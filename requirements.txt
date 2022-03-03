@@ -1,0 +1,3 @@
+composer require --prefer-dist yiisoft/yii2-jui
+composer require webvimark/module-user-management
+composer require --prefer-dist yiisoft/yii2-bootstrap

@@ -1,0 +1,237 @@
+.survey-form{
+    /*width: 68%;*/
+    margin: auto;
+    margin-top: 5%;
+}
+
+
+
+.form-control{
+    /*width: 40%;*/
+    /*padding: 2%;*/
+}
+
+.form-control::placeholder{
+    color: lightgrey !important;
+}
+
+.survey-create{
+    padding: 2%;
+}
+
+.button-row{
+    padding-bottom: 2%;
+    margin: 2% 2% 0% 2%;
+}
+
+.button-row-2{
+    margin: 1% 0% 0% 1%;
+}
+
+.header-row{
+    margin-right: unset !important;
+    margin-left: unset !important;
+    margin-bottom: 4% !important;
+    
+}
+
+.header-row > .tab{
+    border-right: 2px solid white;
+    border-top-right-radius:25px;
+    padding-left: 0% !important;
+    border-bottom: 2px solid white;
+}
+
+.header-row > .tab:last-child{
+    border-right: none !important;
+    border-top-right-radius:25px;
+    padding-left: 0% !important;
+    border-bottom: 2px solid white;
+}
+
+.header-row > div > a {
+    text-decoration: none !important;
+    /*color: #0056aa !important;*/
+    color: white !important;
+}
+
+.outside-div{
+    border-radius: 25px;
+    width: auto;
+    margin: auto;
+    /*background-color: white;*/
+    /*background-color: rgba(255,255,255,0.4);*/
+    background-color: rgba(22, 18, 45, 0.5);
+    padding: 0% 0% 0% 0%;
+    margin-top: 5%;
+    /*background-color: #16122d !important;*/
+    /*opacity: 0.5;*/
+    color: white !important;
+    border: 2px white solid;
+}
+
+h5{
+    /*margin: 6% 0% 4% 7%;*/
+    margin: 10px 0px 7px 12px;
+    opacity: 0.5;
+    padding-left: 10px;
+}
+
+.survey-fields{
+    margin-left: 2% !important;
+    margin-right: 2% !important;
+}
+
+.user-form{
+    /*width: 66% !important;*/
+    margin: auto !important;
+}
+
+.datasetcreate{
+    width: 100% !important;
+}
+
+.questionscreate{
+    width: 100% !important;
+}
+
+.participatesincreate{
+    width: 100% !important;
+}
+
+.dataset-header-column{
+    color: white !important; 
+    /*background-color: dodgerblue; */
+    /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
+    vertical-align: middle; 
+    text-align: center;
+}
+
+.dataset-table-header-row{
+    /*background: linear-gradient(45deg, mediumpurple, dodgerblue) !important;*/
+    /*background: linear-gradient(45deg, dodgerblue, #0056aa) !important;*/
+    background: #327a81 !important;
+}
+
+.dataset-header-column > span > *{
+    color: white !important;
+}
+
+.dataset-tools{
+    border: 1px solid white;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.dataset-header-column > .float-right{
+    padding-right: 1%;
+    padding-left: 1%;
+}
+
+.datasets-table{
+    position: relative; 
+    max-height: 500px; 
+    overflow: auto;
+    padding: 3%;
+    border: 2px white solid;
+    margin: 3%;
+}
+
+.dataset-form{
+    margin-bottom: 3%;
+}
+
+.tooltip-icon{
+    text-decoration: none !important;
+    cursor: pointer;
+    color: white;
+}
+
+.tooltip-icon:hover{
+    color: white;
+}
+
+.white{
+    color: white;
+}
+.teal{
+    color: darkcyan;
+}
+
+.green{
+    color: #3c873a;
+}
+
+.modal-header{
+    /*background-color: dodgerblue !important;*/
+    /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
+    background: #327a81;
+    color: white !important;
+}
+.close > span:nth-child(1){
+    color: white !important;
+}
+.code-block-background{
+    background-color: #303030; padding: 2%; font-size: 15px;
+}
+
+.link-icon{
+    cursor: pointer !important;
+    text-decoration: none !important;
+}
+
+.fa-eye{
+    color: #949494;
+}
+
+.fa-edit{
+
+}
+
+.fa-trash-alt{
+    color: #dd7777;
+}
+
+.fa-star{
+   
+    color:gold;
+}
+
+.fa-lock{
+    
+}
+
+.fa-unlock {
+    color: #77dd77;
+}
+
+.url-disabled{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.resources-inner{
+    padding: 4%;
+}
+
+.float-left > .form-group{
+    display: inline !important;
+}
+
+.resource-header-row{
+    padding: 0.75rem; 
+    border: 1px solid white;
+    /*border-bottom: none;*/
+}
+
+.form-group{
+    margin: auto !important;
+}
+
+.datasets-table div[class^='resource-object'] {
+    margin-bottom: 4%;
+}
+
+.select2-selection__rendered{
+    /*display: grid !important;*/
+}
