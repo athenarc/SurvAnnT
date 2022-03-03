@@ -1362,7 +1362,7 @@ class SiteController extends Controller
         }
 
         $survey = Surveys::findOne( $surveyid );
-        $fields = explode("&&", $survey->fields);
+        $fields = array_filter( explode("&&", $survey->fields) );
         $user_participants = Participatesin::find()->where(['surveyid' => $surveyid])->asArray()->all();
         $user_invited = Invitations::find()->where(['surveyid' => $surveyid])->asArray()->all();
         
@@ -1379,8 +1379,9 @@ class SiteController extends Controller
                 $users[$key]['request'] = 1;
             }
 
-            if ( sizeof( array_intersect( $fields, explode("&&", $users[$key]['fields']) ) ) == 0 && $users[$key]['participates'] == 0 ){
+            if ( sizeof( array_intersect( $fields, explode("&&", $users[$key]['fields']) ) ) == 0 && sizeof($fields) > 0 && $users[$key]['participates'] == 0 ){
                 // IF USERS IN DB HAVE NO REASEARCH FIELDS IN COMMON WITH THE SURVEY FIELDS UNSET THEM
+
                 unset($users[$key]);
                 continue;
             }
