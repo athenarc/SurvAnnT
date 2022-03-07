@@ -11,7 +11,17 @@ use webvimark\modules\UserManagement\models\rbacDB\Route;
 use webvimark\modules\UserManagement\UserManagementModule;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-
+use app\models\Participatesin;
+use app\models\Badges;
+use app\models\Collections;
+use app\models\Questions;
+use app\models\Rate;
+use app\models\Resources;
+use app\models\Surveytobadges;
+use app\models\Surveytocollections;
+use app\models\Surveytoquestions;
+use app\models\Surveytoresources;
+use app\models\Usertobadges;
 /**
  * This is the model class for table "user".
  *
@@ -31,6 +41,18 @@ use yii\behaviors\TimestampBehavior;
  * @property string $fields
  * @property string $orcidid
  * @property integer $availability
+ *
+ * @property Badges[] $badges
+ * @property Collection[] $collections
+ * @property Participatesin[] $participatesins
+ * @property Questions[] $questions
+ * @property Resources[] $resources
+ * @property Surveytobadges[] $surveytobadges
+ * @property Surveytocollections[] $surveytocollections
+ * @property Surveytoquestions[] $surveytoquestions
+ * @property Surveytoresources[] $surveytoresources
+ * @property Usertobadges[] $usertobadges
+ * @property Rate[] $rates
  */
 class User extends UserIdentity
 {
@@ -364,7 +386,6 @@ class User extends UserIdentity
 			->viaTable(Yii::$app->getModule('user-management')->auth_assignment_table, ['user_id'=>'id']);
 	}
 
-
 	/**
 	 * Make sure user will not deactivate himself and superadmin could not demote himself
 	 * Also don't let non-superadmin edit superadmin
@@ -444,4 +465,113 @@ class User extends UserIdentity
 
 		return parent::beforeDelete();
 	}
+
+	/**
+     * Gets query for [[Badges]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBadges()
+    {
+        return $this->hasMany(Badges::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Collections]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCollections()
+    {
+        return $this->hasMany(Collection::className(), ['userid' => 'id']);
+    }
+    /**
+     * Gets query for [[Participatesins]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParticipatesin()
+    {
+        return $this->hasMany(Participatesin::className(), ['userid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Questions]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getQuestions()
+    {
+        return $this->hasMany(Questions::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Rates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRates()
+    {
+        return $this->hasMany(Rate::className(), ['userid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Resources]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResources()
+    {
+        return $this->hasMany(Resources::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Surveytobadges]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSurveytobadges()
+    {
+        return $this->hasMany(Surveytobadges::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Surveytocollections]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSurveytocollections()
+    {
+        return $this->hasMany(Surveytocollections::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Surveytoquestions]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSurveytoquestions()
+    {
+        return $this->hasMany(Surveytoquestions::className(), ['ownerid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Surveytoresources]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSurveytoresources()
+    {
+        return $this->hasMany(Surveytoresources::className(), ['ownerid' => 'id']);
+    }
+
+   /**
+     * Gets query for [[Usertobadges]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsertobadges()
+    {
+        return $this->hasMany(Usertobadges::className(), ['userid' => 'id']);
+    }
 }

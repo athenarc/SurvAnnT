@@ -57,8 +57,8 @@ old/*
 web/css/surveyformnew.css
 web/css/sitenew.css
 
-model/User2.php
-model/User3.php
-model/Surveys2.php
-model/Resources2.php
+models/User2.php
+models/User3.php
+models/Surveys2.php
+models/Resources2.php
 # /data

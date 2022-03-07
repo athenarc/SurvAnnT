@@ -67,12 +67,12 @@ $this->title = 'My Yii Application';
 			                       	return "&nbsp;<a href = 'index.php?r=site%2Fsurveys-view&surveyid=".$model['id']."'>".$model['name']."</a>";
 			                    }  	
 						],
-						[
-							'headerOptions' => ['style'=>'text-align: center;'],
-				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-							'attribute'=>'created',
-							'visible' => Yii::$app->user->identity->hasRole(['Admin', 'Superadmin'])
-						],
+						// [
+						// 	'headerOptions' => ['style'=>'text-align: center;'],
+				  //           'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
+						// 	'attribute'=>'created',
+						// 	'visible' => Yii::$app->user->identity->hasRole(['Admin', 'Superadmin'])
+						// ],
 						[
 							'headerOptions' => ['style'=>'text-align: center;'],
 				            'contentOptions' => ['class' => 'start-time','style'=>'text-align: center; vertical-align: middle;'],
@@ -87,28 +87,73 @@ $this->title = 'My Yii Application';
 							'label' => 'Expires in'
 						],
 
-						// [
-						// 	'headerOptions' => ['style'=>'text-align: center;'],
-				  //           'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-					 //        'label' => 'Participants',
-			   //              'format' => 'ntext',
-			   //              'value' => function($model) 
-			   //              	{
-			   //                     	return sizeof($model['user']);
-			   //                  }  		        
-						// ],
-
-
+			            [
+			            	'headerOptions' => ['style'=>'text-align: center;'],
+				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
+			                'label' => 'Participants',
+			                'format' => 'raw',
+			                'attribute'=>'participants_count',
+			                'value' => function($model) {
+			                	$completed = 0;
+			                	foreach ($model->participatesin as $key => $value) {
+			                		if ( $value['finished'] == 1 ){
+			                			$completed ++;
+			                		}
+			                	}
+			                	$info = "<a class = 'fas fa-info-circle link-icon' title = 'Completed: ".$completed."'> </a>";
+			                    return sizeof($model->participatesin)." ".$info;
+			                },
+			            ],
 
 			            [
 			            	'headerOptions' => ['style'=>'text-align: center;'],
 				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-			                'label' => 'participants',
-			                'format' => 'ntext',
-			                'attribute'=>'participants_count',
+			                'label' => 'Active',
+			                'attribute'=>'active',
 			                'value' => function($model) {
-			                    return sizeof($model->participatesin);
+			                    return ($model->active == '1') ? 'True' : 'False';
 			                },
+			            ],
+
+			            [
+			            	'headerOptions' => ['style'=>'text-align: center;'],
+				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
+			                'label' => 'Questions',
+			                'format' => 'ntext',
+			                'attribute'=>'questions_count',
+			                'value' => function($model) {
+			                    return sizeof($model->questions);
+			                },
+			            ],
+
+			            [
+			            	'headerOptions' => ['style'=>'text-align: center;'],
+				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
+			                'label' => 'Resources',
+			                'format' => 'ntext',
+			                'attribute'=>'resources_count',
+			                'value' => function($model) {
+			                    $test = "";
+		                    	foreach ($model->collection as $col) {
+		                    		$test .= sizeof($col->getResources()->all());
+		                    	}
+		                    	if ( $test == '' ){
+		                    		return 0;
+		                    	}
+		                    	return $test;
+			                },
+			            ],
+
+			            [
+			            	'headerOptions' => ['style'=>'text-align: center;'],
+				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
+			                'label' => 'Annotations',
+			                'attribute'=>'rates_count',
+			                'visible' => Yii::$app->user->identity->hasRole(['Admin', 'Superadmin']),
+			                'value' => function($model) {
+			                    return ( isset( $model->rates_count) ) ? $model->rates_count : 0; 
+			                },
+
 			            ],
 						
 				        [
@@ -136,7 +181,7 @@ $this->title = 'My Yii Application';
 					                    }
 				                    }
 							        return 
-							        Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin")
+							        ( Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin") ) && ( $model->active != 1 )
 							        ? Html::a('<i class="fas fa-edit link-icon"></i>', 'index.php?r=site%2Fsurvey-create&surveyid='.$key.'&edit=1') 
 							        : '';
 							    },
@@ -158,7 +203,10 @@ $this->title = 'My Yii Application';
 							        if ( ( Yii::$app->user->identity->hasRole(["Admin"]) && $model['locked'] == 0 ) || in_array(Yii::$app->user->identity->id, array_column($model->participatesin, 'userid') ) ){
 							        	foreach ($model->participatesin as $participant) {
 							    			if ( $participant->userid ==  Yii::$app->user->identity->id ){
-							    				if ( $participant->request == 1 ){
+							    				if ( $participant->finished == 1 ){
+							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Completed!']);
+							    				}
+							    				if ( $participant->request == 1 && $model->active == 1){
 							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key);
 							    				}
 							    			}

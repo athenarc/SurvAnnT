@@ -20,9 +20,21 @@ use kartik\select2\Select2;
             <?php endforeach; ?>
         </div>
 
-        <?php $form = ActiveForm::begin(['action' =>['site/badges-create', 'surveyid' => $survey->id], 'options' => ['class' => 'survey-create']]); ?>
-        <h3 style = "margin-left: 2%; padding-left: 1%;"> Registered Users</h3>
-        <hr style = "width:95%; background-color:white;">
+        <?php $form = ActiveForm::begin(['action' =>['site/participants-invite', 'surveyid' => $survey->id], 'options' => ['class' => 'survey-create']]); ?>
+
+        <div class = "row d-flex align-items-center" > 
+            <div class="col-md-8">
+                <h3 style = "margin-left: 2%; padding-left: 1%;"> Registered Users</h3>
+                
+            </div>
+            <div class = "col-md-4 text-right" style = "padding-right: 3%;">
+                <?= Html::checkbox( 'reset-filter', $limit_on_fields, ['class' => 'no-margin-label', 'id' => 'reset-filter', 'label' => 'Limit users based on Research fields', 'style' => 'margin-bottom:0%;']) ?>                       
+            </div>
+            <hr style = "width:95%; background-color:white; margin-top: 1%;">
+        </div> 
+
+        <!-- <h3 style = "margin-left: 2%; padding-left: 1%;"> Registered Users</h3> -->
+        <!-- <hr style = "width:95%; background-color:white;"> -->
         <br>
         <div class = "row survey-fields table-row">
             
@@ -85,7 +97,7 @@ use kartik\select2\Select2;
                 <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
             </div>
             <div class = "col-md-1">
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
+                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'badges-create']) ?>
             </div>
         </div>
 

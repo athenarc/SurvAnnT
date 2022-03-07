@@ -7,7 +7,7 @@ return [
     'bsVersion' => '4.x',
     'resources' => '../data/resources',
     'dataset' => '../data/dataset.json',
-    'questions' => '../data/questions.json',
+    'questions' => '../data/questions/questions.json',
     'dir-articles' => '../data/resources/article/articles.json',
     'dir-texts' => '../data/resources/text/texts.json',
     'dir-images' => '../data/resources/image/',
@@ -16,7 +16,7 @@ return [
     'helpdesk-address' => 'survannt.helpdesk@gmail.com',
     'invitation-url' => 'http://localhost/SurveiFy/web/index.php?r=user-management%2Fauth%2Fregistration&email=',
     'title' => 'SurvAnnT',
-    'fields' => 
+    'fields' =>  
         [
             'Artificial Intelligence', 
             'Computer-Human Interface', 
@@ -31,8 +31,24 @@ return [
             'Theory'
         ],
     'resources_allowlist' => ['text' => 'Text', 'article' => 'Article', 'image' => 'Image', 'questionaire' => 'No resources (Single Questionaire)'],
-    'likert-5' => ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
-    'likert-7' => ['Strongly disagree', 'Disagree', 'Somewhat Disagree', 'Neither agree nor disagree', 'Somewhat Agree', 'Agree', 'Strongly agree'],
+    'likert-5' => 
+        [ 
+            1 => 'Strongly disagree', 
+            2 => 'Disagree', 
+            3 => 'Neither agree nor disagree', 
+            4 => 'Agree', 
+            5 => 'Strongly agree'
+        ],
+    'likert-7' => 
+        [
+            1 => 'Strongly disagree', 
+            2 => 'Disagree', 
+            3 => 'Somewhat Disagree', 
+            4 => 'Neither agree nor disagree', 
+            5 => 'Somewhat Agree', 
+            6 => 'Agree', 
+            7 => 'Strongly agree'
+        ],
     'tabs' => 
         [
             'Campaign' => 
@@ -60,13 +76,18 @@ return [
                     'link' => 'index.php?r=site%2Fbadges-create&surveyid=',
                     'enabled' => 0 
                 ],
+            'Overview' => 
+                [
+                    'link' => 'index.php?r=site%2Fsurvey-overview&surveyid=',
+                    'enabled' => 0 
+                ]
         ],
     'about' =>
         [
             'Purpose' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'This survey is taking place to help us gather insight about the readability of scientific abstracts. Since traditional readability metrics fail to distinguish effectively difficult from easy scientific texts, the goal is to establish a ground truth based on your assessments which will work as a basis for a tailor-made readability metric.',
+                    'text' => 'SurvAnnT offers functionalities to create, manage, and analyse survey and annotation campaingns.',
                     'enabled' => 1,
 
                 ],
@@ -83,5 +104,14 @@ return [
                     'enabled' => 1,
                 ]
         ],
+
+        'Scoring-system' =>
+            [
+                'First-Badge' => 20,
+                'Annotation' => 10,
+                'Survey-Completion' => 50,
+                'All-Badges' => 100, 
+            ],
+
         
 ];

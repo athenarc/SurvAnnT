@@ -21,56 +21,146 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin(); ?>
             <div class = "datasets-table"> 
                 <?php foreach ($questions as $key => $question): ?>
-                    <div class = "dataset-tools">
-                        <div class = "dataset-header-column dataset-table-header-row text-center" colspan = "<?= $colspan ?>" > 
-                            Question <?=$key + 1?> 
-                            <span class = "float-right"> 
+                    <div id = "dataset-tools-<?=$key?>" class = "dataset-tools">
+                        <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "<?= $colspan ?>" > 
+                            <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
+                                 <!-- Html::checkbox('agree-question-'.$key, true, ['id' => 'use-question-'.$key, 'label' => 'Use']) &nbsp; -->
+                            </span>
+                            <span class = "center" style = "width: 40%;">
+                                Question
+                            </span>
+                            <span class = "float-right" style = "width: 30%; text-align: right;"> 
                                 <a id = "dataset-<?=$key?>" class="fas fa-eye link-icon white hide-dataset"></a> 
-                                <a id = "dataset-<?=$key?>" class="fas fa-times link-icon white delete-dataset"></a> 
+                                <a id = "dataset-<?=$key?>" class="fas fa-times link-icon white delete-question"></a> 
                             </span> 
                         </div>
                     </div>
-                    <div class = "col-md-12 dataset-form">
+
+
+                    <div id = "dataset-form-<?=$key?>"  class = "col-md-12 dataset-form">
                         
                         <table class="table table-striped table-bordered participants-table table-<?=$key?>">     
                             
                             <tr class = "dataset-table-header-row">
                                 <td class = "dataset-header-column" colspan = "1"> Question </td>
-                                <td class = "dataset-header-column" colspan = "1"> Tooltip </td>
+                                <td class = "dataset-header-column" colspan = "2"> Tooltip </td>
                                 
                             </tr>
                             <tr>
                                 
                                 <td colspan = "1"> <?= $form->field($question, "[$key]question")->textarea()->label(false) ?> </td>    
-                                <td> <?= $form->field($question, "[$key]tooltip")->label(false) ?> </td>
+                                <td colspan = "2"> <?= $form->field($question, "[$key]tooltip")->label(false) ?> </td>
                                 
                             </tr>
                             <tr class = "dataset-table-header-row">
-                                <td class = "dataset-header-column" colspan = "1"> Answer Type </td>
-                                <td class = "dataset-header-column" colspan = "<?= $colspan ?>"> <?= $question->answertype == 'textInput' ? 'Answer' : 'Answer values <a data-toggle="modal" data-target=".help" class="fas fa-info-circle tooltip-icon" title="" aria-hidden="true"></a>' ?></td>
-                                
+                                <td class = "dataset-header-column" colspan = "1" style = "width:50%;"> Answer Type </td>
+                                <td id =  "answer-header-text-input-<?=$key?>" class = "dataset-header-column" style = ""> Answer </td>                                
                             </tr>
                             <tr>
-                                <td> <?= $form->field($question, "[$key]answertype")->dropDownList($answertypes)->label(false) ?> </td>
-                                <td colspan = "<?= $colspan ?>" style = "display: <?= $question->answertype == 'textInput' ? 'block;' : 'none;' ?> "> <?= $form->field($question, "[$key]answer")->textarea([ 'placeholder' => 'This is a question answer...'])->label(false) ?> </td>
-                                <td colspan = "<?= $colspan ?>" style = "display: <?= $question->answertype == 'radioList' ? 'block' : 'none;' ?> "> <?= $form->field($question, "[$key]answervalues")->textarea([ 'placeholder' => "{\n\t\"1\" : \"value\"\n}"])->label(false) ?> </td>
-                                <td class = "likert-5" colspan = "<?= $colspan ?>" style = "display: <?= $question->answertype == 'Likert(5)' ? 'block;' : 'none;' ?> "> 
-                                    <?php foreach ($likert_5 as $likert_key => $likert_val): ?>
-                                        
-                                        <input type="text" value="<?=$likert_val?>" name="question-<?=$key?>-likert-5-<?=$likert_key?>-answer" class = "form-control" style = "width: 45%; display:table-cell; margin-bottom:5px;">
-                                        =>
-                                        <input type="text" value="<?=$likert_key + 1?>" name="question-<?=$key?>-likert-5-<?=$likert_key?>-value" class = "form-control" style = "width: 45%; display:table-cell; margin-bottom:5px;">
-                                        <br>
-                                    <?php endforeach; ?>
+                                <td colspan = "1" style = "width: 45%;"> 
+                                    <?= $form->field($question, "[$key]answertype")->dropDownList($answertypes)->label(false) ?> 
                                 </td>
-                                <td class = "likert-7" colspan = "<?= $colspan ?>" style = "display: <?= $question->answertype == 'Likert(7)' ? 'block;' : 'none;' ?> "> 
-                                    <?php foreach ($likert_7 as $likert_key => $likert_val): ?>
-                                        
-                                        <input type="text" value="<?=$likert_val?>" name="question-<?=$key?>-likert-7-<?=$likert_key?>-answer" class = "form-control" style = "width: 45%; display:table-cell; margin-bottom:5px;">
-                                        =>
-                                        <input type="text" value="<?=$likert_key + 1?>" name="question-<?=$key?>-likert-7-<?=$likert_key?>-value" class = "form-control" style = "width: 45%; display:table-cell; margin-bottom:5px;">
-                                        <br>
-                                    <?php endforeach; ?>
+                                <td id = "textInput-<?=$key?>" colspan = "2" style = "display: <?= $question->answertype == 'textInput' ? 'table-cell;' : 'none;' ?> "> 
+                                    <?= $form->field($question, "[$key]answer")->textarea([ 'placeholder' => 'This is a question answer...'])->label(false) ?> 
+                                </td>
+                                <td id = "radioList-<?=$key?>" colspan = "<?= 2 ?>" style = "display: <?= $question->answertype == 'radioList' ? 'table-cell;' : 'none;' ?> "> 
+                                    <?php 
+                                    $counter = 0;
+                                    $question->answervalues = ($question->answervalues == '') ? $likert_5 : json_decode($question->answervalues) ;
+                                    ?>
+                                    
+                                    <table class = "table table-striped table-bordered">
+                                        <tr class = "dataset-table-header-row">
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 10%;">  </td>
+                                        </tr>
+                                        <?php foreach ($question->answervalues as $ans_key => $ans_val): ?>
+                                            <?php 
+                                            $answer = (array)$ans_val;
+                                            $answer_key = key($answer);
+                                            $answer_val = end($answer);
+                                            ?>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-radioList-<?=$counter?>-answer" class = "form-control" style = "">
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-radioList-<?=$counter?>-value" class = "form-control" style = "">
+                                                </td>
+                                                <td>
+                                                    <a id = "delete-radioList-<?=$key?>-<?=$answer_key?>" class="fas fa-trash-alt link-icon delete-radioList-key"></a>
+                                                </td>
+                                            </tr>
+                                            <?php $counter ++; ?>
+                                        <?php endforeach; ?>
+                                    </table>
+                                </td>
+                                <td id = "Likert-5-<?=$key?>" colspan = "<?= 2 ?>" style = "display: <?= $question->answertype == 'Likert-5' ? 'table-cell;' : 'none;' ?> "> 
+                                    <?php 
+                                    $counter = 0;
+                                    $radiolist = ( ! $question->isNewRecord )  ? $question->answervalues :  $likert_5;
+                                    ?>
+                                    <table class = "table table-striped table-bordered">
+                                        <tr class = "dataset-table-header-row">
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 10%;">  </td>
+                                        </tr>
+                                        <?php foreach ($radiolist as $ans_key => $ans_val): ?>
+                                            <?php 
+                                            $answer = (array)$ans_val;
+                                            $answer_key = key($answer);
+                                            $answer_val = end($answer);
+                                            ?>
+                                            <tr>
+                                                <!-- FOR EACH LIKERT VAL -->
+                                                <td>
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-5-<?=$counter?>-answer" class = "form-control">
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-5-<?=$counter?>-value" class = "form-control">
+                                                </td>
+                                                <!-- FOR EACH LIKERT VAL -->
+                                                <td>
+                                                    <a id = "delete-radioList-<?=$key?>-<?=$answer_key?>" class="fas fa-trash-alt link-icon delete-radioList-key"></a>
+                                                </td>
+                                            </tr>
+                                            <?php $counter ++; ?>
+                                        <?php endforeach; ?>
+                                    </table>
+                                </td>
+                                <td id = "Likert-7-<?=$key?>" colspan = "<?= 2 ?>" style = "display: <?= $question->answertype == 'Likert-7' ? 'table-cell;' : 'none;' ?> "> 
+                                    <?php 
+                                    $counter = 0;
+                                    $radiolist = ( ! $question->isNewRecord ) ? $question->answervalues : $likert_7;
+                                    ?>
+                                    <table class = "table table-striped table-bordered">
+                                        <tr class = "dataset-table-header-row">
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
+                                            <td class = "dataset-header-column" colspan = "1" style = "width: 10%;">  </td>
+                                        </tr>
+                                        <?php foreach ($radiolist as $ans_key => $ans_val): ?>
+                                            <?php 
+                                            $answer = (array)$ans_val;
+                                            $answer_key = key($answer);
+                                            $answer_val = end($answer);
+                                            ?>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-7-<?=$counter?>-answer" class = "form-control">
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-7-<?=$counter?>-value" class = "form-control">
+                                                </td>
+                                                <td>
+                                                    <a id = "delete-radioList-<?=$key?>-<?=$answer_key?>" class="fas fa-trash-alt link-icon delete-radioList-key"></a> 
+                                                </td>
+                                            </tr>
+                                            <?php $counter ++; ?>
+                                        <?php endforeach; ?>
+                                    </table>
                                 </td>
                             </tr>
                             
@@ -78,11 +168,13 @@ use yii\widgets\ActiveForm;
                     </div>
                     <?= $form->field($question, "[$key]ownerid")->hiddenInput()->label(false) ?>
                     <?= $form->field($question, "[$key]destroy")->hiddenInput(['id' => 'destroy-'.$key])->label(false) ?>
+                    <input type="hidden" id ='Likert-5' name="" value="<?= Html::encode( ( json_encode($likert_5) ) ) ?>">
+                    <input type="hidden" id ='Likert-7' name="" value="<?= Html::encode( ( json_encode($likert_7) ) )?>">
                 <?php endforeach; ?>
                 <div class = "row button-row-2">
                     <div class = "col-md-10"></div>
                     <div class = "col-md-2">
-                        <?= Html::a('Add question', ['site/survey-create'], ['class' => 'btn btn-primary submit-button add-dataset', 'name' => 'add']) ?>
+                        <?= Html::a('Add question', ['site/survey-create'], ['class' => 'btn btn-primary submit-button add-question', 'name' => 'add']) ?>
                     </div>
                 </div>
             </div>

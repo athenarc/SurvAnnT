@@ -70,6 +70,28 @@ $this->params['breadcrumbs'][] = $this->title;
 						'format'=>'raw',
 					],
 					[
+						'attribute'=>'fields',
+						'format' => 'ntext',
+						'value' => function ($model) {
+							$str = '';
+							foreach (explode("&&", $model->fields) as $key => $value) {
+								$str .= $value."\n";
+							}
+							return $str;
+						}
+					],
+					[
+						'attribute'=>'participates in',
+						'format' => 'raw',
+						'value' => function ($model) {
+							$str = '';
+							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 0])->all() as $key => $value) {
+								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id). "<br>"; //'<a href = "index" >'.$value->survey->name.'</a><br>';
+							}
+							return $str;
+						}
+					],
+					[
 						'attribute'=>'bind_to_ip',
 						'visible'=>User::hasPermission('bindUserToIp'),
 					],

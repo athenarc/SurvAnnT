@@ -118,7 +118,7 @@ h5{
 }
 
 .dataset-tools{
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     margin-right: 15px;
     margin-left: 15px;
 }
@@ -201,7 +201,7 @@ h5{
     
 }
 
-.fa-unlock {
+.fa-unlock, .fa-check{
     color: #77dd77;
 }
 

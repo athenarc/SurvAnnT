@@ -14,7 +14,7 @@ $(document).ready(function(){
 
 		var participants = '<div class = "col-md-6" style ="position: relative; height: 300px; overflow: auto;"><table class="table table-striped table-bordered participants-table"> <thead class="control-label" for="surveys-starts" style = "text-decoration: none;"><tr><th colspan = "3" style = "width:80%;">Participants</th><th  style = "text-align: center;" ><a class="fas fa-angle-down" style = "cursor: pointer; text-decoration: none;"></a></tr></thead><tbody class = "participants-body">';
 		var non_participants =  participants.replace("Participants", "Select users to participate!").replace("participants", "non-participants").replace("participants-body", "non-participants-body");
-		var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
+		var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
 		var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
 		var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
 		var pending_icon = '<a class="fas fa-hourglass-start" title ="Pending registration" style = "cursor: pointer; text-decoration: none; color:orange;"></a>&nbsp;&nbsp;';
@@ -235,6 +235,10 @@ $(document).ready(function(){
 		
 	});
 
+	$('body').on('click', 'input#reset-filter', function() {
+		$(".submit-button").attr('name', 'non-finalize');
+		$(".survey-create").submit();
+	});
 
 });
 

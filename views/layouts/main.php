@@ -43,7 +43,8 @@ AppAsset::register($this);
         'items' => [
             // ['label' => 'Home <i class="fas fa-home"></i>', 'url' => ['/site/index']],
             ['label' => 'About <i class="fas fa-question-circle"></i>', 'url' => ['/site/about']],
-            isset (Yii::$app->user->identity) && Yii::$app->user->identity->hasRole(["Rater", "Admin", "Superadmin"]) ? (['label' => 'Surveys <i class="fas fa-poll"></i>', 'url' => ['/site/surveys-view']]) : '',
+            isset (Yii::$app->user->identity) && Yii::$app->user->identity->hasRole(["Rater", "Admin", "Superadmin"]) ? (['label' => 'Leaderboard <i class="fas fa-book"></i>', 'url' => ['/site/leaderboard']]) : '',
+            isset (Yii::$app->user->identity) && Yii::$app->user->identity->hasRole(["Rater", "Admin", "Superadmin"]) ? (['label' => 'Campaigns <i class="fas fa-poll"></i>', 'url' => ['/site/surveys-view']]) : '',
 
             isset (Yii::$app->user->identity) && Yii::$app->user->identity->hasRole(["Rater", "Admin", "Superadmin"]) ? ([
                 'label' => ( isset($this->params['requests']) && sizeof($this->params['requests']) > 0 ) ? 'Admin <span class = "dot" style = "background-color:red; color:white;">'.sizeof($this->params['requests']).'</span><i class="fas fa-cogs"></i>' : 'Admin <i class="fas fa-cogs"></i>',
@@ -57,8 +58,8 @@ AppAsset::register($this);
                        Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Visit log') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/user-visit-log/index']] : '',
                         ['label' => 
                             isset($this->params['requests']) && sizeof($this->params['requests']) > 0 
-                            ? 'My Surveys <span class = "dot" style = "background-color:red; color:white;">'.sizeof($this->params['requests']).'</span> <i class="fas fa-database"></i>'
-                            : 'My Surveys <i class="fas fa-database"></i>'
+                            ? 'My Campaigns <span class = "dot" style = "background-color:red; color:white;">'.sizeof($this->params['requests']).'</span> <i class="fas fa-database"></i>'
+                            : 'My Campaigns <i class="fas fa-database"></i>'
                             , 'url' => ['/site/my-surveys-view']],
                        Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' => 'Statistics <i class="fas fa-chart-bar"></i>', 'url' => ['/site/index']] : '',
                        ['label' => 'Password <i class="fas fa-key"></i>', 'url'=>['/user-management/auth/change-own-password']],

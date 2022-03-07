@@ -218,3 +218,23 @@ a.desc:after {
     padding-left: 5%;
     padding-right: 5%;
 }
+
+.error-div{
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(22, 18, 45, 0.5);
+    border: 2px solid white;
+    color: white;
+    text-align: left;
+    padding: 10px;
+}
+
+.error-div > a{
+    color: #dd7777;
+}
+
+label {
+    margin-bottom: 0% !important;
+}

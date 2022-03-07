@@ -25,6 +25,7 @@ use webvimark\modules\UserManagement\models\User;
 class Questions extends \yii\db\ActiveRecord
 {
     public $destroy = 0;
+    // public $answertype = 'textInput';
     /**
      * {@inheritdoc}
      */
@@ -46,7 +47,7 @@ class Questions extends \yii\db\ActiveRecord
             [['question', 'tooltip', 'answer'], 'string', 'max' => 255],
             [['answertype'], 'string', 'max' => 20],
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
-            [['answervalues', 'answertype'], 'validateJson']
+            // [['answervalues', 'answertype'], 'validateJson']
         ];
     }
 
@@ -54,25 +55,25 @@ class Questions extends \yii\db\ActiveRecord
     {
         // echo $this->id, "<br>==============================<br>";
         // echo $this->answertype,"<br>";
-        $error_message = "";
-        if ( $this->answertype == 'radioList'  ){
+        // $error_message = "";
+        // if ( $this->answertype == 'radioList'  ){
                     
-            if ( empty( $this->answervalues ) || $this->answervalues == ' ' ){
+        //     if ( empty( $this->answervalues ) || $this->answervalues == ' ' ){
 
-                $error_message = "Answer values can not be blank.";
+        //         $error_message = "Answer values can not be blank.";
                 
-            }else if ( ! json_decode( $this->answervalues )  ){
+        //     }else if ( ! json_decode( $this->answervalues )  ){
                 
-                $error_message = "Answer values not in correct JSON format.";
+        //         $error_message = "Answer values not in correct JSON format.";
             
-            }
-            if ( $error_message != "" ){
+        //     }
+        //     if ( $error_message != "" ){
             
-                $this->addError('answervalues', $error_message);
+        //         $this->addError('answervalues', $error_message);
             
-            }
+        //     }
             
-        }
+        // }
         // echo "<br><br>";
         
     }
@@ -129,11 +130,14 @@ class Questions extends \yii\db\ActiveRecord
         $questions = [new Questions()];
         foreach ($string['questions'] as $key => $value) {
             $question = new Questions();
-            // $question->surveyid = $surveyid;
             $question->ownerid = $userid;
+            $array = [];
             foreach ($value as $abstract_field => $abstract_value) {
-                if ( is_array ( $abstract_value ) ){
-                    $question[$abstract_field] = json_encode( $abstract_value, JSON_PRETTY_PRINT ); 
+                if ( is_array ( $abstract_value ) && $abstract_field = 'answervalues'){
+                    foreach ($abstract_value as $k => $v) {
+                        $array[] = array($k => $v);
+                    }
+                    $question[$abstract_field] = json_encode( $array ); 
                 }else{
                     $question[$abstract_field] = $abstract_value; 
                 } 

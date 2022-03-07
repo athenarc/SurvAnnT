@@ -89,9 +89,15 @@ class Badges extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSurveytobadges()
-    {
-        return $this->hasMany(Surveytobadges::className(), ['badgeid' => 'id']);
+    public function getSurveytobadges($surveyid = null)
+    {   
+        
+        if ( $surveyid ){
+            return $this->hasMany(Surveytobadges::className(), ['badgeid' => 'id']);
+        }else{
+            return $this->hasMany(Surveytobadges::className(), ['badgeid' => 'id']);
+        }
+        
     }
 
     /**

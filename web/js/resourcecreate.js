@@ -1,22 +1,5 @@
 $(document).ready(function(){
 
-	// $(document).on('change', '.user-type-select, .resource-type', function(){
- //        var item_class = $(this).val();
- //        if ( $(this).hasClass('user-type-select') ){
- //            var input = $("<input>").attr("type", "hidden").attr("name", "db").val("db");
- //            if ( $(this).val() != '' ){
- //                $('.resource-form').append($(input));
- //                $(".resource-form").submit();
- //            }
-            
- //        }else{
- //            $( ".resource-types" ).css("display", "none");
- //            $( "." + item_class ).toggle();
- //        }
-        
-
- //    });
-
     $(document).on('change', '#user-resource-types, #db-resource-types, #dir-resource-types', function(){
 
         var datastring = $(".resource-before-form").serialize();
@@ -85,14 +68,27 @@ $(document).ready(function(){
 
     });
 
-    $(document).on('click', '.use-all-button', function(e){
+    $(document).on('click', '.select-all-button', function(e){
         e.preventDefault();
         $("[id*='use-']").each(function( ) {
             if ( $(this).not(':checked') ){
                 $(this).attr("checked", true);
             }
         });
+        $(this).removeClass("select-all-button").addClass("deselect-all-button");
+        $(this).text("Deselect all");
 
+    });
+
+    $(document).on('click', '.deselect-all-button', function(e){
+        e.preventDefault();
+        $("[id*='use-']").each(function( ) {
+            if ( $(this).is(':checked') ){
+                $(this).attr("checked", false);
+            }
+        });
+        $(this).removeClass("deselect-all-button").addClass("select-all-button");
+        $(this).text("Select all");
     });
     
 
@@ -116,7 +112,6 @@ $(document).ready(function(){
             <div class="help-block"></div>\
         </div>';
 
-        // alert();
         if ( $(".resource-object-" + new_id).last().find(".float-left").find(".form-group").length == 0 ){
             $(".resource-object-" + new_id).last().find(".float-left").append(allowusers);
         }
@@ -145,10 +140,31 @@ $(document).ready(function(){
           $(this).find(".help-block").text("");
 
         });
-
     });
 
     $(document).on('click', "input[id^='use-']", function(e){
+        var flag = 0;
+        var id = $(this).attr('id');
+        if ( $( '.dir-resource-types' ).css("display") == 'block' ){
+            if ( $( '#dir-resource-types' ).val() == 'questionaire' ){
+                flag = 1;
+            }
+        }
+        if ( $( '.db-resource-types' ).css("display") == 'block' ){
+            if ( $( '#db-resource-types' ).val() == 'questionaire' ){
+                flag = 1;
+            }
+        }
+
+        if ( flag == 1){
+            var count = 0;
+            $( "input[id^='use-collection']" ).each(function() {
+              if (this.checked && this.id != id){
+                $("#" + this.id).prop( "checked", false );
+              }
+            });
+        }
+        
 
         if ($(this).val() == 0){
             $(this).val(1);
@@ -157,24 +173,81 @@ $(document).ready(function(){
         }
     });
 
+    $('button[name="discard-collection"]').click(function(e){
+        e.preventDefault();
+        $('button[name="discard-collection"]').val("discard");
+        $(".resource-before-form").submit();
+    });
+
     $('button[name="next"]').click(function(e){
         e.preventDefault();
         var resources_count = $( "input[id^='use-']" ).length;
-        count = 0;
-        $( "input[id^='use-']" ).each(function() {
-          if (this.checked){
-            count ++;
-          }
-        });
-        if ( count == 0 ){
-            // $(".button-row > div:nth-child(1)").html("<div class = 'help-block text-center'>No resource selected for usage!</div>");
-            if ( ! $(".datasets-table").last().find('row').hasClass("no-resource") ){
-                $(".datasets-table").last().prepend("<row class = 'text-center help-block no-resource'> <div class = 'col-md-12'><h3><i>No resource selected for usage. Please select at least one resource.</i></h3></div></row><br>");
-            }
-            return ;
+        var collections_count = $( "input[id^='use-collection']" ).length;
+        if ( collections_count > 0 ){
+            resources_count = resources_count - collections_count;
         }
+
+        res_count = 0;
+        coll_count = 0;
+        var collectionsArray = {}; 
+        $( "input[id^='use-']" ).each(function() {
+            
+            var collection_regex = new RegExp('^use-collection-');
+            if (collection_regex.test(this.id)) {
+                // IF WE EXAMINE COLLECTIONS
+                if (this.checked){
+                    coll_count ++;
+                    var collection_id = this.id;
+                    var collection_name = $( "#" + this.id ).parent().parent().next().text().trim();
+                    
+                    var embed_res_id = this.id.replace("use-collection", "collection-resources");
+                    collectionsArray[collection_name] = 0;
+                    $( "#" + embed_res_id ).find("input[id^='use-']").each(function() {
+                        // IF A SELECTED COLLECTION'S NESTED RESOURCES ARE CHECKED
+                        if ( this.checked ){
+                            collectionsArray[collection_name] += 1;
+                        }
+                    });
+                }
+            }else{
+                
+                if (this.checked){
+                    res_count ++;
+                }
+            }
+            
+        });
+
+        $(".error-div").html("");
+        
+        for (const property in collectionsArray) {
+            if ( collectionsArray[property] == 0 ){
+                $(".error-div").append('<span>Collection <b> ' + property + ' </b> is selected but none of its resources is!&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
+                $(".error-div").css("display", "block");
+            }
+        }
+        
+        if ( $(".error-div > span ").length == 0 ){
+            $(".error-div").css("display", "none");
+        }else{
+            return;
+        }
+        
+        if ( coll_count == 0 && collections_count == 0 ){
+
+            if ( res_count == 0 && resources_count != 0 ){
+                // var url=location.href;
+                // var entity_name = url.substring(url.lastIndexOf('/')+1);
+                // $(".error-div").append('<span> No Badges are selected !&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
+                // $(".error-div").css("display", "block");
+                // return;
+            }
+
+        }
+
+        
+
         $(".resources-number > .col-md-6 ").each(function( ) {
-            // alert($(this).css("display"));
             if ( $(this).css("display") == "block" ){
                 $(this).find("select").attr("name", "resources-type");
             }
@@ -259,46 +332,6 @@ $(document).ready(function(){
 
     });
 
-    $(document).on('change','select',function(){
-        if ( $(this).attr('id') == 'surveys-fields' ){
-            return;
-        }
-        var answer_type = $(this).val();
-        if ( $(this).attr("id") )
-        {
-            var id = $(this).attr("id").replace("questions-", "").replace("-answertype", "");
-            var help_modal = '<a data-toggle="modal" data-target=".help" class="fas fa-info-circle tooltip-icon" title="" aria-hidden="true"></a>';
-            if ( answer_type == 'textInput' ){
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answer").parent().css("display", "block");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues").parent().css("display", "none");
-                $(this).parent().parent().parent().prev().find("td:nth-child(2)").text("Answer");
-                $(this).parent().parent().parent().find(".likert-7").css("display", "none");
-                $(this).parent().parent().parent().find(".likert-5").css("display", "none");
-            }else if( answer_type == 'radioList' ){
-                $(this).parent().parent().parent().prev().find("td:nth-child(2)").text("Answer values");
-                $(this).parent().parent().parent().prev().find("td:nth-child(2)").append(help_modal);
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answer").parent().css("display", "none");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues").parent().css("display", "block");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues > textarea").css("color", "lightgrey");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues > textarea").attr("placeholder", "{\n\t\"1\" : \"value\"\n}");
-                $(this).parent().parent().parent().find(".likert-7").css("display", "none");
-                $(this).parent().parent().parent().find(".likert-5").css("display", "none");
-            }else{
-                $(this).parent().parent().parent().prev().find("td:nth-child(2)").text("Answer => Value");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues").parent().css("display", "none");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answer").parent().css("display", "none");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues > textarea").attr("placeholder", "");
-                $(this).parent().parent().parent().find(" td > .field-questions-" + id + "-answervalues > textarea").val("");
-                if ( answer_type == 'Likert(5)' ){
-                    $(this).parent().parent().parent().find(".likert-5").css("display", "block");
-                    $(this).parent().parent().parent().find(".likert-7").css("display", "none");
-                }else{
-                    $(this).parent().parent().parent().find(".likert-7").css("display", "block");
-                    $(this).parent().parent().parent().find(".likert-5").css("display", "none");
-                }
-                
-            }
-        }
-    });
+    
     
 });

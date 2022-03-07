@@ -15,8 +15,14 @@ use yii\data\ActiveDataProvider;
  * @property string|null $ends
  * @property int $locked
  * @property string $about
- *
+ * @property Invitations[] $invitations
  * @property Participatesin[] $participatesins
+ * @property Rate[] $rates
+ * @property Surveytobadges[] $surveytobadges
+ * @property Surveytocollections[] $surveytocollections
+ * @property Surveytoquestions[] $surveytoquestions
+ * @property Surveytoresources[] $surveytoresources
+ * @property Usertobadges[] $usertobadges
  */
 class SurveysSearch extends Surveys
 {
@@ -31,31 +37,67 @@ class SurveysSearch extends Surveys
     public $starts;
     public $ends;
     public $participants_count;
+    public $resources_count;
+    public $questions_count;
     public $owner_username;
+    public $rates_count;
 
     // now set the rules to make those attributes safe
     public function rules()
     {
         return [
-            // ... more stuff here
-            [['participants', 'user', 'name', 'username', 'starts', 'ends', 'participants_count', 'owner_username'], 'safe'],
-            // ... more stuff here
+            [['participants', 'user', 'name', 'username', 'starts', 'ends', 'participants_count', 'owner_username', 'resources_count', 'questions_count', 'collection', 'questions', 'resources', 'rates_count'], 'safe'],
         ];
     }
 
-    // public function getUser(){
-    //     return $this->hasMany(User::className(), ['id' => 'userid'])->via('participatesin', ['userid' => 'id']);
-    // }
+    public function search($params, $view = null) {
 
-    public function search($params) {
-        // $query = Surveys::find()->innerJoinWith('user', true)->innerJoinWith('participatesin', true);
         $query = Surveys::find(); 
-        $query->joinWith(['user'])->select(
-            ['surveys.*', 'count(participatesin.surveyid) as participants_count', 
-            '(select GROUP_CONCAT(username) from participatesin join user on participatesin.userid = user.id where owner = 1 and participatesin.surveyid = surveys.id and participatesin.request = 1 GROUP BY surveyid) as owner_username'])->groupBy('surveys.id');
+        $query->joinWith(['user', 'collection', 'questions', 'rates']) //, 'questions' 'collection'
+        ->leftJoin('resources', '`resources`.`collectionid` = `collection`.`id`')
+        
+        ->select(
+                ['surveys.*', 
+                'count(participatesin.surveyid) as participants_count', 
+                '(select GROUP_CONCAT(username) from participatesin join user on participatesin.userid = user.id where owner = 1 and participatesin.surveyid = surveys.id and participatesin.request = 1 GROUP BY surveyid) as owner_username',
+                'count(resources.id) as resources_count',
+                'count(questions.id) as questions_count',
+                '(SELECT count(distinct resourceid, userid ) FROM rate where rate.surveyid = surveys.id group by surveyid) as rates_count',
+                ]
+            )->groupBy('surveys.id');
+
+        if ( ! Yii::$app->user->identity->hasRole(['Admin', 'Superadmin']) ){
+            $query->where(['surveys.active' => 1]);
+        }
+
+        if ( $view ){
+            $query->andWhere(['participatesin.userid' => Yii::$app->user->identity->id]);
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['resources_count'] = [
+            // The tables are the ones our relation are configured to
+            // in my case they are prefixed with "tbl_"
+            'asc' => ['resources_count' => SORT_ASC],
+            'desc' => ['resources_count' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['questions_count'] = [
+            // The tables are the ones our relation are configured to
+            // in my case they are prefixed with "tbl_"
+            'asc' => ['questions_count' => SORT_ASC],
+            'desc' => ['questions_count' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['active'] = [
+            // The tables are the ones our relation are configured to
+            // in my case they are prefixed with "tbl_"
+            'asc' => ['surveys.active' => SORT_ASC],
+            'desc' => ['surveys.active' => SORT_DESC],
+        ];
 
         $dataProvider->sort->attributes['user'] = [
             // The tables are the ones our relation are configured to
@@ -76,6 +118,13 @@ class SurveysSearch extends Surveys
             // in my case they are prefixed with "tbl_"
             'asc' => ['owner_username' => SORT_ASC],
             'desc' => ['owner_username' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['rates_count'] = [
+            // The tables are the ones our relation are configured to
+            // in my case they are prefixed with "tbl_"
+            'asc' => ['rates_count' => SORT_ASC],
+            'desc' => ['rates_count' => SORT_DESC],
         ];
 
         if (!($this->load($params) && $this->validate())) {
@@ -123,7 +172,7 @@ class SurveysSearch extends Surveys
         // exit(0);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['attributes' => ['owner', 'owner_username', 'ends', 'name', 'username', 'participants_count']]
+            'sort' => ['attributes' => ['owner', 'owner_username', 'ends', 'name', 'username', 'participants_count', 'resources_count', 'questions_count', 'rates_count']]
         ]);
         return $dataProvider;
         // $this->load($params);

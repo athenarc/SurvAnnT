@@ -15,6 +15,7 @@ use Yii;
  * @property string $created
  *
  * @property Resources[] $resources
+ * @property Rate[] $rates
  * @property Surveytocollections[] $surveytocollections
  * @property User $user
  */
@@ -86,5 +87,15 @@ class Collection extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'userid']);
+    }
+
+    /**
+     * Gets query for [[Rates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRates()
+    {
+        return $this->hasMany(Rate::className(), ['collectionid' => 'id']);
     }
 }

@@ -26,7 +26,9 @@ use Yii;
  * @property int|null $allowusers
  * @property string $collection
  *
+ * @property Collection $collection
  * @property User $owner
+ * @property Rate[] $rates
  * @property Surveytoresources[] $surveytoresources
  */
 class Resources extends \yii\db\ActiveRecord
@@ -130,6 +132,16 @@ class Resources extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Collection]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCollection()
+    {
+        return $this->hasOne(Collection::className(), ['id' => 'collectionid']);
+    }
+
+    /**
      * Gets query for [[Owner]].
      *
      * @return \yii\db\ActiveQuery
@@ -191,5 +203,23 @@ class Resources extends \yii\db\ActiveRecord
             $resources = [$resource];
         }
         return $resources;
+    }
+
+    /**
+     * Gets query for [[Rates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRates()
+    {
+        return $this->hasMany(Rate::className(), ['resourceid' => 'id']);
+    }
+
+    public function getNumberOfRatings($surveyid)
+    {
+
+        $resource = Resources::findOne($this->id);
+        $ratings_count = $resource->find()->joinWith(['rates'])->select(['resources.id', 'surveyid', 'count(distinct userid, resourceid) as RatingsCount'])->where(['rate.surveyid' => $surveyid])->groupBy('resources.id')->asArray()->one();
+        return ( isset( $ratings_count['RatingsCount'] ) ) ? $ratings_count['RatingsCount'] : 0;
     }
 }

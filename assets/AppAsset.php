@@ -33,6 +33,9 @@ class AppAsset extends AssetBundle
         'js/surveyview.js',
         'js/resourcecreate.js',
         'js/acceptusers.js',
+        'js/questionscreate.js',
+        'js/badgescreate.js',
+        'js/surveyoverview.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

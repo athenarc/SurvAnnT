@@ -27,7 +27,7 @@ $date = date('Y-m-d hh:mm', time());
                     <td class = "dataset-header-column"> Name </td>
                     <td class = "dataset-header-column"> Starts </td>
                     <td class = "dataset-header-column"> Ends </td>
-                    <td class = "dataset-header-column"> Permissions <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all raters, or Locked to invite those that you want." style = "color: white !important;"></a></td>
+                    <td class = "dataset-header-column"> Availability <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all raters, or Locked to invite those that you want." style = "color: white !important;"></a></td>
                 </tr>
                 <tr>
                     <td><?= $form->field($survey, 'name')->textInput()->label(false) ?></td>

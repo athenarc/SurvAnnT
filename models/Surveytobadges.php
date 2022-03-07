@@ -12,8 +12,8 @@ use Yii;
  * @property int|null $badgeid
  * @property int|null $ownerid
  * @property string $created
- * @property int|null $ratecondition
- * @property int|null $surveycondition
+ * @property int $ratecondition
+ * @property int $surveycondition
  *
  * @property Badges $badge
  * @property User $owner
@@ -38,6 +38,7 @@ class Surveytobadges extends \yii\db\ActiveRecord
             [['surveyid', 'badgeid', 'ownerid'], 'integer'],
             [['created', 'ratecondition', 'surveycondition'], 'safe'],
             [['ratecondition', 'surveycondition'], 'integer'],
+            [['ratecondition', 'surveycondition'], 'default', 'value' => 0],
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
             [['badgeid'], 'exist', 'skipOnError' => true, 'targetClass' => Badges::className(), 'targetAttribute' => ['badgeid' => 'id']],
             [['surveyid'], 'exist', 'skipOnError' => true, 'targetClass' => Surveys::className(), 'targetAttribute' => ['surveyid' => 'id']],

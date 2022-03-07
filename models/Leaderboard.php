@@ -5,26 +5,25 @@ use webvimark\modules\UserManagement\models\User;
 use Yii;
 
 /**
- * This is the model class for table "participatesin".
+ * This is the model class for table "leaderboard".
  *
  * @property int $id
- * @property int|null $surveyid
- * @property int|null $userid
- * @property int|null $owner
+ * @property int $userid
+ * @property int $surveyid
+ * @property int $points
  * @property string $created
- * @property int $request
- * @property int $finished
+ *
  * @property Surveys $survey
  * @property User $user
  */
-class Participatesin extends \yii\db\ActiveRecord
+class Leaderboard extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'participatesin';
+        return 'leaderboard';
     }
 
     /**
@@ -33,8 +32,9 @@ class Participatesin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['surveyid', 'userid', 'owner'], 'integer'],
-            [['created', 'request', 'finished'], 'safe'],
+            [['userid', 'surveyid'], 'required'],
+            [['userid', 'surveyid', 'points'], 'integer'],
+            [['created'], 'safe'],
             [['userid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userid' => 'id']],
             [['surveyid'], 'exist', 'skipOnError' => true, 'targetClass' => Surveys::className(), 'targetAttribute' => ['surveyid' => 'id']],
         ];
@@ -47,12 +47,10 @@ class Participatesin extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'surveyid' => 'Surveyid',
             'userid' => 'Userid',
-            'owner' => 'Owner',
+            'surveyid' => 'Surveyid',
+            'points' => 'Points',
             'created' => 'Created',
-            'request' => 'Request',
-            'finished' => 'Finished',
         ];
     }
 
@@ -73,7 +71,6 @@ class Participatesin extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-
         return $this->hasOne(User::className(), ['id' => 'userid']);
     }
 }

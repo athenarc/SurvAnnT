@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Φιλοξενητής: 127.0.0.1
--- Χρόνος δημιουργίας: 03 Μαρ 2022 στις 10:56:32
+-- Χρόνος δημιουργίας: 07 Μαρ 2022 στις 18:27:54
 -- Έκδοση διακομιστή: 10.4.11-MariaDB
 -- Έκδοση PHP: 7.2.30
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Βάση δεδομένων: `survannt`
 --
-CREATE DATABASE IF NOT EXISTS `survannt` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `survannt`;
 
 -- --------------------------------------------------------
 
@@ -29,7 +27,6 @@ USE `survannt`;
 -- Δομή πίνακα για τον πίνακα `auth_assignment`
 --
 
-DROP TABLE IF EXISTS `auth_assignment`;
 CREATE TABLE `auth_assignment` (
   `item_name` varchar(64) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -48,6 +45,8 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 ('Rater', 3, 1643881767),
 ('Rater', 4, 1643819731),
 ('Rater', 22, 1645091029),
+('Rater', 36, 1646578077),
+('Rater', 37, 1646578076),
 ('Rater', 41, 1646230808),
 ('User', 21, 1644328794),
 ('User', 22, 1645089764),
@@ -64,7 +63,6 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
 -- Δομή πίνακα για τον πίνακα `auth_item`
 --
 
-DROP TABLE IF EXISTS `auth_item`;
 CREATE TABLE `auth_item` (
   `name` varchar(64) NOT NULL,
   `type` int(11) NOT NULL,
@@ -156,6 +154,7 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/site/error', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/index', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/invite-user', 3, NULL, NULL, NULL, 1645966191, 1645966191, NULL),
+('/site/leaderboard', 3, NULL, NULL, NULL, 1646663654, 1646663654, NULL),
 ('/site/login', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/logout', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/my-surveys-view', 3, NULL, NULL, NULL, 1643823224, 1643823224, NULL),
@@ -175,6 +174,7 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/site/resource-update', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/survey-create', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
 ('/site/survey-delete', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
+('/site/survey-overview', 3, NULL, NULL, NULL, 1646566575, 1646566575, NULL),
 ('/site/survey-participants', 3, NULL, NULL, NULL, 1643898999, 1643898999, NULL),
 ('/site/survey-rate', 3, NULL, NULL, NULL, 1643823224, 1643823224, NULL),
 ('/site/survey-updates', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
@@ -289,7 +289,6 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 -- Δομή πίνακα για τον πίνακα `auth_item_child`
 --
 
-DROP TABLE IF EXISTS `auth_item_child`;
 CREATE TABLE `auth_item_child` (
   `parent` varchar(64) NOT NULL,
   `child` varchar(64) NOT NULL
@@ -318,6 +317,7 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('adminPermissions', '/site/error'),
 ('adminPermissions', '/site/index'),
 ('adminPermissions', '/site/invite-user'),
+('adminPermissions', '/site/leaderboard'),
 ('adminPermissions', '/site/my-surveys-view'),
 ('adminPermissions', '/site/participants-invite'),
 ('adminPermissions', '/site/questions-create'),
@@ -327,6 +327,7 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('adminPermissions', '/site/resource-create'),
 ('adminPermissions', '/site/survey-create'),
 ('adminPermissions', '/site/survey-delete'),
+('adminPermissions', '/site/survey-overview'),
 ('adminPermissions', '/site/survey-participants'),
 ('adminPermissions', '/site/survey-rate'),
 ('adminPermissions', '/site/survey-updates'),
@@ -423,7 +424,6 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 -- Δομή πίνακα για τον πίνακα `auth_item_group`
 --
 
-DROP TABLE IF EXISTS `auth_item_group`;
 CREATE TABLE `auth_item_group` (
   `code` varchar(64) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -448,7 +448,6 @@ INSERT INTO `auth_item_group` (`code`, `name`, `created_at`, `updated_at`) VALUE
 -- Δομή πίνακα για τον πίνακα `auth_rule`
 --
 
-DROP TABLE IF EXISTS `auth_rule`;
 CREATE TABLE `auth_rule` (
   `name` varchar(64) NOT NULL,
   `data` text DEFAULT NULL,
@@ -462,7 +461,6 @@ CREATE TABLE `auth_rule` (
 -- Δομή πίνακα για τον πίνακα `badges`
 --
 
-DROP TABLE IF EXISTS `badges`;
 CREATE TABLE `badges` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -478,7 +476,6 @@ CREATE TABLE `badges` (
 -- Δομή πίνακα για τον πίνακα `collection`
 --
 
-DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -494,7 +491,6 @@ CREATE TABLE `collection` (
 -- Δομή πίνακα για τον πίνακα `fields`
 --
 
-DROP TABLE IF EXISTS `fields`;
 CREATE TABLE `fields` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -507,7 +503,6 @@ CREATE TABLE `fields` (
 -- Δομή πίνακα για τον πίνακα `invitations`
 --
 
-DROP TABLE IF EXISTS `invitations`;
 CREATE TABLE `invitations` (
   `id` int(11) NOT NULL,
   `hash` varchar(255) NOT NULL,
@@ -519,10 +514,23 @@ CREATE TABLE `invitations` (
 -- --------------------------------------------------------
 
 --
+-- Δομή πίνακα για τον πίνακα `leaderboard`
+--
+
+CREATE TABLE `leaderboard` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `surveyid` int(11) NOT NULL,
+  `points` int(10) NOT NULL DEFAULT 0,
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Δομή πίνακα για τον πίνακα `migration`
 --
 
-DROP TABLE IF EXISTS `migration`;
 CREATE TABLE `migration` (
   `version` varchar(180) NOT NULL,
   `apply_time` int(11) DEFAULT NULL
@@ -534,14 +542,14 @@ CREATE TABLE `migration` (
 -- Δομή πίνακα για τον πίνακα `participatesin`
 --
 
-DROP TABLE IF EXISTS `participatesin`;
 CREATE TABLE `participatesin` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
   `userid` int(11) DEFAULT NULL,
   `owner` int(1) DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `request` int(11) NOT NULL DEFAULT 1
+  `request` int(11) NOT NULL DEFAULT 1,
+  `finished` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -550,7 +558,6 @@ CREATE TABLE `participatesin` (
 -- Δομή πίνακα για τον πίνακα `questions`
 --
 
-DROP TABLE IF EXISTS `questions`;
 CREATE TABLE `questions` (
   `id` int(11) NOT NULL,
   `ownerid` int(11) DEFAULT NULL,
@@ -566,10 +573,27 @@ CREATE TABLE `questions` (
 -- --------------------------------------------------------
 
 --
+-- Δομή πίνακα για τον πίνακα `rate`
+--
+
+CREATE TABLE `rate` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `surveyid` int(11) NOT NULL,
+  `resourceid` int(11) NOT NULL,
+  `questionid` int(11) NOT NULL,
+  `collectionid` int(11) NOT NULL,
+  `answer` text DEFAULT NULL,
+  `answertype` varchar(20) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Δομή πίνακα για τον πίνακα `resources`
 --
 
-DROP TABLE IF EXISTS `resources`;
 CREATE TABLE `resources` (
   `id` int(11) NOT NULL,
   `ownerid` int(11) DEFAULT NULL,
@@ -595,7 +619,6 @@ CREATE TABLE `resources` (
 -- Δομή πίνακα για τον πίνακα `surveys`
 --
 
-DROP TABLE IF EXISTS `surveys`;
 CREATE TABLE `surveys` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -608,7 +631,10 @@ CREATE TABLE `surveys` (
   `maxRespPerRes` int(11) DEFAULT NULL,
   `minResEv` int(11) DEFAULT NULL,
   `maxResEv` int(11) DEFAULT NULL,
-  `fields` text NOT NULL
+  `fields` text NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `badgesused` tinyint(1) NOT NULL DEFAULT 0,
+  `completed` tinyint(1) NOT NULL DEFAULT 0
 ) ;
 
 -- --------------------------------------------------------
@@ -617,7 +643,6 @@ CREATE TABLE `surveys` (
 -- Δομή πίνακα για τον πίνακα `surveytobadges`
 --
 
-DROP TABLE IF EXISTS `surveytobadges`;
 CREATE TABLE `surveytobadges` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
@@ -634,7 +659,6 @@ CREATE TABLE `surveytobadges` (
 -- Δομή πίνακα για τον πίνακα `surveytocollections`
 --
 
-DROP TABLE IF EXISTS `surveytocollections`;
 CREATE TABLE `surveytocollections` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
@@ -649,7 +673,6 @@ CREATE TABLE `surveytocollections` (
 -- Δομή πίνακα για τον πίνακα `surveytoquestions`
 --
 
-DROP TABLE IF EXISTS `surveytoquestions`;
 CREATE TABLE `surveytoquestions` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
@@ -664,7 +687,6 @@ CREATE TABLE `surveytoquestions` (
 -- Δομή πίνακα για τον πίνακα `surveytoresources`
 --
 
-DROP TABLE IF EXISTS `surveytoresources`;
 CREATE TABLE `surveytoresources` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
@@ -679,7 +701,6 @@ CREATE TABLE `surveytoresources` (
 -- Δομή πίνακα για τον πίνακα `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
@@ -706,26 +727,13 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `confirmation_token`, `status`, `superadmin`, `created_at`, `updated_at`, `registration_ip`, `bind_to_ip`, `email`, `email_confirmed`, `name`, `surname`, `fields`, `orcidid`, `availability`) VALUES
-(1, 'superadmin', '1nIM-Vq57uEw2C4VrMuYVrcX_u4tOMMT', '$2y$13$Z0JPtazBC263YU4x4h2M7OP3qBgoX1gWhJgp43cAPc3g.d0lgox2i', NULL, 1, 1, 1643795415, 1643795415, NULL, NULL, NULL, 0, '', '', '', '', 1),
-(2, 'tzerefos', '_j77UNgktonk42e_rvRRnmnVT1sKwGmN', '$2y$13$SPjiQdD6Diui1aAF1tFpoO7oFQwTrtct75TqjqEDHEl5WblzGdXOO', NULL, 1, 0, 1643796716, 1646226393, '127.0.0.1', '', 'tzerefos@athenarc.gr', 1, 'Anargiros', 'Tzerefos', '', '0000-0001-6439-959X', 1),
-(3, 'Kanellos', 'zCZa4gsHADXVfut-MwngxJXs1c7d0nSm', '$2y$13$EWH10aLzYzku8ZamNC.Jyu/erErNoizKLgEK9QwTuhRAB2eLvywLC', NULL, 1, 0, 1643818301, 1643818301, '127.0.0.1', '', 'kanellos@athenarc.gr', 0, 'Ilias', 'Kanellos', '', '', 1),
-(4, 'Vergoulis', 'Ui9xRwGmo1cuYoeFTHDshKOPDKTJYMEu', '$2y$13$CCmfEb1BRVYaFtIoTlgmD.ZKz4HKORsOhBUKMCQWzQm9NBNbSYjF.', NULL, 1, 0, 1643818893, 1643818893, '127.0.0.1', '', 'vergoulis@athenarc.gr', 0, 'Thanasis', 'Vergoulis', '', '', 1),
-(21, 'SimpleUser', 'lDCPy-FCXsvL11SppePNZ3R4hvlhOWiU', '$2y$13$qJBECdN1sNmXPUWlnvhCIOtv84pUWqKYIsjxQ.a.umoqd7NAGDAbC', NULL, 1, 0, 1644328794, 1644328794, '127.0.0.1', '', 'user@user.gr', 0, 'userName', 'userSurname', '', '', 1),
-(22, 'RaterUser', 'prCzHQP5UWqcDPteKpsSCVr0WQ19kmuA', '$2y$13$Dv.twR8Kti1aFfL4KZLLj.vW4a8UCaG3w4BfxhmkwqwBi5jvHzg7.', NULL, 1, 0, 1645089764, 1645089764, '127.0.0.1', '', 'rater@rater.gr', 0, 'raterName', 'raterSurname', '', '', 1),
-(31, 'test', 'v1Qi91FYxljlCg2HQKt6E1IT_1FF5Hkw', '$2y$13$jj4nFHWf0ZgL7vWd7Fkswuyo.pF4lCF9MzlkiCJFPlo7vsT2CE94q', NULL, 1, 0, 1646061455, 1646061455, '127.0.0.1', '', 'test@test.com', 0, 'test', 'test', 'Game Design', '', 1),
-(32, 'test2', 'G_0qOYIZDaGZX3tUbZ6HxW4LjqjpXAkN', '$2y$13$BOsG6zER1cYmgs1a9c./jOPRi5iiRIG4MSZX9MRr.yBrlyXxkk5im', NULL, 1, 0, 1646066647, 1646067418, '127.0.0.1', '', 'anargirosdare@gmail.com', 1, 'test', 'test', 'Computer-Human Interface', '', 1),
-(35, 'test3', 'Jy8TT7lwcXNyUKm-9UHL25kbScHhnGN5', '$2y$13$gsJHrnbc.2ePF00k.9jF4uVYgWrrKAdAQ2LVdd5WSN/usqAtJZMNy', NULL, 1, 0, 1646129169, 1646129169, '127.0.0.1', '', 'test3@test.com', 1, 'test3', 'test3', 'Artificial Intelligence&&Computer-Human Interface', '0000-0001-6439-959X', 1),
-(36, 'test4', 'R9VWfnYtoDktF2SRR2gihH62Aa3WNYky', '$2y$13$D3GWM3xt35MlPQWTBSyHe.j1oGe9z.rWIfLgxnxdV9HrZMuSdIOC6', NULL, 1, 0, 1646129682, 1646133727, '127.0.0.1', '', 'test4@test.com', 1, 'test4', 'test4', 'Networks&&Computer Graphics&&Information Security', 'test4', 1),
-(37, 'availability', '9yRqx73VM90Z6TUlRq2963nUrG8PBH7-', '$2y$13$41YBn0siDGoXIbP/5Xaq9ezF3sR3uTa4X6wf2f/ibJt5R1L2eLUBa', NULL, 1, 0, 1646224864, 1646226356, '127.0.0.1', '', 'availability@t.com', 1, 'availability', 'availability', '', '', 1),
-(41, 'test6', 'rx4EWGSPA9wQ_1o6fPqmikHdqNGymGkN', '$2y$13$wDJTyy8MkY69xi18gHNIKuHg0lHOum2WZ72r.jyfwwXkOlHdqagzS', NULL, 1, 0, 1646228642, 1646228642, '127.0.0.1', '', 'test6@t.com', 1, 'test6', 'test6', 'Databases&&Data Management', '', 1);
-
+(1, 'superadmin', '1nIM-Vq57uEw2C4VrMuYVrcX_u4tOMMT', '$2y$13$Z0JPtazBC263YU4x4h2M7OP3qBgoX1gWhJgp43cAPc3g.d0lgox2i', NULL, 1, 1, 1643795415, 1643795415, NULL, NULL, NULL, 0, '', '', '', '', 1);
 -- --------------------------------------------------------
 
 --
 -- Δομή πίνακα για τον πίνακα `usertobadges`
 --
 
-DROP TABLE IF EXISTS `usertobadges`;
 CREATE TABLE `usertobadges` (
   `id` int(11) NOT NULL,
   `surveyid` int(11) DEFAULT NULL,
@@ -740,7 +748,6 @@ CREATE TABLE `usertobadges` (
 -- Δομή πίνακα για τον πίνακα `user_visit_log`
 --
 
-DROP TABLE IF EXISTS `user_visit_log`;
 CREATE TABLE `user_visit_log` (
   `id` int(11) NOT NULL,
   `token` varchar(255) NOT NULL,
@@ -822,6 +829,14 @@ ALTER TABLE `invitations`
   ADD KEY `invitations_ibfk_1` (`surveyid`);
 
 --
+-- Ευρετήρια για πίνακα `leaderboard`
+--
+ALTER TABLE `leaderboard`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leaderboard_ibfk_1` (`userid`),
+  ADD KEY `leaderboard_ibfk_2` (`surveyid`);
+
+--
 -- Ευρετήρια για πίνακα `migration`
 --
 ALTER TABLE `migration`
@@ -841,6 +856,17 @@ ALTER TABLE `participatesin`
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `questions_ibfk_1` (`ownerid`);
+
+--
+-- Ευρετήρια για πίνακα `rate`
+--
+ALTER TABLE `rate`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `rate_ibfk_1` (`userid`),
+  ADD KEY `rate_ibfk_2` (`surveyid`),
+  ADD KEY `rate_ibfk_3` (`resourceid`),
+  ADD KEY `rate_ibfk_4` (`questionid`),
+  ADD KEY `rate_ibfk_5` (`collectionid`);
 
 --
 -- Ευρετήρια για πίνακα `resources`
@@ -944,6 +970,12 @@ ALTER TABLE `invitations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT για πίνακα `leaderboard`
+--
+ALTER TABLE `leaderboard`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT για πίνακα `participatesin`
 --
 ALTER TABLE `participatesin`
@@ -953,6 +985,12 @@ ALTER TABLE `participatesin`
 -- AUTO_INCREMENT για πίνακα `questions`
 --
 ALTER TABLE `questions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT για πίνακα `rate`
+--
+ALTER TABLE `rate`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1053,6 +1091,13 @@ ALTER TABLE `invitations`
   ADD CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`surveyid`) REFERENCES `surveys` (`id`);
 
 --
+-- Περιορισμοί για πίνακα `leaderboard`
+--
+ALTER TABLE `leaderboard`
+  ADD CONSTRAINT `leaderboard_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `leaderboard_ibfk_2` FOREIGN KEY (`surveyid`) REFERENCES `surveys` (`id`);
+
+--
 -- Περιορισμοί για πίνακα `participatesin`
 --
 ALTER TABLE `participatesin`
@@ -1064,6 +1109,16 @@ ALTER TABLE `participatesin`
 --
 ALTER TABLE `questions`
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`ownerid`) REFERENCES `user` (`id`);
+
+--
+-- Περιορισμοί για πίνακα `rate`
+--
+ALTER TABLE `rate`
+  ADD CONSTRAINT `rate_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `rate_ibfk_2` FOREIGN KEY (`surveyid`) REFERENCES `surveys` (`id`),
+  ADD CONSTRAINT `rate_ibfk_3` FOREIGN KEY (`resourceid`) REFERENCES `resources` (`id`),
+  ADD CONSTRAINT `rate_ibfk_4` FOREIGN KEY (`questionid`) REFERENCES `questions` (`id`),
+  ADD CONSTRAINT `rate_ibfk_5` FOREIGN KEY (`collectionid`) REFERENCES `collection` (`id`);
 
 --
 -- Περιορισμοί για πίνακα `resources`

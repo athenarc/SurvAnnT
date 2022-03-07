@@ -8,8 +8,8 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 <div class="badgescreate">
+    <div class = 'error-div' style = "display: none;"></div>
     <div class ="outside-div">
-
         <div class = "row header-row dataset-header-row">
             <?php foreach ($tabs as $tab => $url): ?>
                 <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
@@ -20,10 +20,11 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
             <div class = "row" style = "margin:3%;">
                 <div class = "col-md-12">
-                    <?=  Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name']) ?>
+                    <?= Html::checkbox('badges-used', $survey->badgesused, ['id' => 'badges-used', 'label' => 'Use Badges on this Campaign']) ?> &nbsp;
+                    <?=  Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name', 'style' => ($survey->badgesused) ? "display: block;" : "display: none;"]) ?>
                 </div>
             </div>
-            <div class = "datasets-table edit-tools"> 
+            <div class = "datasets-table edit-tools" style = "display: <?= ($survey->badgesused) ? 'block' : 'none' ?>"> 
                 
                 <div class = "row " >
                     <div class = "col-md-3">
@@ -44,7 +45,7 @@ use yii\widgets\ActiveForm;
                 </div>
 
             </div>
-            <div class = "datasets-table"> 
+            <div class = "datasets-table" style = "display: <?= ($survey->badgesused) ? 'block' : 'none' ?>"> 
                 <?php foreach ($badges as $key => $badge): ?>
                     
                     <div class = "resource-object-<?=$key?>">
@@ -52,8 +53,8 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($badge, "[$key]ownerid")->hiddenInput()->label(false) ?>
                         <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "3"> 
                             <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
-                                <?= Html::checkbox('agree-badge-'.$key, in_array($surveyid, array_column($badge->surveytobadges, 'surveyid') ) ? true : false, ['id' => 'use-badge-'.$key, 'label' => 'Use']) ?> &nbsp;
-                                <?= ( $userid == $badge->ownerid || ( $badge->id == '') ) ? $form->field($badge, "[$key]allowusers")->checkbox(['label' => 'Allow', 'id' => 'badge-allowusers-'.$key]) : '' ?>
+                                <?= Html::checkbox('agree-badge-'.$key, $badge->isNewRecord || in_array($surveyid, array_column($badge->surveytobadges, 'surveyid') ) ? true : false, ['id' => 'use-badge-'.$key, 'label' => 'Use']) ?> &nbsp;
+                                <?= ( $userid == $badge->ownerid || ( $badge->id == '') ) ? $form->field($badge, "[$key]allowusers")->checkbox(['label' => 'Public', 'id' => 'badge-allowusers-'.$key]) : '' ?>
 
                             </span>
                             <span class = "center" style = "width: 40%;">
@@ -68,11 +69,13 @@ use yii\widgets\ActiveForm;
                             <table class="table table-striped table-bordered participants-table table-<?=$key?>">  
                                 <tr class = "dataset-table-header-row">
                                     <td class = "dataset-header-column"> Name </td>
-                                    <td class = "dataset-header-column"> Image </td>
-                                    <td class = "dataset-header-column"> Survey Condition 
+                                    <?php if ( ( $userid == $badge->ownerid ) || ( $badge->id == '' ) ) : ?>
+                                        <td class = "dataset-header-column"> Image </td>
+                                    <?php endif; ?>
+                                    <td class = "dataset-header-column"> Rating Condition 
                                         <a class="fas fa-info-circle tooltip-icon" title="Number of surveys to earn this badge"></a>
                                     </td>
-                                    <td class = "dataset-header-column"> Rating Condition 
+                                    <td class = "dataset-header-column"> Survey Condition 
                                         <a class="fas fa-info-circle tooltip-icon" title="Number of resources evaluated to earn this badge"></a>
                                     </td>
                                     <td class = "dataset-header-column"> Badge Preview </td>
@@ -81,11 +84,11 @@ use yii\widgets\ActiveForm;
                                     <td>
                                         <?= $form->field($badge, "[$key]name")->textInput(['disabled'=> ( ( $userid == $badge->ownerid ) || ( $badge->id == '' ) ) ? false : true])->label(false) ?>
                                     </td>
-                                    <td>
-                                        <?php if ( ( $userid == $badge->ownerid ) || ( $badge->id == '' ) ) : ?>
+                                    <?php if ( ( $userid == $badge->ownerid ) || ( $badge->id == '' ) ) : ?>
+                                        <td>
                                             <?= $form->field($badge, "[$key]image")->fileInput(['id' => 'image-'.$key, 'multiple' => false ])->label(false) ?>
-                                        <?php endif; ?>
-                                    </td>
+                                        </td>
+                                    <?php endif; ?>
                                     <td>
                                         <?= $form->field($surveytobadges_arr[$key], "[$key]ratecondition")->textInput(['id' => 'rate-condition-'.$key])->label(false) ?>
                                     </td>
@@ -104,7 +107,7 @@ use yii\widgets\ActiveForm;
                     <div class = "col-md-11">
                     </div>
                     <div class = "col-md-1">
-                        <?= Html::a( 'Add', '', ['class' => 'btn btn-primary submit-button add-button', 'name' => 'test-name']) ?>
+                        <?= Html::a( 'Add', '', ['class' => 'btn btn-primary submit-button add-badge', 'name' => 'test-name']) ?>
                     </div>
                 </div>
             </div>
@@ -114,7 +117,7 @@ use yii\widgets\ActiveForm;
                     <?= Html::a( 'Previous', $tabs['Participants']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
                 </div>
                 <div class = "col-md-1">
-                    <?= Html::submitButton('Finish', ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
                 </div>
             </div>
         <?php ActiveForm::end(); ?>

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use webvimark\extensions\BootstrapSwitch\BootstrapSwitch;
 use kartik\select2\Select2;
-
+use app\models\Fields;
 /**
  * @var yii\web\View $this
  * @var webvimark\modules\UserManagement\models\User $model
@@ -16,14 +16,7 @@ use kartik\select2\Select2;
 
 <div class="user-form">
 	<?php 
-	$fields = [];
-	foreach (Yii::$app->params['fields'] as $key => $value) {
-        $fields[$value] = $value;
-    }
-
-    foreach ( $model->fields as $key => $value ) {
-        $fields[$value] = $value;
-    }
+	$fields = array_column ( Fields::find()->select(['name'])->asArray()->all(), 'name' );
 
 	?>
 	<?php $form = ActiveForm::begin([

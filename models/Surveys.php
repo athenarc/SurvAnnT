@@ -19,15 +19,24 @@ use Yii;
  * @property int $minResEv
  * @property int $maxResEv
  * @property string $fields
- *
- * @property Dataset[] $datasets
+ * @property int $active
+ * @property int $badgesused
+ * @property int $completed
+ * @property Invitations[] $invitations
  * @property Participatesin[] $participatesins
- * @property Questions[] $questions
+ * @property Rate[] $rates
+ * @property Surveytobadges[] $surveytobadges
+ * @property Surveytocollections[] $surveytocollections
  * @property Surveytoquestions[] $surveytoquestions
  * @property Surveytoresources[] $surveytoresources
+ * @property Usertobadges[] $usertobadges
  */
 class Surveys extends \yii\db\ActiveRecord
 {
+    public $rates_count;
+    public $participants_count;
+    public $resources_count;
+    public $questions_count;
     /**
      * {@inheritdoc}
      */
@@ -43,7 +52,7 @@ class Surveys extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'about'], 'required'],
-            [['created', 'starts', 'ends', 'fields'], 'safe'],
+            [['created', 'starts', 'ends', 'fields', 'active', 'badgesused', 'completed'], 'safe'],
             ['ends', 'compare', 'compareAttribute' => 'starts', 'operator'=>'>','message' => 'Survey can not expire before it starts!'],
             [['locked', 'minRespPerRes', 'maxRespPerRes', 'minResEv', 'maxResEv'], 'integer'],
             [['about'], 'string'],
@@ -69,7 +78,8 @@ class Surveys extends \yii\db\ActiveRecord
             'minRespPerRes' => 'Minimum Responses Per Resource',
             'maxRespPerRes' => 'Maximum Responses Per Resource',
             'minResEv' => 'Minimum Resources Evaluated',
-            'maxResEv' => 'Maximum Resources Evaluated'
+            'maxResEv' => 'Maximum Resources Evaluated',
+            'active' => 'Active',
         ];
     }
 
@@ -95,9 +105,11 @@ class Surveys extends \yii\db\ActiveRecord
 
     public function getOwner()
     {
-        return $this->hasMany(Participatesin::className(), ['id' => 'userid'])->select(['id', 'username'])->viaTable('participatesin', ['surveyid' => 'id'], function($query){
-        $query->where(['owner' => 1]);
-    })->asArray()->all();
+    //     return $this->hasMany(Participatesin::className(), ['id' => 'userid'])->select(['id', 'owner'])->viaTable('participatesin', ['surveyid' => 'id'], function($query){
+    //     $query->where(['owner' => 1]);
+    // })->createCommand()->getRawSql();
+        $owner = $this->find()->joinWith(['participatesin'])->select(['surveys.id', 'userid'])->where(['surveys.id' => $this->id, 'owner' => 1 ])->asArray()->all();
+        return array_column($owner, 'userid');
     }
 
     public function getUser(){
@@ -119,18 +131,207 @@ class Surveys extends \yii\db\ActiveRecord
         return $this->hasMany(Surveytoquestions::className(), ['surveyid' => 'id']);
     }
 
+    public function getSurveytocollections()
+    {
+        return $this->hasMany(Surveytocollections::className(), ['surveyid' => 'id']);
+    }
+
+    public function getCollection()
+    {
+        return $this->hasMany(Collection::className(), ['id' => 'collectionid'])->viaTable('surveytocollections', ['surveyid' => 'id']);
+    }
+
+    public function getQuestions()
+    {
+        return $this->hasMany(Questions::className(), ['id' => 'questionid'])->viaTable('surveytoquestions', ['surveyid' => 'id']);
+    }
+
     /**
      * Gets query for [[Surveytoresources]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSurveytoresources()
-    {
-        return $this->hasMany(Surveytoresources::className(), ['surveyid' => 'id']);
-    }
+    // public function getSurveytoresources()
+    // {
+    //     return $this->hasMany(Surveytoresources::className(), ['surveyid' => 'id']);
+    // }
 
     public function getResources()
     {
-        return $this->hasMany(Resources::className(), ['id' => 'resourceid'])->viaTable('surveytoresources', ['surveyid' => 'id']);
+        return $this->hasMany(Resources::className(), ['id' => 'resourceid'])->viaTable('surveytocollections', ['id' => 'surveyid'])->viaTable('collection', ['collectionid' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Invitations]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvitations()
+    {
+        return $this->hasMany(Invitations::className(), ['surveyid' => 'id']);
+    }
+    /**
+     * Gets query for [[Rates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRates()
+    {
+        return $this->hasMany(Rate::className(), ['surveyid' => 'id']);
+    }
+
+    public function getNumberOfRatings()
+    {
+
+        $survey = Surveys::findOne($this->id);
+        $ratings_count = $survey->find()->joinWith(['rates'])->select(['surveys.id', 'count(distinct userid, resourceid) as RatingsCount'])->where(['surveyid' => $this->id])->groupBy('surveys.id')->asArray()->one();
+        return ( isset( $ratings_count['RatingsCount'] ) ) ? $ratings_count['RatingsCount'] : 0;
+    } 
+
+
+    public function getOverview($surveyid, $limited = false){
+
+            $table = '<table style = "width: 100%; text-align: center; ">';
+            $survey = (array)Surveys::find()->select(['id', 'name', 'starts', 'ends', 'locked', 'about', 'minRespPerRes as `Minimum Responses Per Resource`', 'maxRespPerRes as `Maximum Responses Per Resource`', 'minResEv as `Minimum Resources Evaluated`', 'maxResEv as `Maximum Resources Evaluated`', 'fields' ])->where(['id' => $surveyid])->asArray()->one();
+            
+            
+
+            $collection = Collection::find()->joinWith(['surveytocollections'])->where(['surveyid' => $surveyid])->one();
+            
+            $resources_q = Resources::find()->where(['collectionid' => $collection->id])->asArray()->all();
+
+            foreach ($resources_q as $key => $value) {
+                if ( $value['type'] == 'image' ){
+                    $resources[$key]['image'] = $value['image'];
+                }else if ($value['type'] == 'text'){
+                    $resources[$key]['title'] = $value['title'];
+                    $resources[$key]['text'] = $value['text'];
+                }else if ( $value['type'] == 'article' ){
+                    $resources[$key]['title'] = $value['title'];
+                    $resources[$key]['abstract'] = $value['abstract'];
+                    $resources[$key]['pmc'] = $value['title'];
+                    $resources[$key]['doi'] = $value['text'];
+                    $resources[$key]['pubmed_id'] = $value['pubmed_id'];
+                    $resources[$key]['authors'] = $value['authors'];
+                    $resources[$key]['journal'] = $value['journal'];
+                    $resources[$key]['year'] = $value['year'];
+                }else{
+                    $resources[$key]['title'] = $value['title'];
+                }
+            }
+            
+            
+            $questions = Questions::find()->joinWith('surveytoquestions')->select(['questions.id', 'question', 'tooltip', 'answer', 'answervalues', 'answertype as `Answer Type`', 'allowusers as Public'])->where(['surveyid' => $survey['id']])->asArray()->all();
+
+            // foreach ($questions as $key => $question) {
+            //     print_r($question->attributeLabels());
+            //     echo "<br><br>";
+            // }
+            // exit(0);
+            foreach ($questions as $key => $value) {
+                unset($questions[$key]['id']);
+                if ( isset($questions[$key]['surveytoquestions']) ){
+                    unset($questions[$key]['surveytoquestions']);
+                }
+                if ( $questions[$key]['Answer Type'] != 'textInput' ){
+                    unset($questions[$key]['answer']);
+                    if( $questions[$key]['Answer Type'] == 'radioList' ){
+                        $questions[$key]['Answer Type'] = 'Radio List';
+                    }else if ( $questions[$key]['Answer Type'] == 'Likert-5' ){
+                        $questions[$key]['Answer Type'] = 'Likert 5';
+                    }else if ( $questions[$key]['Answer Type'] == 'Likert-7' ){
+                        $questions[$key]['Answer Type'] = 'Likert 7';
+                    }
+                }else{
+                    $questions[$key]['Answer Type'] != 'Text Input';
+                    unset($questions[$key]['answervalues']);
+                }
+
+                if ( $questions[$key]['Public'] == '1' ){
+                    $questions[$key]['Public'] = 'True';
+                }else{
+                    $questions[$key]['Public'] = 'False';
+                }
+
+                if ( isset( $questions[$key]['answervalues'] ) ){
+                    $answer_values = '<table>';
+                    foreach ( json_decode($questions[$key]['answervalues']) as $f ){
+                        $answer_values .= "<tr><td>".end($f)."</td><td>".key($f)."</td></tr>";
+                    }
+                    $questions[$key]['answer'] = $answer_values."</table>";
+                    unset($questions[$key]['answervalues']);
+                }
+
+            }
+            
+            
+            $participants = Participatesin::find()
+                ->joinWith(['user' => function($q){
+                    $q->select(['id', 'email', 'username', 'name', 'surname']);
+                }])->where(['surveyid' => $surveyid])->select(['userid', 'user.username', 'user.name', 'user.surname', 'user.email', 'user.fields'])->asArray()->all();
+            
+            foreach ($participants as $key => $value) {
+                if ( strpos($value['fields'], "&&") !== false ){
+                    
+                    foreach (explode("&&", $value['fields']) as $v) {
+                        $table .= "<tr><td>".$v."</td></tr>";        
+                    }   
+                    $participants[$key]['fields'] = $table."</table>"; 
+                }
+
+                unset($participants[$key]['user']);
+                unset($participants[$key]['userid']);
+            }
+
+            $badges = Badges::find()->joinWith('surveytobadges')->select(['name', 'image', 'badges.allowusers as Public', 'badges.id', 'surveycondition as `Survey Condition`', 'ratecondition as `Rating Condition`' ])->where(['surveyid' => $surveyid])->asArray()->all();
+
+            foreach ($badges as $key => $value) {
+                unset($badges[$key]['id']);
+                if ( $badges[$key]['Public'] == '1' ){
+                    $badges[$key]['Public'] = 'True';
+                }else{
+                    $badges[$key]['Public'] = 'False';
+                }
+                foreach ($value['surveytobadges'] as $k => $v) {
+                    $badges[$key]['Survey Condition'] = $v['surveycondition'];
+                    $badges[$key]['Rating Condition'] = $v['ratecondition'];
+                }
+                unset($badges[$key]['surveytobadges']);
+            }
+
+            unset($survey['id']);
+            if ( $survey['starts'] == '' ){
+                $survey['starts'] = 'Not set';
+            }
+            if ( $survey['ends'] == '' ){
+                $survey['ends'] = 'Not set';
+            }
+            if ( $survey['locked'] == '0' ){
+                $survey['locked'] = 'False';
+            }else{
+                $survey['locked'] = 'True';
+            }
+
+            if ( strpos($survey['fields'], "&&") !== false ){
+                $table = '<table style = "width: 100%; text-align: center; ">';
+                foreach (explode("&&", $survey['fields']) as $v) {
+                    $table .= "<tr><td>".$v."</td></tr>";        
+                }   
+                $survey['fields'] = $table."</table>"; 
+            }
+
+            $survey_sections['campaign'][0] = $survey;
+            // $survey_sections['collection'] = $collection;
+            $survey_sections['resources'] = $resources;
+            $survey_sections['questions'] = $questions;
+            $survey_sections['participants'] = $participants;
+            $survey_sections['badges'] = $badges;
+
+            if ( $limited ){
+                unset($survey_sections['questions']);
+                unset($survey_sections['resources']);
+            }
+
+            return $survey_sections;
     }
 }

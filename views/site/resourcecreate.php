@@ -1,5 +1,5 @@
 <?php
-
+ 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 <div class="resourcecreateformbefore">
+    <div class = 'error-div' style = "display: none;"></div>
     <div class = "outside-div">
         <div class = "row header-row dataset-header-row">
             <?php foreach ($tabs as $tab => $url): ?>
@@ -16,10 +17,11 @@ use yii\widgets\ActiveForm;
                 </div>
             <?php endforeach; ?>
         </div>
+
         <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
             <div class = "row" style = "margin:3%;">
                 <div class = "col-md-12">
-                    <?=  Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name']) ?>
+                    <?=  Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name', 'style' => "display: $tool"]) ?>
                 </div>
             </div>
             <div class = "datasets-table edit-tools" style = "display: <?= $tool ?>"> 
@@ -53,61 +55,84 @@ use yii\widgets\ActiveForm;
                         
                     </div>
                 </div>
+                <br>
+                
                 <div class = "row resources-number" >
                     <div class = "col-md-12">
                         <?= Html::a('Submit', '', ['class' => 'btn btn-primary submit-button submit-action-form', 'name' => 'submit']) ?>
                     </div>
                 </div>
-
             </div>
             
             <div class = "datasets-table"> 
-                <div class = "row" >
-                    <div class = "col-md-8 pull-right">
-                        <?=  Html::a( 'Use all', '', ['class' => 'btn submit-button pull-left use-all-button', 'name' => 'use-all', 'style' => 'float: unset !important;']) ?>
+                <h3><i>Your Collection</i></h3>
+                <hr style="background-color: white;">
+                <div class = "row resources-number" >
+                    <div class = "col-md-1">
+                        Name
                     </div>
-                    <div class = "col-md-4 pull-left">
-                        
-                            <table class="table table-striped table-bordered participants-table">  
-                                <tr class = "dataset-table-header-row">
-                                    <td class = "dataset-header-column" style = "width: 30%;"> Collection Name </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <?=  $form->field($new_collection, "name")->textInput() ?>
-                                    </td>
-                                </tr>
-                            </table>
-                       
+                    <div class="col-md-4">
+                        <?= $form->field($collection, "name")->textInput()->label(false) ?>
+                    </div>
+                    <div class="col-md-1">
+                        About
+                    </div>
+                    <div class = "col-md-6 col-md-offset-6">
+                        <?= $form->field($collection, "about")->textArea()->label(false) ?>
                     </div>
                 </div>
                 <br>
-            
                 <br>
+                <div class = "row" > 
+                    <div class="col-md-8">
+                        <?php if( $collection->isNewRecord ): ?>
+                            <h3> 
+                                <i><?= ($option == 'db-load') ? "Chose from the following publicly available collections" : 'Choose resources from selected directory' ?></i>
+                            </h3>
+                        <?php endif; ?>
+                    </div>
+                    <?php if( $collection->isNewRecord && $resource_types_option != 'questionaire' && $option != 'dir-load' ): ?>
+                        <div class = "col-md-4 text-right">
+                            <?=  Html::a( 'Select all', '', ['class' => 'btn submit-button pull-left select-all-button', 'name' => 'use-all', 'style' => 'float: unset !important;']) ?>
+                        </div>
+                    <?php elseif( ! $collection->isNewRecord ): ?>
+                        <div class = "col-md-4 text-right">
+                            <?= Html::submitButton( 'Discard Collection', ['class' => 'btn submit-button pull-left', 'name' => 'discard-collection', 'id' => 'discard-collection']) ?>                       
+                        </div>
+                    <?php endif; ?>  
+                </div>  
+           
+                <?php if( $collection->isNewRecord ): ?>
+                    <hr style="background-color: white;">
+                <?php else: ?>
+                    <br>
+                <?php endif; ?>
                 <?php foreach ($collections as $collection_key => $collection): ?>
                     <div class = "collection-<?=$collection_key?>" style = "">
                         <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "3"> 
                             <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
-                                <?= Html::checkbox('agree-collection-'.$collection_key, ! isset( $collection->id ) || in_array($surveyid, array_column($collection->surveytocollections, 'surveyid') ) ? true : false, ['id' => 'use-collection-'.$collection_key, 'label' => 'Use']) ?> &nbsp;
-                                <?= $form->field($collection, "[$collection_key]allowusers")->checkbox(['label' => 'Public']) ?>
+                                <?= ($option == 'db-load') ? Html::checkbox('agree-collection-'.$collection_key, ! isset( $collection->id ) || in_array($surveyid, array_column($collection->surveytocollections, 'surveyid') ) ? true : false, ['id' => 'use-collection-'.$collection_key, 'label' => 'Use']) : '' ?> &nbsp;
+                                <?= ( $userid == $collection->userid || ( $collection->id == '') ) ? $form->field($collection, "[$collection_key]allowusers")->checkbox(['label' => 'Public']) : '' ?>
                             </span>
                             <span class = "center" style = "width: 40%;">
-                                <?= $collection->name. ' (<i>'.$collection->getUser()->select(['username'])->asArray()->all()[0]['username'].')</i>' ?>
+                                <?=  $collection->name.' <i>('.$collection->getUser()->select(['username'])->asArray()->all()[0]['username'].')</i>' ?>
                                 
                             </span>
                             <span class = "float-right" style = "width: 30%; text-align: right;"> 
+                                
                                 &nbsp;
                                 <a id = "dataset-<?=$collection_key?>" class="fas fa-eye link-icon white hide-dataset collections"></a> 
                             </span> 
                         </div>
                         <br>
-                        <div id = "collection-resources-<?=$collection_key?>" class="" style = "width: 80%; margin: auto;">
-                            <?php $resources = ( isset( $collection->id ) ) ? $collection->getResources()->all() : $resources ?>
+                        <div id = "collection-resources-<?=$collection_key?>" class="" style = "width: 80%; margin: auto; display: none;">
+                            <?php $resources = ( isset( $collection->id ) ) ? $collection->getResources()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->all() : $resources ?>
+
                             <?php foreach ( $resources as $key => $resource): ?>
                             
                                 <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "3"> 
                                     <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
-                                        <?= Html::checkbox('agree-'.$resource->type.'-'.$key, $resource->collectionid == $collection->id ? true : false, ['id' => 'use-'.$resource->type.'-'.$key, 'label' => 'Use']) ?> &nbsp;
+                                        <?=  ($option == 'db-load') ? Html::checkbox('agree-'.$collection_key.'-'.$resource->type.'-'.$key, $resource->collectionid == $collection->id ? true : false, ['id' => 'use-'.$resource->type.'-'.$key, 'label' => 'Use']) : '' ?> &nbsp;
                                         <?= ( $userid == $resource->ownerid || ( $resource->id == '') ) ? $form->field($resource, "[$key]allowusers")->checkbox(['label' => 'Public', 'id' => $resource->type.'-allowusers-'.$key]) : '' ?>
                                     </span>
                                     <span class = "center" style = "width: 40%;">
@@ -115,14 +140,14 @@ use yii\widgets\ActiveForm;
                                     </span>
                                     <span class = "float-right" style = "width: 30%; text-align: right;"> 
                                         &nbsp;
-                                        <a id = "dataset-<?=$key?>" class="fas fa-eye link-icon white hide-dataset resources"></a> 
+                                        <a id = "dataset-<?=$collection_key?>-<?=$key?>" class="fas fa-eye link-icon white hide-dataset resources"></a> 
                                     </span> 
                                 </div>
 
-                                <div id = "resource-<?=$key?>">
+                                <div id = "resource-<?=$collection_key?>-<?=$key?>">
                                     
                                     <div class = "text resource-types" style = "display: <?= ( $resource->type == 'text' ) ? : 'none;' ?> ">
-                                        <table class="table table-striped table-bordered participants-table table-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'text') ? 'none' : '' ?> ;">  
+                                        <table class="table table-striped table-bordered participants-table table-<?=$collection_key?>-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'text') ? 'none' : '' ?> ;">  
                                             <tr class = "dataset-table-header-row">
                                                 <td class = "dataset-header-column" style = "width: 30%;"> Title </td>
                                                 <td class = "dataset-header-column" style = "width: 70%;"> Text </td>
@@ -139,7 +164,7 @@ use yii\widgets\ActiveForm;
                                     </div>
 
                                     <div class = "article resource-types" style = "display: <?= ( $resource->type == 'article' ) ? : 'none;' ?> ">
-                                        <table class="table table-striped table-bordered participants-table table-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'article') ? 'none' : '' ?> ;">  
+                                        <table class="table table-striped table-bordered participants-table table-<?=$collection_key?>-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'article') ? 'none' : '' ?> ;">  
                                             <tr class = "dataset-table-header-row">
                                                 <td  class = "dataset-header-column" colspan = "1"> Title </td>
                                                 <td class = "dataset-header-column" colspan = "2"> Abstract </td>
@@ -190,14 +215,14 @@ use yii\widgets\ActiveForm;
                                     </div>
 
                                     <div class = "image resource-types" style = "display: <?= ( $resource->type == 'image' ) ? 'block;' : 'none;' ?> ">
-                                        <table class="table table-striped table-bordered participants-table table-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'image') ? 'none' : '' ?> ;">     
+                                        <table class="table table-striped table-bordered participants-table table-<?=$collection_key?>-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'image') ? 'none' : '' ?> ;">     
                                         
                                             <tr class = "dataset-table-header-row">
-                                                <td class = 'dataset-header-column' style="width: 70%;"> Image </td>
+                                                <!-- <td class = 'dataset-header-column' style="width: 70%;"> Image </td> -->
                                                 <td class = "dataset-header-column" style="width: 30%;"> Preview </td>
                                             </tr>
                                             <tr>
-                                                <?= ( $userid == $resource->ownerid || $resource->id == '' ) ? "<td class = 'image-input'>".$form->field($resource, "[$key]image")->fileInput(['id' => 'image-'.$key, 'multiple' => false ])."</td>" : "<td class = 'image-input'></td>" ?>   
+                                                <!-- ( $userid == $resource->ownerid || $resource->id == '' ) ? "<td class = 'image-input'>".$form->field($resource, "[$key]image")->fileInput(['id' => 'image-'.$key, 'multiple' => false ])."</td>" : "<td class = 'image-input'></td>"  -->
                                                 <td> 
                                                     <?= isset($resource->image) 
                                                         ? isset($resource->id ) 
@@ -212,7 +237,7 @@ use yii\widgets\ActiveForm;
                                     </div>
 
                                     <div class = "empty resource-types" style = "display: <?= ( $resource->type == 'questionaire' ) ? : 'none;' ?> ">
-                                        <table class="table table-striped table-bordered participants-table table-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'questionaire') ? 'none' : '' ?> ;">  
+                                        <table class="table table-striped table-bordered participants-table table-<?=$collection_key?>-<?=$key?>" style = "display: <?= ($option == 'db-load' && $resource->type == 'questionaire') ? 'none' : '' ?> ;">  
                                             <tr class = "dataset-table-header-row">
                                                 <td class = "dataset-header-column" style = "width: 30%;"> Title </td>
                                             </tr>
@@ -229,13 +254,7 @@ use yii\widgets\ActiveForm;
                         </div>
                     </div>
                 <?php endforeach; ?>
-                <div class = "row">
-                    <div class = "col-md-11">
-                    </div>
-                    <div class = "col-md-1">
-                        <?= ( $option != 'db-load' && $resource_types_option != 'questionaire') ? Html::a( 'Add', '', ['class' => 'btn btn-primary submit-button add-button', 'name' => 'test-name']) : '' ?>
-                    </div>
-                </div>
+
             </div>
             <div class = "row button-row">
                 <div class = "col-md-10"></div>
@@ -250,3 +269,14 @@ use yii\widgets\ActiveForm;
     </div>
 
 </div><!-- resourcecreateform -->
+
+<style type="text/css">
+    .collection-name-label{
+        margin: 0%;
+    }
+
+    .collection-name{
+        color: black !important;
+        height: 24px;
+    }
+</style>
