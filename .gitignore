@@ -53,4 +53,12 @@ config/web.php
 config/__autocomplete.php
 
 old/*
+
+web/css/surveyformnew.css
+web/css/sitenew.css
+
+model/User2.php
+model/User3.php
+model/Surveys2.php
+model/Resources2.php
 # /data
