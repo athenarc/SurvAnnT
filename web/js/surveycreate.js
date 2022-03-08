@@ -84,19 +84,19 @@ $(document).ready(function(){
 		var email = $(this).parent().prev().text();
 		var surveyid = $("#surveyid").val();
 		var to_remove = $(this).parent().parent();
+
 		if ( userid == 'delete-user-<id>' ){
 			userid = -1;
 		}else{
-			
+			userid = userid.replace('delete-user-', '');
 			var to_replace = '</table>';
 			var calling_td = $(this).parent().html();
-			var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
-			var invite_icon = '<a id = "add-user-"'+userid+' class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
+			var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
+			var invite_icon = '<a id = "add-user-' + userid + '" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
 			var row = $(this).parent().parent().html().replace( calling_td, view_icon + invite_icon );
 			var participants = $(".participants-table").html().replace(to_replace, "");
-			userid = userid.replace('delete-user-', '');
+			
 		}
-		
 
 		$.ajax({
             url: ['index.php?r=site%2Fsurvey-participants'],
@@ -162,9 +162,10 @@ $(document).ready(function(){
 		}else{
 			var email = '';
 			var to_replace = '</table>';
+			userid = userid.replace('add-user-', '');
 			var calling_td = $(this).parent().html();
-			var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
-			var delete_icon = '<a id = "delete-user-"' + userid + ' class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
+			var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
+			var delete_icon = '<a id = "delete-user-' + userid + '" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
 			var row = $(this).parent().parent().html().replace( calling_td, view_icon + delete_icon );
 			var to_remove = $(this).parent().parent();
 			var participants = $(".participants-table").html().replace(to_replace, "");

@@ -3,7 +3,7 @@
 body{
     font-family: font-family: Tahoma, sans-serif; /*"Sansita Swashed", cursive;*/
     /*font-size: 16px;*/
-    background: linear-gradient(45deg, olivedrab, dodgerblue);
+    background: linear-gradient(45deg, #C7CEEA, dodgerblue);
     height: 100vh;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -105,13 +105,13 @@ a.desc:after {
   /*width: 5%;*/
 
   float: right;
-  background: #327a81; /*#0056aa;*/ /*dodgerblue;*/
+  background: #007bff;/*#327a81;*/ /*#0056aa;*/ /*dodgerblue;*/
   color: #fff;
   border: #fff;
 }
 
 .submit-button:hover{
-    background: linear-gradient(45deg, greenyellow, dodgerblue);
+    /*background: linear-gradient(45deg, greenyellow, dodgerblue);*/
 }
 
 .header-row{
@@ -132,7 +132,8 @@ a.desc:after {
 .table > thead {
     /*background: linear-gradient(45deg, mediumpurple, dodgerblue);*/
     /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
-    background: #327a81;
+    /*background: #327a81;*/
+    background: #7D88B7;
     color: white; !important;
 }
 
@@ -142,7 +143,8 @@ a.desc:after {
 }
 
 .table > thead:nth-child(1) > tr:nth-child(1) > th > a:nth-child(1):hover{
-    background: -webkit-linear-gradient(45deg, greenyellow, dodgerblue);
+    /*background: -webkit-linear-gradient(45deg, #C7CEEA, dodgerblue);*/
+    background: #007bff;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

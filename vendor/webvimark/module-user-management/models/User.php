@@ -22,6 +22,7 @@ use app\models\Surveytocollections;
 use app\models\Surveytoquestions;
 use app\models\Surveytoresources;
 use app\models\Usertobadges;
+use app\models\Leaderboard;
 /**
  * This is the model class for table "user".
  *
@@ -42,6 +43,7 @@ use app\models\Usertobadges;
  * @property string $orcidid
  * @property integer $availability
  *
+ * @property Leaderboard[] $leaderboards
  * @property Badges[] $badges
  * @property Collection[] $collections
  * @property Participatesin[] $participatesins
@@ -465,6 +467,17 @@ class User extends UserIdentity
 
 		return parent::beforeDelete();
 	}
+
+	/**
+     * Gets query for [[Leaderboards]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLeaderboards()
+    {
+        return $this->hasMany(Leaderboard::className(), ['userid' => 'id']);
+    }
+
 
 	/**
      * Gets query for [[Badges]].

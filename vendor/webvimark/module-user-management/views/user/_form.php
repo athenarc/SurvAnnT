@@ -23,33 +23,43 @@ use app\models\Fields;
 	?>
 	<?php $form = ActiveForm::begin([
 		'id'=>'user',
-		'layout'=>'horizontal',
+		// 'layout'=>'horizontal',
 		'validateOnBlur' => false,
 	]); ?>
-
+	
+		
+	
 	<?php if ( User::hasRole('Admin', 'Superadmin') ): ?>
-		<?= $form->field($model->loadDefaultValues(), 'status')
-			->dropDownList(User::getStatusList()) ?>
+		<div class = "row">
+			<?= $form->field($model->loadDefaultValues(), 'status')
+				->dropDownList(User::getStatusList()) ?>
+		</div>
 	<?php endif; ?>
+	
+	<div class = "row">
+		<?= $form->field($model, 'username')->textInput(['maxlength' => 255, 'autocomplete'=>'off']) ?>
+	</div>
 
-	<?= $form->field($model, 'username')->textInput(['maxlength' => 255, 'autocomplete'=>'off']) ?>
-
-	<?= $form->field($model, 'availability')->checkbox(['label' => 'Availability'])->label(true) ?>
+	<div class = "row">
+		<?= $form->field($model, 'availability')->checkbox(['label' => 'Availability'])->label(true) ?>
+	</div>
 
 	<?php if ( $model->isNewRecord ): ?>
-
+		<div class = "row">
 		<?= $form->field($model, 'password')->passwordInput(['maxlength' => 255, 'autocomplete'=>'off']) ?>
-
+		</div>
+		<div class = "row">
 		<?= $form->field($model, 'repeat_password')->passwordInput(['maxlength' => 255, 'autocomplete'=>'off']) ?>
+		</div>
 	<?php endif; ?>
 
 
 	<?php if ( User::hasPermission('bindUserToIp') ): ?>
-
+		<div class = "row">
 		<?= $form->field($model, 'bind_to_ip')
 			->textInput(['maxlength' => 255])
 			->hint(UserManagementModule::t('back','For example: 123.34.56.78, 168.111.192.12')) ?>
-
+		</div>
 	<?php endif; ?>
 
 	<?php if ( User::hasPermission('editUserEmail') ): ?>
@@ -81,7 +91,7 @@ use app\models\Fields;
 			
 
 	<div class="form-group">
-		<div class="col-sm-offset-3 col-sm-9">
+		<div class="col-sm-offset-3 col-sm-12 text-right">
 			<?php if ( $model->isNewRecord ): ?>
 				<?= Html::submitButton(
 					'<span class="glyphicon glyphicon-plus-sign"></span> ' . UserManagementModule::t('back', 'Create'),

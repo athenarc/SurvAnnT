@@ -12,9 +12,20 @@ $this->registerCssFile(
 
 ?>
 <div class = "outside-div" style = "">
+  <div class = "row header-row dataset-header-row" style = "">
+    <?php foreach ($tabs as $tab => $url): ?>
+        <div class = "tab col-md" style = "white-space:  nowrap; border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '2px solid white;' ?>">
+            <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'] : null ?>">
+              <h5 title = "<?= ucwords(str_replace("_", " ", $message ) ) ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>;"> 
+                <?= ucwords(str_replace("_", " ", $tab) ) ?>
+              </h5>
+            </a>
+        </div>
+    <?php endforeach; ?>
+  </div>
   <div class="container-wrap">
     <?php foreach ($survey_leaderboards as $leaderboard_key => $leaderboard): ?>
-      <div id = "leaderboard-div-<?=$leaderboard_key?>" class = "" style = "margin: 2%; padding: 3%; border:2px solid white; border-radius: 25px;">
+      <div id = "leaderboard-div-<?=$leaderboard_key?>" class = "" style = "margin: 4%; padding: 3%; border:2px solid white; border-radius: 25px; background-color: white;">
         <section id="leaderboard-<?=$leaderboard_key?>">
           <nav class="ladder-nav">
             <div class="ladder-title">
@@ -35,10 +46,10 @@ $this->registerCssFile(
                 <th>Username</th>
                 <th>Annotations</th>
                 <th>Badges  
-                  <a href="#" data-toggle="modal" data-target=".badges"><i class="fas fa-info-circle badges-info"></i></a>
+                  <a href="#" data-toggle="modal" data-target=".badges"><!-- <i class="fas fa-info-circle badges-info"></i> --></a>
                 </th>
                 <th>Points
-                  <a href="#" data-toggle="modal" data-target=".achievements"><i class="fas fa-info-circle achievements-info"></i></a>
+                  <a href="#" data-toggle="modal" data-target=".achievements"><!-- <i class="fas fa-info-circle achievements-info"></i> --></a>
                 </th>
               </tr>
             </thead>

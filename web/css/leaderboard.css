@@ -96,6 +96,7 @@ input[type=text], textarea, input[type=email], input[type=password], input[type=
 }
 .leaderboard-results tbody tr {
   color:#747474;
+  border-bottom: 4px solid white;
 }
 .leaderboard-results tbody tr:first-child {
   color:#686EF9;

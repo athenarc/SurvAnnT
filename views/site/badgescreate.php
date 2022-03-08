@@ -75,9 +75,6 @@ use yii\widgets\ActiveForm;
                                     <td class = "dataset-header-column"> Rating Condition 
                                         <a class="fas fa-info-circle tooltip-icon" title="Number of surveys to earn this badge"></a>
                                     </td>
-                                    <td class = "dataset-header-column"> Survey Condition 
-                                        <a class="fas fa-info-circle tooltip-icon" title="Number of resources evaluated to earn this badge"></a>
-                                    </td>
                                     <td class = "dataset-header-column"> Badge Preview </td>
                                 </tr>
                                 <tr>
@@ -91,9 +88,6 @@ use yii\widgets\ActiveForm;
                                     <?php endif; ?>
                                     <td>
                                         <?= $form->field($surveytobadges_arr[$key], "[$key]ratecondition")->textInput(['id' => 'rate-condition-'.$key])->label(false) ?>
-                                    </td>
-                                    <td>
-                                        <?= $form->field($surveytobadges_arr[$key], "[$key]surveycondition")->textInput(['id' => 'survey-condition-'.$key])->label(false) ?>
                                     </td>
                                     <td>
                                         <?= isset($badges[$key]->image) ? '<img id = "image-preview-'.$key.'" src="data:image/png;base64,'.base64_encode($badges[$key]->image ).'"/>' : '' ?>

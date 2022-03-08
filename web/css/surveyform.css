@@ -100,7 +100,8 @@ h5{
 }
 
 .dataset-header-column{
-    color: white !important; 
+    color: white !important;
+    font-weight: bold; 
     /*background-color: dodgerblue; */
     /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
     vertical-align: middle; 
@@ -110,7 +111,7 @@ h5{
 .dataset-table-header-row{
     /*background: linear-gradient(45deg, mediumpurple, dodgerblue) !important;*/
     /*background: linear-gradient(45deg, dodgerblue, #0056aa) !important;*/
-    background: #327a81 !important;
+    background: #7D88B7 !important; /*#327a81 !important;*/
 }
 
 .dataset-header-column > span > *{

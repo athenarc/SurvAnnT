@@ -143,48 +143,34 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        // print_r(Yii::$app->user->identity->getLeaderboards()->asArray()->all());
+        // exit(0);
         return $this->render('index', []);
     }
 
     public function actionLeaderboard()
     {
-        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username'])->all();
-        $total_leaderboard = [];
-        foreach ($total_leaderboard_q as $key => $value) {
-
-            $total_leaderboard[$key]['username'] = $value->user->username;
-            $total_leaderboard[$key]['badge'] = '';
-            foreach ( $value->user->getUsertobadges()->asArray()->all() as $badge){
-                
-                $badge_image = Badges::find()->select(['image'])->where(['id' => $badge['badgeid']])->one();
-                $total_leaderboard[$key]['badge'] .= '<img width = "30" height = "30" id = "image-preview-'.$key.'" src="data:image/png;base64,'.base64_encode($badge_image['image']).'"/>&nbsp;';
-            }
-            $total_leaderboard[$key]['points'] = $value->points;
-            $total_leaderboard[$key]['annotations'] = sizeof($value->user->getRates()->groupBy(['resourceid'])->asArray()->all());
-        }
-        array_multisort($total_leaderboard);
-
-        $surveys = Surveys::find()->all();
-        $survey_leaderboards = [];
-        $survey_leaderboards['total_leaderboard'] = $total_leaderboard;
-        foreach ($surveys as $survey) {
-            $survey_leaderboards[str_replace(" ", "_", $survey->name)] = [];
-            $leaderboard = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username'])->where(['surveyid' => $survey->id])->all();
-            foreach ($leaderboard as $key => $value) {
-
-                $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['username'] = $value->user->username;
-                $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['badge'] = '';
-                foreach ( $value->user->getUsertobadges()->asArray()->all() as $badge){
-                    
-                    $badge_image = Badges::find()->select(['image'])->where(['id' => $badge['badgeid']])->one();
-                    $survey_leaderboards[$survey->name][$key]['badge'] .= '<img width = "30" height = "30" id = "image-preview-'.$key.'" src="data:image/png;base64,'.base64_encode($badge_image['image']).'"/>&nbsp;';
-                }
-                $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['points'] = $value->points;
-                $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['annotations'] = sizeof($value->user->getRates()->groupBy(['resourceid'])->asArray()->all());
-            }
+        $lead = new Leaderboard();
+        $survey_leaderboards['total_leaderboard'] = $lead->getTotalLeaderboard();
+        $message = 'total_leaderboard';
+        if ( isset( $_GET['surveyid'] ) ){
+            $surveyid = escapeshellcmd($_GET['surveyid']);
+            $survey_leaderboards = $lead->getAllLeaderboards($surveyid);
+            $message = isset(array_keys($survey_leaderboards)[0]) ? strtolower( array_keys( $survey_leaderboards)[0] ) : '';
         }
 
-        return $this->render('leaderboard', ['leaderboard' => $total_leaderboard, 'survey_leaderboards' => $survey_leaderboards]);
+        
+        $surveys = Surveys::find()->select(['name', 'id'])->where(['active' => 1 ])->all();
+        $survey_names = array_values( array_column( $surveys, 'name') );
+        $survey_ids = array_values( array_column( $surveys, 'id') );
+        $tabs = [];
+        $tabs['total_leaderboard'] = ['link' => 'index.php?r=site%2Fleaderboard', 'enabled' => 1];
+        foreach ($survey_names as $key => $survey_name) {
+            $tabs[strtolower( str_replace(" ", "_", $survey_name) ) ] = ['link' => 'index.php?r=site%2Fleaderboard&surveyid='.$survey_ids[$key], 'enabled' => 1];
+            // echo $leaderboard_key."<br><br>";
+        }
+
+        return $this->render('leaderboard', ['survey_leaderboards' => $survey_leaderboards, 'tabs' => $tabs, 'message' => $message]);
 
 
     }
@@ -377,7 +363,7 @@ class SiteController extends Controller
                             }else{
                                 $assigned = 'False';
                             }
-                            $response->data = ['response' => 'Participant saved.', 'assigned' => $assigned, 'user' => $user];
+                            $response->data = ['response' => 'Participant saved.', 'assigned' => $assigned];
                             $response->statusCode = 200;
                         }else{
                             $participant = Participatesin::find()->where(['surveyid' => $surveyid])->andWhere(['userid' => $userid])->one();
@@ -393,7 +379,7 @@ class SiteController extends Controller
                                 $response->data = ['response' => 'User accepted.'];
                                 $response->statusCode = 200;
                             }else{
-                                $response->data = ['response' => 'User already participates.', 'participant' => $participant];
+                                $response->data = ['response' => 'User already participates.'];
                                 $response->statusCode = 200;
                             }
                             
@@ -553,8 +539,18 @@ class SiteController extends Controller
 
                 $rates_query = Rate::find()->select(['resourceid'])->where(['userid' => $userid]);
 
-
                 $rates_query_feedback = $rates_query;
+
+                if ( Leaderboard::find()->where(['surveyid' => $survey->id, 'userid' => $userid])->one()){
+                    $leaderboard = Leaderboard::find()->where(['surveyid' => $survey->id, 'userid' => $userid])->one();
+                }else{
+                    $leaderboard = new Leaderboard();
+                    $leaderboard->userid = $userid;
+                    $leaderboard->surveyid = $surveyid;
+                    $leaderboard->save();
+                }
+
+
 
                 // GET USERS PROVIDED FEEDBACK FOR THIS SURVEY + IN GENERAL
                 $user_feedback_provided_general = sizeof ( $rates_query_feedback->groupBy(['resourceid'])->all() );
@@ -590,6 +586,7 @@ class SiteController extends Controller
                     if ( $survey_ratings >= $maximum_resources_goal ){
                         // MAXIMUM RESOURCES EVALUATED FOR SURVEY, SO SURVEY FINISHES
                         $survey->completed = 1;
+                        $survey->active = 0;
                         $survey->save();
                     }
                 }
@@ -613,17 +610,23 @@ class SiteController extends Controller
 
                 if ( ! $resource ){
                     $message = 'Thank you for participating in Campaign '.$survey->name.". <br> You have annotated every resource! <br><br> Feel free to request participation in other surveys as well.";
-                    $participant->finished = 1;
-                    $participant->save();
                 } 
 
                 if ( $survey->completed == 1 ){
-                    $message = 'Thank you for participating in Campaign '.$survey->name.". <br> The survey is completed! <br><br> Feel free to request participation in other surveys as well.";
-                    $participant->finished = 1;
-                    $participant->save();
+                    $message = 'Thank you for participating in Campaign '.$survey->name.". <br> The survey is completed! <br><br> Feel free to request participation in other surveys as well.";   
                 }
                     
-                
+                if ( $survey->completed == 1 || ! $resource ){
+
+                    $participant->finished = 1;
+                    $participant->save();
+
+                    if ( $leaderboard ){
+                        $leaderboard = Leaderboard::find()->where(['surveyid' => $survey->id, 'userid' => $userid])->one();
+                        $leaderboard->points += Yii::$app->params['Scoring-system']['Survey-Completion'];
+                        $leaderboard->save();
+                    }
+                }
 
                 
                 if ( $survey->badgesused == 1 ){
@@ -637,11 +640,25 @@ class SiteController extends Controller
                             $usertobadges->badgeid = $badge->id;
                             $usertobadges->surveyid = $survey->id;
 
-                            $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition;
-                            $surveys_expression = (int)$user_surveys_finished >= (int)$surveytobadge->surveycondition;
-                            if ( $ratings_expression || $surveys_expression ){
+                            $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition && (int)$surveytobadge->ratecondition > 0;
+                            // $surveys_expression = (int)$user_surveys_finished >= (int)$surveytobadge->surveycondition;
+                            if ( $ratings_expression ){
                                 if ( ! Usertobadges::find()->where(['surveyid' => $survey->id, 'userid' => $userid, 'badgeid' => $badge->id])->all() ){
                                     $usertobadges->save();
+                                    if ( $leaderboard ){
+                                        if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'userid' => $userid])->all() ){
+                                            // FIRST BADGE FOR THE USER
+                                            $leaderboard->points += Yii::$app->params['Scoring-system']['First-Badge-Earned'];
+                                        }
+
+                                        if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'badgeid' => $badge->id])->all() ){
+                                            // IF NO ONE ELSE ON THIS SURVEY HAS ACQUIRED SPECIFIC BADGE
+                                            $leaderboard->points += Yii::$app->params['Scoring-system']['First-To-Earn-Badge'];
+                                        }
+
+                                        $leaderboard->save();
+                                    }
+                                    
                                 }
                             }
                         }
@@ -689,6 +706,10 @@ class SiteController extends Controller
                     }
                     $rate->save();
                 }
+                
+                $leaderboard->points += Yii::$app->params['Scoring-system']['Annotation'];
+                $leaderboard->save();
+                
                 return $this->redirect(['site/survey-rate', 'surveyid' => $surveyid]);
             }
         }
@@ -1254,15 +1275,6 @@ class SiteController extends Controller
         if ( $survey ){
             // IF USER IS OWNER
             if ( $survey->isOwner( $userid )->one() ){
-                // echo "User ".$userid." is owner of surveyid: ".$surveyid."<br><br>";
-                // $participants->surveyid = $survey->id;
-                // return $this->render('dataset', [
-                //     'survey' => $survey,
-                //     'users' => $users,
-                //     'action' => 'generate-participants',
-                //     'message' => $message
-                // ]);
-                // Yii::$app->response->redirect( array( 'site/dataset-create', 'surveyid' => $survey->id));
             }
 
         }else{
@@ -1271,12 +1283,9 @@ class SiteController extends Controller
         
         }
         if ( Yii::$app->request->post() ){
-            // print_r($_POST);
-            // exit(0);
             if ( isset($_POST['finalize']) ){
                 return $this->redirect(['site/badges-create', 'surveyid' => $surveyid]);
             }
-            
         }
         $users = array_values($users);
 
@@ -1373,7 +1382,6 @@ class SiteController extends Controller
                         $badge = new Badges();
                         $badges[] = $badge;
                     }
-                    // exit(0);
                 }
             }
 

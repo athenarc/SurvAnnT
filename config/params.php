@@ -107,7 +107,9 @@ return [
 
         'Scoring-system' =>
             [
-                'First-Badge' => 20,
+                'First-Badge-Earned' => 20,
+                'Badge-Earned' => 20,
+                'First-To-Earn-Badge' => 30,
                 'Annotation' => 10,
                 'Survey-Completion' => 50,
                 'All-Badges' => 100, 
