@@ -1,4 +1,65 @@
 .rate-form{
-	margin: 2%;
+	margin: 1%;
 	padding: 2%;
+}
+
+.rate-box{
+	margin: 2%;
+	/*background-color: #dadeefa8;*/
+	color: black;
+	border-radius: 25px;
+	padding: 2%;
+}
+
+.marg-left-right{
+	margin-bottom: 1em;
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+.question-box{
+	background-color: #dadeefa8;
+	padding: 1em;
+	border-radius: 25px;
+}
+
+.resource-row{
+	border-radius: 25px;
+	border: 2px solid grey;
+	padding: 2em;
+	background-color: white;
+	margin-top: 1em;
+}
+
+.question{
+	font-weight: bold;
+	margin: auto;
+}
+
+.question-values{
+	margin: auto;
+}
+
+.progress-bar-widget{
+	/*width: 30%;*/
+	margin-left: 2em;
+	margin-right: 2em;
+	margin-bottom: 1em;
+}
+
+.progress-bar-widget > .col-md-4{
+	background-color: white;
+	border-radius: 25px;
+	/*padding: 2%;*/
+	padding-top: 1%;
+	padding-bottom: 1%;
+	border: 1px solid grey;
+	margin-right: 1em;
+}
+
+.question-radiolist{
+	/*background-color: #C7CEEA;*/
+	border-radius: 25px;
+	padding-left: 1%;
+	width: auto;
 }

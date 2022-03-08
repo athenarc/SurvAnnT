@@ -153,7 +153,7 @@ class SiteController extends Controller
         $lead = new Leaderboard();
         $survey_leaderboards['global_leaderboard'] = $lead->getTotalLeaderboard();
         $leaderboard = 'global_leaderboard';
-
+        $surveyid = "global_leaderboard";
         if ( Yii::$app->request->post() ){
             
             $surveyid = isset( $_POST['Leaderboard'] ) ?  $_POST['Leaderboard'] : '';
@@ -714,7 +714,7 @@ class SiteController extends Controller
                 return $this->redirect(['site/survey-rate', 'surveyid' => $surveyid]);
             }
         }
-        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general]);
+        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal]);
     }
 
     public function actionRequestParticipation()
