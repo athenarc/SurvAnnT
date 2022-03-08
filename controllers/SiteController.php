@@ -1184,7 +1184,7 @@ class SiteController extends Controller
     {
         date_default_timezone_set("Europe/Athens"); 
         $userid = Yii::$app->user->identity->id;
-        $users = User::find()->select(['id', 'username', 'name', 'surname', 'email', 'fields'])->where(['!=', 'username', 'superadmin'])->asArray()->all();
+        $users = User::find()->select(['id', 'username', 'name', 'surname', 'email', 'fields'])->where(['!=', 'username', 'superadmin'])->andWhere(['availability' => 1])->asArray()->all();
         $tabs = Yii::$app->params['tabs'];
         $message = 'Participants';
         $tabs['Campaign']['enabled'] = 1;

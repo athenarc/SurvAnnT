@@ -16,8 +16,10 @@ use app\models\Fields;
 
 <div class="user-form">
 	<?php 
-	$fields = array_column ( Fields::find()->select(['name'])->asArray()->all(), 'name' );
-
+	$fields = [];
+	foreach (array_column ( Fields::find()->select(['name'])->asArray()->all(), 'name' ) as $f) {
+		$fields[$f] = $f;
+	}
 	?>
 	<?php $form = ActiveForm::begin([
 		'id'=>'user',
