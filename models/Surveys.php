@@ -198,28 +198,30 @@ class Surveys extends \yii\db\ActiveRecord
 
             $collection = Collection::find()->joinWith(['surveytocollections'])->where(['surveyid' => $surveyid])->one();
             
-            $resources_q = Resources::find()->where(['collectionid' => $collection->id])->asArray()->all();
+            if ( $collection ){
 
-            foreach ($resources_q as $key => $value) {
-                if ( $value['type'] == 'image' ){
-                    $resources[$key]['image'] = $value['image'];
-                }else if ($value['type'] == 'text'){
-                    $resources[$key]['title'] = $value['title'];
-                    $resources[$key]['text'] = $value['text'];
-                }else if ( $value['type'] == 'article' ){
-                    $resources[$key]['title'] = $value['title'];
-                    $resources[$key]['abstract'] = $value['abstract'];
-                    $resources[$key]['pmc'] = $value['title'];
-                    $resources[$key]['doi'] = $value['text'];
-                    $resources[$key]['pubmed_id'] = $value['pubmed_id'];
-                    $resources[$key]['authors'] = $value['authors'];
-                    $resources[$key]['journal'] = $value['journal'];
-                    $resources[$key]['year'] = $value['year'];
-                }else{
-                    $resources[$key]['title'] = $value['title'];
-                }
+                $resources_q = Resources::find()->where(['collectionid' => $collection->id])->asArray()->all();
+
+                foreach ($resources_q as $key => $value) {
+                    if ( $value['type'] == 'image' ){
+                        $resources[$key]['image'] = $value['image'];
+                    }else if ($value['type'] == 'text'){
+                        $resources[$key]['title'] = $value['title'];
+                        $resources[$key]['text'] = $value['text'];
+                    }else if ( $value['type'] == 'article' ){
+                        $resources[$key]['title'] = $value['title'];
+                        $resources[$key]['abstract'] = $value['abstract'];
+                        $resources[$key]['pmc'] = $value['title'];
+                        $resources[$key]['doi'] = $value['text'];
+                        $resources[$key]['pubmed_id'] = $value['pubmed_id'];
+                        $resources[$key]['authors'] = $value['authors'];
+                        $resources[$key]['journal'] = $value['journal'];
+                        $resources[$key]['year'] = $value['year'];
+                    }else{
+                        $resources[$key]['title'] = $value['title'];
+                    }
+                }       
             }
-            
             
             $questions = Questions::find()->joinWith('surveytoquestions')->select(['questions.id', 'question', 'tooltip', 'answer', 'answervalues', 'answertype as `Answer Type`', 'allowusers as Public'])->where(['surveyid' => $survey['id']])->asArray()->all();
 
@@ -322,7 +324,7 @@ class Surveys extends \yii\db\ActiveRecord
 
             $survey_sections['campaign'][0] = $survey;
             // $survey_sections['collection'] = $collection;
-            $survey_sections['resources'] = $resources;
+            $survey_sections['resources'] = isset( $resources ) ? $resources : [];
             $survey_sections['questions'] = $questions;
             $survey_sections['participants'] = $participants;
             $survey_sections['badges'] = $badges;

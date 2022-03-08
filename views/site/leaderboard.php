@@ -1,5 +1,8 @@
 
 <?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
 $this->registerJsFile(
     '@web/js/leaderboard.js',
     ['depends' => [\yii\web\JqueryAsset::class]]
@@ -12,24 +15,17 @@ $this->registerCssFile(
 
 ?>
 <div class = "outside-div" style = "">
-  <div class = "row header-row dataset-header-row" style = "">
-    <?php foreach ($tabs as $tab => $url): ?>
-        <div class = "tab col-md" style = "white-space:  nowrap; border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '2px solid white;' ?>">
-            <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'] : null ?>">
-              <h5 title = "<?= ucwords(str_replace("_", " ", $message ) ) ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>;"> 
-                <?= ucwords(str_replace("_", " ", $tab) ) ?>
-              </h5>
-            </a>
-        </div>
-    <?php endforeach; ?>
-  </div>
+
   <div class="container-wrap">
+    <?php $form = ActiveForm::begin(['options' => ['class' => 'leaderboard-form']]); ?>
     <?php foreach ($survey_leaderboards as $leaderboard_key => $leaderboard): ?>
       <div id = "leaderboard-div-<?=$leaderboard_key?>" class = "" style = "margin: 4%; padding: 3%; border:2px solid white; border-radius: 25px; background-color: white;">
         <section id="leaderboard-<?=$leaderboard_key?>">
           <nav class="ladder-nav">
             <div class="ladder-title">
-            <h1><?= str_replace( "_", " ", $leaderboard_key) ?></h1>
+              <div class = "col-md-7" style = "padding-left: 0%; margin-top: 2%; margin-bottom: 1%;">
+               <?= Html::dropDownList( 'Leaderboard', $surveyid, $tabs, ['class' => 'form-control leaderboard-selection', 'name' => 'test-name']); ?>
+              </div>
             <?= ( isset( $leaderboard[0]['username'] ) ? $leaderboard[0]['username'].' <i class="fas fa-trophy" style = "color: #d4af37;"></i>' : '' ) ?>
             &nbsp;
             <?= ( isset( $leaderboard[1]['username'] ) ? $leaderboard[1]['username'].' <i class="fas fa-trophy" style = "color: silver;"></i>' : '' ) ?>
@@ -63,12 +59,12 @@ $this->registerCssFile(
                   <td><?= $lead['badge'] ?></td>
                   <td><?= $lead['points'] ?></td>
                 </tr>
-                <br>
               <?php endforeach; ?>   
             </tbody>
           </table>
         </section>
       </div>
     <?php endforeach; ?> 
+    <?php ActiveForm::end(); ?>
   </div>
 </div>

@@ -51,6 +51,12 @@ $(document).on('keyup', 'input[id^="search-leaderboard-"]' , function() {
     });
 });
 
+$(document).on('change', ".leaderboard-selection" , function() {
+
+    // alert($(this).val());
+    $(".leaderboard-form").submit();
+});
+
 // $(document).on('click', ".text-statistics" , function() {
 //     var id = $(this).data("value");
 //     $.ajax({

@@ -151,26 +151,27 @@ class SiteController extends Controller
     public function actionLeaderboard()
     {
         $lead = new Leaderboard();
-        $survey_leaderboards['total_leaderboard'] = $lead->getTotalLeaderboard();
-        $message = 'total_leaderboard';
-        if ( isset( $_GET['surveyid'] ) ){
-            $surveyid = escapeshellcmd($_GET['surveyid']);
-            $survey_leaderboards = $lead->getAllLeaderboards($surveyid);
-            $message = isset(array_keys($survey_leaderboards)[0]) ? strtolower( array_keys( $survey_leaderboards)[0] ) : '';
-        }
+        $survey_leaderboards['global_leaderboard'] = $lead->getTotalLeaderboard();
+        $leaderboard = 'global_leaderboard';
 
+        if ( Yii::$app->request->post() ){
+            
+            $surveyid = isset( $_POST['Leaderboard'] ) ?  $_POST['Leaderboard'] : '';
+            if ( $surveyid != 'global_leaderboard'){
+                $survey_leaderboards = $lead->getAllLeaderboards($surveyid);
+            }
+            
+        }
         
         $surveys = Surveys::find()->select(['name', 'id'])->where(['active' => 1 ])->all();
         $survey_names = array_values( array_column( $surveys, 'name') );
         $survey_ids = array_values( array_column( $surveys, 'id') );
         $tabs = [];
-        $tabs['total_leaderboard'] = ['link' => 'index.php?r=site%2Fleaderboard', 'enabled' => 1];
+        $tabs['global_leaderboard'] = 'Global Leaderboard';
         foreach ($survey_names as $key => $survey_name) {
-            $tabs[strtolower( str_replace(" ", "_", $survey_name) ) ] = ['link' => 'index.php?r=site%2Fleaderboard&surveyid='.$survey_ids[$key], 'enabled' => 1];
-            // echo $leaderboard_key."<br><br>";
+            $tabs[$survey_ids[$key]] = ucwords($survey_name);
         }
-
-        return $this->render('leaderboard', ['survey_leaderboards' => $survey_leaderboards, 'tabs' => $tabs, 'message' => $message]);
+        return $this->render('leaderboard', ['survey_leaderboards' => $survey_leaderboards, 'tabs' => $tabs, 'survey_names' => $survey_names, 'surveyid' => $surveyid]);
 
 
     }
@@ -1541,29 +1542,7 @@ class SiteController extends Controller
             }
             
             $survey_sections = $survey->getOverview($surveyid);
-            
 
-            // foreach ($survey_sections as $section_name => $section) {
-            //     echo $section_name. "<br><br>";
-            //     // print_r($section);
-            //     foreach ($section as $section_key => $section_value) {
-            //         foreach (array_keys($section_value) as $entity_column){
-                        
-            //             if ($entity_column == 'image'){
-            //                 echo $entity_column."  ";
-            //             }
-            //         }
-            //         foreach (array_keys($section_value) as $entity_column){
-                        
-            //             if ($entity_column == 'image'){
-            //                 echo $entity_column."  ";
-            //             }
-            //         }
-            //         echo "<br><br>";
-            //     }
-            //     echo "<br><br>=================================<br><br>";
-            // }
-            // exit(0);
         }
 
         if ( isset( $_POST['finalize'] ) ){
