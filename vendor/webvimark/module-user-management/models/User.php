@@ -376,6 +376,7 @@ class User extends UserIdentity
 			'name'				 => UserManagementModule::t('back', 'Name'),
 			'surname'			 => UserManagementModule::t('back', 'Surname'),
 			'availability'			 => UserManagementModule::t('back', 'Availability'),
+			'fields'			 => UserManagementModule::t('back', 'Research Interests'),
 		];
 	}
 

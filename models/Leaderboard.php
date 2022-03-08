@@ -108,7 +108,7 @@ class Leaderboard extends \yii\db\ActiveRecord
 
     public function getTotalLeaderboard()
     {
-        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username'])->orderBy(['points' => SORT_DESC])->all();
+        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username', 'SUM(points)'])->orderBy(['points' => SORT_DESC])->groupBy(['userid'])->all();
         $total_leaderboard = [];
         foreach ($total_leaderboard_q as $key => $value) {
 

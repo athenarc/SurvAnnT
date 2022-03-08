@@ -11,8 +11,8 @@ use kartik\select2\Select2;
  * @var webvimark\modules\UserManagement\models\forms\RegistrationForm $model
  */
 
-$this->title = UserManagementModule::t('front', 'Registration');
-$this->params['breadcrumbs'][] = $this->title;
+// $this->title = UserManagementModule::t('front', 'Registration');
+// $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="user-registration">
@@ -42,14 +42,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				],
 			]); ?>
 
-		<div class = "row">
-			<div class = "col-lg-12">
+		<div class = "row d-flex align-items-end">
+			<div class = "col-md-8">
 				<?= $form->field($model, 'username')->textInput(['maxlength' => 50, 'autocomplete'=>'off', 'autofocus'=>true]) ?>
 			</div>
-		</div>
-
-		<div class = "row">
-			<div class = "col-md-12">
+			<div class = "col-md-4">
 				<?= $form->field($model, 'availability')->checkbox(['value' => true]) ?>
 			</div>
 		</div>
@@ -67,13 +64,13 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 
 		<div class = "row">
-			<div class = "col-lg-12">
+			<div class = "col-md-12">
 				<?= $form->field($model, 'name')->textInput(['maxlength' => 50, 'autocomplete'=>'off', 'autofocus'=>true]) ?>
 			</div>
 		</div>
 
 		<div class = "row">
-			<div class = "col-lg-12">
+			<div class = "col-md-12">
 				<?= $form->field($model, 'surname')->textInput(['maxlength' => 50, 'autocomplete'=>'off', 'autofocus'=>true]) ?>
 			</div>
 		</div>
@@ -109,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 		
 		<?= $form->field($model, 'captcha')->widget(Captcha::className(), [
-			'template' => '<div class="row"><div class="col-md-6">{image}</div><div class="col-md-6">{input}</div></div>',
+			'template' => '<div class="row d-flex align-items-end"><div class="col-md-4">{image}</div><div class="col-md-8">{input}</div></div>',
 			'captchaAction'=>['/user-management/auth/captcha']
 		]) ?>
 
