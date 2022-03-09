@@ -244,3 +244,9 @@ label {
 ul {
     /*display: grid !important;*/
 }
+
+
+img {
+    max-height: 800px;
+    max-width: 800px;
+}

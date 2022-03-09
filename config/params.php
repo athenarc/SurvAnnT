@@ -84,23 +84,76 @@ return [
         ],
     'about' =>
         [
-            'Purpose' => 
+            'What is SurvAnnT?' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'SurvAnnT offers functionalities to create, manage, and analyse survey and annotation campaingns.',
+                    'text' => 'SurvAnnT offers functionalities to create, manage, and analyse survey and annotation campaingns. This tool supports ..',
                     'enabled' => 1,
 
                 ],
-            'About page 2' => 
+            'Architecture' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'We have selected a wide range of publication abstracts coming from various Journals, Conferences and Workshops through <a href="https://dblp.org">DBLP</a>. Since the dataset consisted of <b>227.296</b> abstracts, we discarded venues that were not directly related to computer science resulting in a pool of <b>77.299</b> abstracts derived from <b>120</b> venues. The following table presents the venues along with their respective number of abstracts.',
+                    'text' => '',
                     'enabled' => 1,
                 ],
-            'About page 3' => 
+            'Citations' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'The questions selected for the assessments reflect, in our opinion, many aspects of readability such as the overall <b>coherence</b> and <b>structure</b> of the text presented as well as the <b>style</b>, <b>syntax</b> and the <b>difficulty of terms explained</b>. In order to measure your provided feedback, we have selected a five point agreement <a href = "https://en.wikipedia.org/wiki/Likert_scale">Likert scale</a>, which is a widely used approach to scaling responses in survey research.',
+                    'text' => '',
+                    'enabled' => 1,
+                ],
+
+            'Team' => 
+                [ 
+                    
+                        [
+                            'name' => 'Thanasis Vergoulis',
+                            'title' => 'Post-doctoral researcher',
+                            'url' => 'http://thanasis-vergoulis.com/',
+                            'email' => 'vergoulis@athenarc.gr',
+                            'image' => 'images/vergoulis.png',
+                        ],
+                    
+                        [
+                            'name' => 'Ilias Kanellos',
+                            'title' => 'Research associate',
+                            'url' => 'http://www.imsi.athenarc.gr/en/people/member/78',
+                            'email' => 'kanellos@athenarc.gr',
+                            'image' => 'images/kanellos.jpeg',
+                        ],
+
+                        [
+                            'name' => 'Serafeim Chatzopoulos',
+                            'title' => 'PhD candidate',
+                            'url' => 'https://schatzopoulos.github.io/',
+                            'email' => 'schatz@athenarc.gr',
+                            'image' => 'images/serafeim.jpg',
+                        ],
+
+                        [
+                            'name' => 'Theodore Dalamaggas',
+                            'title' => 'Senior researcher',
+                            'url' => 'http://www.imsi.athenarc.gr/en/people/member/4',
+                            'email' => 'dalamagas@athenarc.gr',
+                            'image' => 'images/dalamagas.jpg',
+                        ],
+
+                        [
+                            'name' => 'Anargiros Tzerefos',
+                            'title' => 'Senior researcher',
+                            'url' => 'https://www.imsi.athenarc.gr/en/people/member/100',
+                            'email' => 'tzerefos@athenarc.gr',
+                            'image' => 'images/tzerefos.jpg',
+                        ]
+
+
+                        
+                ],
+            'Contact us' => 
+                [
+                    'link' => 'index.php?r=site%2Fabout&tab=',
+                    'text' => 'Send us your feedback at: <br> &nbsp;&nbsp;<i class = "fa fa-envelope"> </i> survannt@athenarc.gr <br> &nbsp;&nbsp;<i class = "fa fa-map-marker"> </i> Athena RC, Artemidos 6 & Epidavrou, Maroussi 15125, Greece  ',
                     'enabled' => 1,
                 ]
         ],

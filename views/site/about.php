@@ -10,23 +10,75 @@ $this->title = 'About';
 <div class="survey-form" >
 
 
-    <div class ="outside-div" style = "background-color: #16122d !important;
-opacity: 0.5;
-color: white !important; margin-top: 15% !important; width: 80% !important;">
-        <div class = "row header-row dataset-header-row" style = "">
-            <?php foreach ($tabs as $tab => $url): ?>
-                <div class = "tab col-md-<?= 12 / sizeof($tabs) ?>" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
-                    <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$tab : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1; color: white !important;' : 'color: white !important;' ?>"> <?= $tab ?></h5></a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <div class = "col-md-12 dataset-form middle-text">
+    <div class ="outside-div about-div" >
+        
+        <div class = "about-text">
         <?php foreach ($about as $header => $text): ?>
-            <?php if( $header == $message ): ?>
-                <p class = "text-left"> <?= $text['text'] ?> </p>
+            
+            <div class="row about-row" >
+                <h3> 
+                    <i><?= $header ?></i> 
+                </h3>
+            </div>
+            <?php if($header == 'Team'): ?>
+                <?php foreach($text as $member): ?>
+                    <div class = "row">
+                        <div class="col-md-1 col-xs-2">
+                            <img class = "img-circle img-responsive" src="<?=$member['image']?>" alt = "<?=$member['name']?>">
+                        </div>
+                        <div class="col-md-4">
+                            <a href = "<?=$member['url']?>" target = "_blank"> <?= $member['name'] ?> 
+                                <i class="fas fa-external-link-square"></i> 
+                            </a>
+                            <br>
+                            <?= $member['title'] ?>
+                            <br>
+                            <?= $member['email'] ?>
+                        </div>
+                    </div>
+                    <br>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p> <?= $text['text'] ?> </p>
             <?php endif; ?>
+            
+            
+            
         <?php endforeach; ?>  
         </div>
     </div> 
 
 </div>
+
+<style type="text/css">
+    .about-div{
+        width: 80%;
+    }
+    .about-text{
+        padding: 2%; 
+        margin: 2%;
+        border-radius: 25px; 
+        color: white;
+    }
+
+    .about-text > .row{
+        padding: 0%;
+        padding-bottom: 0%;
+    }
+
+    .about-row{
+        margin-bottom: 1% !important;
+        border-bottom: 1px solid white;
+    }
+
+    .img-circle{
+        border-radius: 50%;
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+    p {
+        color: white;
+        font-size: 17px;
+    }
+</style>

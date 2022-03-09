@@ -515,6 +515,9 @@ class SiteController extends Controller
                 Surveytoquestions::deleteAll(['surveyid' => $survey->id]);
                 Surveytocollections::deleteAll(['surveyid' => $survey->id]);
                 Surveytobadges::deleteAll(['surveyid' => $survey->id]);
+                Rate::deleteAll(['surveyid' => $survey->id]);
+                // Leaderboard::deleteAll(['surveyid' => $survey->id]);
+                Usertobadges::deleteAll(['surveyid' => $survey->id]);
                 $survey->delete();
             }
             
@@ -1673,7 +1676,7 @@ class SiteController extends Controller
     {   
         
         $tabs = Yii::$app->params['about'];
-        $message =  isset ( $_GET['tab'] ) ? $_GET['tab'] : 'Purpose';
+        $message =  isset ( $_GET['tab'] ) ? $_GET['tab'] : 'What is SurvAnnT?';
         $about = Yii::$app->params['about'];
 
         return $this->render('about', [ 'about' => $about, 'tabs' => $tabs, 'message' => $message ]);

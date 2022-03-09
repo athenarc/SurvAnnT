@@ -61,4 +61,10 @@ models/User2.php
 models/User3.php
 models/Surveys2.php
 models/Resources2.php
+
+web/images/tzerefos.jpg
+web/images/dalamagas.jpg
+web/images/kanellos.jpeg
+web/images/serafeim.jpg
+web/images/vergoulis.png
 # /data
