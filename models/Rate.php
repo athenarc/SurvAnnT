@@ -25,6 +25,7 @@ use Yii;
  */
 class Rate extends \yii\db\ActiveRecord
 {
+    public $tooltip;
     /**
      * {@inheritdoc}
      */
@@ -42,7 +43,7 @@ class Rate extends \yii\db\ActiveRecord
             [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid'], 'required'],
             [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid'], 'integer'],
             [['answer', 'answertype'], 'string'],
-            [['created'], 'safe'],
+            [['created', 'tooltip'], 'safe'],
             [['userid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userid' => 'id']],
             [['surveyid'], 'exist', 'skipOnError' => true, 'targetClass' => Surveys::className(), 'targetAttribute' => ['surveyid' => 'id']],
             [['resourceid'], 'exist', 'skipOnError' => true, 'targetClass' => Resources::className(), 'targetAttribute' => ['resourceid' => 'id']],

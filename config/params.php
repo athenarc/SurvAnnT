@@ -94,13 +94,13 @@ return [
             'Architecture' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => '',
+                    'text' => 'SurvAnnT architecture',
                     'enabled' => 1,
                 ],
             'Citations' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => '',
+                    'text' => 'SurvAnnT citations',
                     'enabled' => 1,
                 ],
 

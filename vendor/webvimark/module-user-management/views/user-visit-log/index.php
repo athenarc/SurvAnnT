@@ -13,8 +13,8 @@ use yii\grid\GridView;
  * @var webvimark\modules\UserManagement\models\search\UserVisitLogSearch $searchModel
  */
 
-$this->title = UserManagementModule::t('back', 'Visit log');
-$this->params['breadcrumbs'][] = $this->title;
+// $this->title = UserManagementModule::t('back', 'Visit log');
+// $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-visit-log-index">
 

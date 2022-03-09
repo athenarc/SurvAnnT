@@ -61,7 +61,7 @@ $this->title = 'My Yii Application';
 	            		<!-- <span id = 'Question' >  -->
 	            			<div class = "col-md-12">
 		            			<?= $questions[$key]['question'] ?> 
-		            			<?php isset( $questions[$key]['tooltip'] ) ? '<i class="fas fa-question-circle" title = "'.$questions[$key]['tooltip'] .'"></i>' : '' ?>
+		            			<?= isset( $questions[$key]['tooltip'] ) ? '<a class="fas fa-question-circle link-icon" title = "'.$questions[$key]['tooltip'] .'"></a>' : '' ?>
 		            		</div>
 	            		<!-- </span> -->
 		           	</div>

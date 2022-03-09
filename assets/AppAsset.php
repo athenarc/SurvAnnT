@@ -26,7 +26,8 @@ class AppAsset extends AssetBundle
         'css/progress_bar.css',
         'css/index.css',
         'css/about.css',
-        'css/surveyform.css'
+        'css/surveyform.css',
+        'css/about.css',
     ];
     public $js = [
         'js/surveycreate.js',

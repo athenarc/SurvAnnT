@@ -22,8 +22,8 @@ $this->title = 'About';
             </div>
             <?php if($header == 'Team'): ?>
                 <?php foreach($text as $member): ?>
-                    <div class = "row">
-                        <div class="col-md-1 col-xs-2">
+                    <div class = "row align-items-center">
+                        <div class="col-md-1 col-xs-2 ">
                             <img class = "img-circle img-responsive" src="<?=$member['image']?>" alt = "<?=$member['name']?>">
                         </div>
                         <div class="col-md-4">
@@ -49,36 +49,3 @@ $this->title = 'About';
     </div> 
 
 </div>
-
-<style type="text/css">
-    .about-div{
-        width: 80%;
-    }
-    .about-text{
-        padding: 2%; 
-        margin: 2%;
-        border-radius: 25px; 
-        color: white;
-    }
-
-    .about-text > .row{
-        padding: 0%;
-        padding-bottom: 0%;
-    }
-
-    .about-row{
-        margin-bottom: 1% !important;
-        border-bottom: 1px solid white;
-    }
-
-    .img-circle{
-        border-radius: 50%;
-        display: block;
-        max-width: 100%;
-        height: auto;
-    }
-    p {
-        color: white;
-        font-size: 17px;
-    }
-</style>
