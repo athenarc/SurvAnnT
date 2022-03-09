@@ -1,14 +1,14 @@
 .rate-form{
 	margin: 1%;
-	padding: 2%;
+	padding: 1%;
 }
 
 .rate-box{
-	margin: 2%;
+	/*margin: 2%;*/
 	/*background-color: #dadeefa8;*/
 	color: black;
 	border-radius: 25px;
-	padding: 2%;
+	/*padding: 2%;*/
 }
 
 .marg-left-right{
@@ -62,4 +62,9 @@
 	border-radius: 25px;
 	padding-left: 1%;
 	width: auto;
+}
+
+.text-center > img {
+	max-height: 800px;
+	max-width: 800px;
 }

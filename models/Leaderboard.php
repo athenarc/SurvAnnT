@@ -93,13 +93,18 @@ class Leaderboard extends \yii\db\ActiveRecord
 
                 $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['username'] = $value->user->username;
                 $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['badge'] = '';
-                foreach ( $value->user->getUsertobadges()->asArray()->all() as $badge){
+                foreach ( $value->user->getUsertobadges()->where(['surveyid' => $surveyid])->asArray()->all() as $badge){
                     
                     $badge_image = Badges::find()->select(['image'])->where(['id' => $badge['badgeid']])->one();
                     $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['badge'] .= '<img width = "30" height = "30" id = "image-preview-'.$key.'" src="data:image/png;base64,'.base64_encode($badge_image['image']).'"/>&nbsp;';
                 }
                 $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['points'] = $value->points;
-                $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['annotations'] = sizeof($value->user->getRates()->groupBy(['resourceid'])->asArray()->all());
+                if( $surveyid ){
+                    $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['annotations'] = sizeof($value->user->getRates()->where(['surveyid' => $surveyid])->groupBy(['resourceid'])->asArray()->all());
+                }else{
+                    $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['annotations'] = sizeof($value->user->getRates()->groupBy(['resourceid'])->asArray()->all());
+                }
+                
             }
         }
 
@@ -108,10 +113,10 @@ class Leaderboard extends \yii\db\ActiveRecord
 
     public function getTotalLeaderboard()
     {
-        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username', 'SUM(points)'])->orderBy(['points' => SORT_DESC])->groupBy(['userid'])->all();
+        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username', 'SUM(points) AS points'])->orderBy(['points' => SORT_DESC])->groupBy(['userid'])->all();
+        
         $total_leaderboard = [];
         foreach ($total_leaderboard_q as $key => $value) {
-
             $total_leaderboard[$key]['username'] = $value->user->username;
             $total_leaderboard[$key]['badge'] = '';
             foreach ( $value->user->getUsertobadges()->asArray()->all() as $badge){

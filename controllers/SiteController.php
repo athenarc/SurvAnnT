@@ -150,6 +150,7 @@ class SiteController extends Controller
 
     public function actionLeaderboard()
     {
+        $userid = Yii::$app->user->identity->id;
         $lead = new Leaderboard();
         $survey_leaderboards['global_leaderboard'] = $lead->getTotalLeaderboard();
         $leaderboard = 'global_leaderboard';
@@ -163,7 +164,7 @@ class SiteController extends Controller
             
         }
         
-        $surveys = Surveys::find()->select(['name', 'id'])->where(['active' => 1 ])->all();
+        $surveys = Surveys::find()->joinWith('participatesin')->select(['name', 'surveys.id'])->where(['active' => 1, 'userid' => $userid ])->all();
         $survey_names = array_values( array_column( $surveys, 'name') );
         $survey_ids = array_values( array_column( $surveys, 'id') );
         $tabs = [];
@@ -631,41 +632,42 @@ class SiteController extends Controller
 
                 
                 if ( $survey->badgesused == 1 ){
-                    $badges = Badges::find()->joinWith(['surveytobadges'])->select(['badges.*' , 'surveytobadges.surveycondition', 'surveytobadges.ratecondition'])->where(['surveytobadges.surveyid' => $survey->id])->all();
 
-                    foreach ($badges as $badge) {
-                        // USER BADGE REWARD 
-                        foreach ($badge->surveytobadges as $surveytobadge) {
-                            $usertobadges = new Usertobadges();
-                            $usertobadges->userid = $userid;
-                            $usertobadges->badgeid = $badge->id;
-                            $usertobadges->surveyid = $survey->id;
+                    $surveytobadges = Surveytobadges::find()->where(['surveyid' => $surveyid])->all();
 
-                            $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition && (int)$surveytobadge->ratecondition > 0;
-                            // $surveys_expression = (int)$user_surveys_finished >= (int)$surveytobadge->surveycondition;
-                            if ( $ratings_expression ){
-                                if ( ! Usertobadges::find()->where(['surveyid' => $survey->id, 'userid' => $userid, 'badgeid' => $badge->id])->all() ){
-                                    $usertobadges->save();
-                                    if ( $leaderboard ){
-                                        if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'userid' => $userid])->all() ){
-                                            // FIRST BADGE FOR THE USER
-                                            $leaderboard->points += Yii::$app->params['Scoring-system']['First-Badge-Earned'];
-                                        }
+                    foreach ($surveytobadges as $surveytobadge) {
+                        $badge = $surveytobadge->getBadge()->one();
+                        
+                        $usertobadges = new Usertobadges();
+                        $usertobadges->userid = $userid;
+                        $usertobadges->badgeid = $badge->id;
+                        $usertobadges->surveyid = $survey->id;
+                        $rate_conditions[] = (int)$surveytobadge->ratecondition - (int)$user_feedback_provided;
+                        $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition && (int)$surveytobadge->ratecondition > 0;
 
-                                        if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'badgeid' => $badge->id])->all() ){
-                                            // IF NO ONE ELSE ON THIS SURVEY HAS ACQUIRED SPECIFIC BADGE
-                                            $leaderboard->points += Yii::$app->params['Scoring-system']['First-To-Earn-Badge'];
-                                        }
-
-                                        $leaderboard->save();
+                        if ( $ratings_expression ){
+                            if ( ! Usertobadges::find()->where(['surveyid' => $survey->id, 'userid' => $userid, 'badgeid' => $badge->id])->all() ){
+                                $usertobadges->save();
+                                if ( $leaderboard ){
+                                    if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'userid' => $userid])->all() ){
+                                        // FIRST BADGE FOR THE USER
+                                        $leaderboard->points += Yii::$app->params['Scoring-system']['First-Badge-Earned'];
                                     }
-                                    
+
+                                    if ( ! Usertobadges::find()->where(['surveyid' => $surveyid, 'badgeid' => $badge->id])->all() ){
+                                        // IF NO ONE ELSE ON THIS SURVEY HAS ACQUIRED SPECIFIC BADGE
+                                        $leaderboard->points += Yii::$app->params['Scoring-system']['First-To-Earn-Badge'];
+                                    }
+
+                                    $leaderboard->save();
                                 }
+                                
                             }
                         }
-                    }
+                    }                    
                 }
                 
+                $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
 
                 if ( $survey->completed == 1 || $participant->finished == 1 ){
                     
@@ -714,7 +716,7 @@ class SiteController extends Controller
                 return $this->redirect(['site/survey-rate', 'surveyid' => $surveyid]);
             }
         }
-        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal]);
+        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal, 'rate_conditions' => $rate_conditions, 'next_badge_goal' => $next_badge_goal]);
     }
 
     public function actionRequestParticipation()
@@ -739,6 +741,29 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+    }
+
+    public function actionSurveyCreateNew()
+    {
+        $survey = new Surveys();
+        $participant = new Participatesin();
+        $users = User::find()->select(['id', 'username'])->all();
+        $tabs = Yii::$app->params['tabs'];
+        $tabs['Campaign']['enabled'] = 1;
+        $message = 'Campaign';
+        $userid = Yii::$app->user->identity->id;
+        $fields = [];
+
+
+        return $this->render('surveycreatenew', [
+            'surveyid' => $survey->id,
+            'survey' => $survey,
+            'participant' => $participant,
+            'users' => $users,
+            'message' => $message,
+            'tabs' => $tabs,
+            'fields' => $fields
+        ]);
     }
 
     public function actionSurveyCreate()
@@ -1230,7 +1255,7 @@ class SiteController extends Controller
             return $this->goBack();
         }
         $fields = array_filter( explode("&&", $survey->fields) );
-        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid])->asArray()->all();
+        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid, 'owner' => 0])->asArray()->all();
         $user_invited = Invitations::find()->where(['surveyid' => $surveyid])->asArray()->all();
         $limit_on_fields = false;
 
@@ -1264,6 +1289,10 @@ class SiteController extends Controller
                     continue;
                 }
             } 
+
+            if ( $users[$key]['id'] == Yii::$app->user->identity->id ){
+                unset($users[$key]);
+            }
         }
 
         foreach ($user_invited as $usr_inv) {
