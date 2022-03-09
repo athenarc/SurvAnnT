@@ -114,6 +114,9 @@ $(document).ready(function(){
             	to_remove.remove();
             	if ( userid != -1 ){
             		$(".non-participants-table").append("<tr>" + row + "</tr></table>");
+					
+					// defined in veto.js
+					removeFromExpertSet(userid);
             	}
             },
             error : function(){
@@ -206,6 +209,11 @@ $(document).ready(function(){
             			item.append('<a class = "fas fa-check" title ="Invited!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>');
             		}
             		$(".participants-table").append("<tr>" + row + "</tr></table>");
+
+					// defined in veto.js
+					let name = $($(row)[0]).html();
+					let surname = $($(row)[1]).html();
+					addToExpertSet(userid, `${name} ${surname}`);
             	}else{
             		item.prev().html('<input type="email" name="new-user-email" class ="form-control" value = "' + email + '">');
             		item.find('#invite-new-user').css("display", "block"); //('<a id = "invite-new-user" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>&nbsp; &nbsp;');
