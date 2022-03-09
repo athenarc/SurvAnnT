@@ -688,8 +688,6 @@ class SiteController extends Controller
                     $rate->collectionid = $resource['collectionid'];
                     $rate->answertype = $question['answertype'];
                     $rate->tooltip = $question['tooltip'];
-                    print_r($question['tooltip']);
-                    echo "<br><br><br>";
                     $rate->surveyid = $survey->id;
                     $rates[] = $rate;
                     $answer_values = [];
