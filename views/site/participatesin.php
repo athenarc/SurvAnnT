@@ -3,10 +3,13 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\participatesin */
 /* @var $form ActiveForm */
+$this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends' => [\yii\web\JqueryAsset::className()]]);
+
 ?>
 <div class="participatesincreate survey-form">
 
@@ -67,22 +70,61 @@ use kartik\select2\Select2;
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class = "col-md-4">
-                    
-                </div>
-                <div class = "col-md-4">
-                </div>
-            </div>
 
-            <div class ="row" style = "padding-left:2%; padding-right: 2%;">
-                <div class = "col-md-4">
                     <a id = "add-invitations" class="btn btn-primary submit-button white" title = "Add more invitation inputs!" style = "cursor: pointer; text-decoration: none;">Add</a>
+
                 </div>
-                <div class = "col-md-4">
-                    
-                </div>
-                <div class = "col-md-4">
+                <div class = "offset-md-2 col-md-6">
+                <div class="card border-info">
+                    <div class="card-body text-info">
+                        <h4 class="card-title">Participant recommendations</h4>
+
+                        <h6 class="card-subtitle mb-2 text-muted">powered by <a href="http://veto.imsi.athenarc.gr" target="_blank" class="text-info">VeTo <i class="fa-solid fa-square-arrow-up-right"></i></a></h6>
+                        
+                        <div class="card-text mb-2">Retrieve recommendations for individuals that share similar expertise with the current set of selected participants.</div>
+
+                        <div class="mb-2">
+                            <span style="display: inline-block;"> 
+                                Dataset <i class="fa-solid fa-circle-info" title="VeTo uses this dataset to compute similarities between authors"></i>
+                            </span>
+                            <span class="" style="display: inline-block;">
+                                <?= Html::dropDownList('veto-dataset', '', [ 'dblp' => 'DBLP' ], ['class' => 'form-control btn-sm']) ?>
+                            </span>
+                        </div>
+                        <div class="mb-2">
+                            Found participants: <span id="found-participants" class="text-secondary">
+                                <div id="found-participants-loading" class="spinner-grow spinner-grow-sm text-info" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </span>
+
+                            <?php 
+                                $participants = array_filter($users, function($u) {
+                                    return ($u['participates'] == true);  
+                                });
+
+                                echo Html::hiddenInput('veto-participants', json_encode($participants), ['id' => 'veto-participants']);
+                            ?>
+                        </div>
+                        <div class="text-center">
+                            <div style="padding-bottom: 10px;">
+                                <button id="veto-exec-button" class="btn btn-info btn-sm" disabled="true" title="No selected participant can be found in the selected dataset">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Find
+                                </button>
+                            </div>
+                            <div id="veto-loading-spinner" style="display: none;">
+                                <i class="fa fa-spinner fa-pulse fa-1x"></i> <span id="loading-message"></span>
+                            </div>
+                            <div id="veto-loading-progress" style="display: none;" class="progress">
+                                <div id="veto-loading-message" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- result are rendered with js in this list -->
+                        <ul id="veto-results" class="list-group list-group-flush">
+                        </ul>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
