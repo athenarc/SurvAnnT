@@ -214,15 +214,8 @@ class SiteController extends Controller
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
             if ( Surveys::findOne($surveyid) ){
-                $query->andWhere(['id' => $surveyid]);
-                $tabs = ['Campaign' => ['link' => '', 'enabled' => 1]];
-                $survey = Surveys::findOne($surveyid);
-                $survey_sections = $survey->getOverview($surveyid, true);
-                $message = 'Campaign';
-                $survey_sections['resources'] = [];
-                
-                
-                return $this->render('surveysview', ['survey' => $survey, 'tabs' => $tabs, 'message' => $message, 'surveyid' => $surveyid, 'survey_sections' => $survey_sections]);
+                $survey = Surveys::findOne($surveyid);                
+                return $this->render('surveysview', ['survey' => $survey]);
             }
         }
 

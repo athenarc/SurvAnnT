@@ -336,4 +336,14 @@ class Surveys extends \yii\db\ActiveRecord
 
             return $survey_sections;
     }
+
+    /**
+     * Gets query for [[Surveytobadges]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSurveytobadges()
+    {
+        return $this->hasMany(Surveytobadges::className(), ['surveyid' => 'id']);
+    }
 }
