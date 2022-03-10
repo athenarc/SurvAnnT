@@ -1179,7 +1179,7 @@ class SiteController extends Controller
 
                     if ( $question->answertype != 'textInput' ){
                         $num_of_answers = sizeof( preg_grep( "/question-$key-".$question->answertype."-[0-9]-answer/", array_keys( $_POST ) ) );
-                        $greped_arr = preg_grep( "/question-$key-".$question->answertype."-[0-9]-answer/", array_keys( $_POST ) );
+                        $greped_arr = preg_grep( "/question-$key-".$question->answertype."-<[0-9]>-answer/", array_keys( $_POST ) );
                         foreach ($greped_arr as $key => $value) {
                             $answer_values[] = array($_POST[str_replace("answer", "value", $value)] => $_POST[$value]);
                         }
@@ -1270,7 +1270,7 @@ class SiteController extends Controller
             return $this->goBack();
         }
         $fields = array_filter( explode("&&", $survey->fields) );
-        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid, 'owner' => 0])->asArray()->all(); // 'owner' => 0
+        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid])->asArray()->all(); // 'owner' => 0
         $user_invited = Invitations::find()->where(['surveyid' => $surveyid])->asArray()->all();
         $limit_on_fields = false;
 
@@ -1305,9 +1305,9 @@ class SiteController extends Controller
                 }
             } 
 
-            // if ( $users[$key]['id'] == Yii::$app->user->identity->id ){
-            //     unset($users[$key]);
-            // }
+            if ( $users[$key]['id'] == Yii::$app->user->identity->id ){
+                $users[$key]['owner'] = 1;
+            }
         }
 
         foreach ($user_invited as $usr_inv) {

@@ -77,18 +77,17 @@ $(document).ready(function(){
     $('body').on('click', 'a.add-question', function(e) {
         // FUNCTION THAT ADDS QUESTION FIELD
         e.preventDefault();
-        var numItems = parseInt( $('.dataset-tools').length );
+        var numItems = parseInt( $(".dataset-tools").last().attr("id").replace("dataset-tools-", "") ) + 1;
         var dataset_tools = $(".dataset-tools").last().clone().prop('outerHTML').replaceAll(numItems - 1, numItems).replace("Dataset " + numItems, "Dataset " + ( numItems + 1 ) ).replace("Question " + numItems, "Question " + ( numItems + 1 ) );
-        var dataset_form = $(".dataset-form").last().clone().prop('outerHTML').replaceAll("-" + ( numItems - 1 ), "-" + numItems).replaceAll("[" + ( numItems - 1 ), "[" + numItems);
+        var dataset_form = $(".dataset-form").last().clone().removeClass("col-md-12").prop('outerHTML').replaceAll("-" + ( numItems - 1 ), "-" + numItems).replaceAll("[" + ( numItems - 1 ), "[" + numItems);
         var dataset_ownerid = $("div[class*=-" + ( numItems - 1 ) + "-ownerid]").last().clone().prop('outerHTML').replaceAll(numItems - 1, numItems);
-        var dataset_destroy = $("div[class*=-" + ( numItems - 1 ) +"]" ).last().clone().prop('outerHTML').replaceAll(numItems - 1, numItems);
+        var dataset_destroy = $("div[class*=-destroy-" + ( numItems - 1 ) +"]" ).last().clone().prop('outerHTML').replaceAll(numItems - 1, numItems);
 
         $(".datasets-table > .button-row-2").before(dataset_tools);
         $(".datasets-table > .button-row-2").before(dataset_form);
         $(".datasets-table > .button-row-2").before(dataset_ownerid);
-        // $(".datasets-table > .button-row-2").before(dataset_surveyid);
         $(".datasets-table > .button-row-2").before(dataset_destroy);
-
+        $(".dataset-form").last().addClass("col-md-12");
         $(".dataset-form").last().find(".form-group").each(function( ) {
           $(this).find("textarea").text("");
           $(this).find("input").text("");

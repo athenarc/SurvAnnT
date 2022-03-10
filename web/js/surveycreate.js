@@ -30,8 +30,12 @@ $(document).ready(function(){
 					var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Allow user to participate!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
 					row += invite_icon.replace('<id>', users[i].id) + '&nbsp;&nbsp;';
 				}
+				if ( users[i].owner != 1 ){
+					row += delete_icon.replace('<id>', users[i].id) +'</td></tr>';
+				}else{
+					row += '<i class="fa-solid fa-crown" title = "Owner"></i> </td></tr>';
+				}
 				
-				row += delete_icon.replace('<id>', users[i].id) +'</td></tr>';
 				participants += row;
 			}else if( users[i].participates == 0 ){
 				row += '<td style = "text-align: center;">'+ view_icon.replace('<id>', users[i].id) + '&nbsp;&nbsp;';

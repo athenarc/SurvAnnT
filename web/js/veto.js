@@ -32,7 +32,9 @@ function getExpert(userId, name) {
                 const isEmpty = Object.keys(response).length === 0 && response.constructor === Object; // find a more elegant way to check if obj is empty (consider lodash?)
                 
                 if (!isEmpty) {
-
+                    if( $('#found-participants').html() == '<i>Sorry, no selected participant can be found in the selected dataset.</i>' ){
+                        $('#found-participants').html("");
+                    }
                     $('#found-participants').prepend(`<span id="veto-participant-${userId}" veto-id="${response.id}">${name + ((found) ? ', ' : '')}</span>`);
                     expertSet.push({
                         userId, 

@@ -83,10 +83,10 @@ use yii\widgets\ActiveForm;
                                             ?>
                                             <tr>
                                                 <td>
-                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-radioList-<?=$counter?>-answer" class = "form-control" style = "">
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-radioList-<<?=$counter?>>-answer" class = "form-control" style = "">
                                                 </td>
                                                 <td>
-                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-radioList-<?=$counter?>-value" class = "form-control" style = "">
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-radioList-<<?=$counter?>>-value" class = "form-control" style = "">
                                                 </td>
                                                 <td>
                                                     <a id = "delete-radioList-<?=$key?>-<?=$answer_key?>" class="fas fa-trash-alt link-icon delete-radioList-key"></a>
@@ -116,10 +116,10 @@ use yii\widgets\ActiveForm;
                                             <tr>
                                                 <!-- FOR EACH LIKERT VAL -->
                                                 <td>
-                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-5-<?=$counter?>-answer" class = "form-control">
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-5-<<?=$counter?>>-answer" class = "form-control">
                                                 </td>
                                                 <td>
-                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-5-<?=$counter?>-value" class = "form-control">
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-5-<<?=$counter?>>-value" class = "form-control">
                                                 </td>
                                                 <!-- FOR EACH LIKERT VAL -->
                                                 <td>
@@ -149,10 +149,10 @@ use yii\widgets\ActiveForm;
                                             ?>
                                             <tr>
                                                 <td>
-                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-7-<?=$counter?>-answer" class = "form-control">
+                                                    <input type="text" value="<?=$answer_val?>" name="question-<?=$key?>-Likert-7-<<?=$counter?>>-answer" class = "form-control">
                                                 </td>
                                                 <td>
-                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-7-<?=$counter?>-value" class = "form-control">
+                                                    <input type="text" value="<?=$answer_key?>" name="question-<?=$key?>-Likert-7-<<?=$counter?>>-value" class = "form-control">
                                                 </td>
                                                 <td>
                                                     <a id = "delete-radioList-<?=$key?>-<?=$answer_key?>" class="fas fa-trash-alt link-icon delete-radioList-key"></a> 

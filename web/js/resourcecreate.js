@@ -308,6 +308,7 @@ $(document).ready(function(){
     $('body').on('click', 'a.add-dataset', function(e) {
 
         e.preventDefault();
+        alert("Hi");
         var numItems = parseInt( $('.dataset-tools').length );
         var dataset_tools = $(".dataset-tools").last().clone().prop('outerHTML').replaceAll(numItems - 1, numItems).replace("Dataset " + numItems, "Dataset " + ( numItems + 1 ) ).replace("Question " + numItems, "Question " + ( numItems + 1 ) );
         var dataset_form = $(".dataset-form").last().clone().prop('outerHTML').replaceAll("-" + ( numItems - 1 ), "-" + numItems).replaceAll("[" + ( numItems - 1 ), "[" + numItems);
