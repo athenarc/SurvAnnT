@@ -13,9 +13,9 @@ use yii\widgets\DetailView;
  * @var webvimark\modules\UserManagement\models\User $model
  */
 
-$this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => UserManagementModule::t('back', 'Users'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+// $this->title = $model->username;
+// $this->params['breadcrumbs'][] = ['label' => UserManagementModule::t('back', 'Users'), 'url' => ['index']];
+// $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
 
