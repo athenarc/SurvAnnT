@@ -3,10 +3,10 @@
 body{
     font-family: font-family: Tahoma, sans-serif; /*"Sansita Swashed", cursive;*/
     /*font-size: 16px;*/
-    background: linear-gradient(45deg, #C7CEEA, dodgerblue);
+    background: linear-gradient(45deg, #C7CEEA, dodgerblue) !important;
     height: 100vh;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
 }
 
 main > .container {

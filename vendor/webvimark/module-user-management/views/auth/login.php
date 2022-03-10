@@ -1,7 +1,7 @@
 <style type="text/css">
 	@import url("https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@600&display=swap");
 body{
-    background: linear-gradient(45deg, greenyellow, dodgerblue);
+    background: linear-gradient(45deg, #C7CEEA, dodgerblue);
 }
 </style>
 

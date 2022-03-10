@@ -1243,6 +1243,7 @@ class SiteController extends Controller
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
+        
         // $tabs['Overview']['enabled'] = 1;
         
         if ( !isset( $_GET['surveyid'] ) ){
@@ -1255,6 +1256,11 @@ class SiteController extends Controller
         }
 
         $survey = Surveys::findOne( $surveyid );
+
+        if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
+            $tabs['Overview']['enabled'] = 1;
+        }
+        
         if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
             return $this->goBack();
         }
@@ -1362,7 +1368,10 @@ class SiteController extends Controller
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
-        $tabs['Overview']['enabled'] = 1;
+        if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
+            $tabs['Overview']['enabled'] = 1;
+        }
+        
         $use_badges = true;
         $badges = Badges::find()->joinWith('surveytobadges')->where(['surveyid' => $surveyid])->all();
 
