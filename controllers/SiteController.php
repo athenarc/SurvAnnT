@@ -1305,9 +1305,9 @@ class SiteController extends Controller
                 }
             } 
 
-            if ( $users[$key]['id'] == Yii::$app->user->identity->id ){
-                unset($users[$key]);
-            }
+            // if ( $users[$key]['id'] == Yii::$app->user->identity->id ){
+            //     unset($users[$key]);
+            // }
         }
 
         foreach ($user_invited as $usr_inv) {
