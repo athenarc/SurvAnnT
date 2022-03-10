@@ -10,8 +10,8 @@ $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
 
-	<div class="outside-div">
-		<div style = "margin:2%;"> 
+	<div class="outside-div" style = "width: 70%;">
+		<div class="text-center" style = "margin:4%;"> 
 			<?= isset($message) ? $message : '' ?>
 		</div>
 		<div class = "row button-row">

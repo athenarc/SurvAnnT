@@ -15,20 +15,25 @@ $this->title = 'My Yii Application';
 
 		<div class = "rate-box" >
 			<div class = "resource-row marg-left-right">
-				<h5> <i>Campaign:  <?= $survey->name ?></i></h5>
+				<h5 class="text-center"> <i>Campaign:  <?= $survey->name ?></i></h5>
 				<?php 	if ( $resource['type'] == 'image'): ?>
 					<div class = "text-center">
 						<img src="data:image/png;base64,<?= base64_encode($resource['image']) ?>"/>
 					</div>
 				<?php 	elseif ( $resource['type'] == 'questionaire' ): ?>
-					<div class = "text-left">
+					<div class = "text-center">
 						<h2><?= $resource['title'] ?></h2>	
 					</div>
 
-				<?php 	else: ?>
+				<?php 	elseif ( $resource['type'] == 'article' ): ?>
 					<div class = "text-left">
 						<h2><?= $resource['title'] ?></h2>
 						<?= $resource['abstract'] ?>
+					</div>
+				<?php 	else: ?>
+					<div class = "text-left">
+						<h2><?= $resource['title'] ?></h2>
+						<?= $resource['text'] ?>
 					</div>
 				<?php 	endif; ?>
 				<br>
@@ -45,7 +50,7 @@ $this->title = 'My Yii Application';
 		           	<div class = "row question-values">
 		           		<div class = "col-md-12">
 			                <?php if( $questions[$key]['answertype'] == 'textInput' ): ?>
-			                	<?= $form->field($rate, "[$key]answer")->textInput(['class' => 'question-radiolist', 'id' => 'rate-answer-'.$key])->label(false) ?><br>
+			                	<?= $form->field($rate, "[$key]answer")->textInput(['id' => 'rate-answer-'.$key])->label(false) ?><br>
 			                <?php else: ?>
 			                	<?= $form->field($rate, "[$key]answer")->radioList($questions[$key]['answervalues'], [ 'class' => 'question-radiolist', 'id' => 'rate-answer-'.$key])->label(false) ?><br>
 			                <?php endif; ?>
@@ -67,15 +72,17 @@ $this->title = 'My Yii Application';
 				       
 				        </div>
 			    	<?php endif; ?>
-			        <div class = "col-md-6">
-		        		<h4> Next Badge Goal </h4>
+			    	<?php if(( $next_badge_goal > 0 )): ?>
+				        <div class = "col-md-6">
+			        		<h4> Next Badge Goal </h4>
 
-						<?= Progress::widget([
-			            'percent' => substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ),
-			            'barOptions' => ['class' => 'progress-bar-success'],
-			            'options' => ['class' => 'active progress-striped']
-			            ]), substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ), "% ( Annotate ", $next_badge_goal, " more resources for the next badge! ) " ?>
-			        </div>
+							<?= Progress::widget([
+				            'percent' => substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ),
+				            'barOptions' => ['class' => 'progress-bar-success'],
+				            'options' => ['class' => 'active progress-striped']
+				            ]), substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ), "% ( Annotate ", $next_badge_goal, " more resources for the next badge! ) " ?>
+				        </div>
+			        <?php endif; ?>
 	        	</div>
 
 				<div class = "row button-row">
@@ -85,7 +92,7 @@ $this->title = 'My Yii Application';
 					</div>
 		            <div class = "col-md-1">
 		            	
-				    	<?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button']); ?>
+				    	<?= Html::submitButton(($resource['type'] != 'questionaire') ? 'Next' : 'Submit', ['class' => 'btn btn-primary submit-button']); ?>
 					</div>
 				</div>
 			</div>

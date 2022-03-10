@@ -614,11 +614,12 @@ class SiteController extends Controller
                 // $fetched_resource_evals = Rate::find()->select(['count(*)'])->where(['resourceid' => $fetched_resource_id])->groupBy(['resourceid', 'questionid'])->all();
 
                 if ( ! $resource ){
-                    $message = 'Thank you for participating in Campaign '.$survey->name.". <br> You have annotated every resource! <br><br> Feel free to request participation in other surveys as well.";
+                    $message = '<p>Thank you for participating in Campaign '.$survey->name.'.</p>';
+                    $message .= '<p>Feel free to request participation in other surveys as well.</p>';
                 } 
 
                 if ( $survey->completed == 1 ){
-                    $message = 'Thank you for participating in Campaign '.$survey->name.". <br> The survey is completed! <br><br> Feel free to request participation in other surveys as well.";   
+                    $message = '<p>Thank you for participating in Campaign '.$survey->name.".</p> <p>The Campaign is completed! </p><p> Feel free to request participation in other surveys as well.</p>";   
                 }
                     
                 if ( $survey->completed == 1 || ! $resource ){
@@ -669,8 +670,12 @@ class SiteController extends Controller
                         }
                     }                    
                 }
-                
-                $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
+
+                $rate_conditions = [];
+                $next_badge_goal = 0;
+                if ( sizeof( array_filter($rate_conditions ) ) > 0 ){
+                    $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
+                }
 
                 if ( $survey->completed == 1 || $participant->finished == 1 ){
                     
@@ -1260,7 +1265,7 @@ class SiteController extends Controller
         if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
             $tabs['Overview']['enabled'] = 1;
         }
-        
+
         if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
             return $this->goBack();
         }
