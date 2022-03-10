@@ -51,12 +51,12 @@ return [
         ],
     'tabs' => 
         [
-            'Campaign' => 
+            'General Settings' => 
                 [
                     'link' => 'index.php?r=site%2Fsurvey-create&surveyid=',
                     'enabled' => 0
                 ],
-            'Resources' =>
+            'Collection of Resources' =>
                  [
                     'link' => 'index.php?r=site%2Fresource-create&surveyid=',
                     'enabled' => 0

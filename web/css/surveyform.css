@@ -236,3 +236,8 @@ h5{
 .fa-crown{
     color: gold;
 }
+
+.border-info{
+    text-align: left !important;
+    border-color: #ced4da !important;
+}

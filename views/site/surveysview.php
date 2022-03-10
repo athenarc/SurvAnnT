@@ -105,7 +105,7 @@ $date = date('Y-m-d hh:mm', time());
                     <?php endforeach; ?>
                     <?php if( sizeof( $survey->getParticipatesin()->all() ) == 0 ): ?>
                         <tr>
-                            <td colspan = "2" style = "text-align: center;"> <i>No participants yet</i></td>
+                            <td colspan = "3" style = "text-align: center;"> <i>No participants yet</i></td>
                         </tr>
                     <?php endif; ?>
                 </table>

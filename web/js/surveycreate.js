@@ -12,8 +12,9 @@ $(document).ready(function(){
 		$(".submit-button").attr('name', 'finalize');
 		var users = jQuery.parseJSON( $("#users_array").val() );
 
-		var participants = '<div class = "col-md-6" style ="position: relative; height: 300px; overflow: auto;"><table class="table table-striped table-bordered participants-table"> <thead class="control-label" for="surveys-starts" style = "text-decoration: none;"><tr><th colspan = "3" style = "width:80%;">Participants</th><th  style = "text-align: center;" ><a class="fas fa-angle-down" style = "cursor: pointer; text-decoration: none;"></a></tr></thead><tbody class = "participants-body">';
-		var non_participants =  participants.replace("Participants", "Select users to participate!").replace("participants", "non-participants").replace("participants-body", "non-participants-body");
+		var participants = '<table class="table table-striped table-bordered participants-table"> <thead class="control-label" for="surveys-starts" style = "text-decoration: none;"><tr><th colspan = "3" style = "width:80%;">Participants</th><th  style = "text-align: center;" ><a class="fas fa-angle-down" style = "cursor: pointer; text-decoration: none;"></a></tr></thead><tbody class = "participants-body">';
+		var non_participants =  participants.replace("Participants", "Already in SurvAnnT").replace("participants", "non-participants").replace("participants-body", "non-participants-body");
+		participants = '<div class = "col-md-6" style ="position: relative; max-height: 635px; overflow: auto;">' + participants;
 		var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
 		var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
 		var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
@@ -49,12 +50,12 @@ $(document).ready(function(){
 			
 		}
 		participants += '</tbody></table></div>';
-		non_participants += '</tbody></table></div>';
+		non_participants += '</tbody></table>';
 		if($('.non-participants-table').length == 0) {
-			$(".table-row").append(non_participants);
+			$(".table-row-2 > .col-md-6:first").prepend(non_participants);
 		}
 		if($('.participants-table').length == 0) {
-			$(".table-row").append(participants);
+			$(".table-row").prepend(participants);
 		}
 
 	}
@@ -135,7 +136,7 @@ $(document).ready(function(){
 
 		var input = '<input type="email" name="new-user-email" class ="form-control">';
 		var inv_icon = '<a id = "invite-new-user" class="fas fa-envelope add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
-		$(".invite-body").append("<tr><td>" + input + "</td><td>" + inv_icon + "</td></tr>");
+		$(".invite-body > tr:last").before("<tr><td>" + input + "</td><td>" + inv_icon + "</td></tr>");
 	});
 	$('body').on('click', 'a.add-user', function() {
 		var userid = $(this).attr("id");

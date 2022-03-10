@@ -406,88 +406,6 @@ class SiteController extends Controller
 
         return $response;
     }
-
-    
-
-    public function actionDatasetCreate(){
-        $dataset = new Dataset();
-        $questions = new Questions();
-        $userid = Yii::$app->user->identity->id;
-        $message = 'Dataset';
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['Survey']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
-        
-        if ( !isset( $_GET['surveyid'] ) ){
-            if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
-                return $this->goHome();
-            }
-        }else{
-            $surveyid = $_GET['surveyid'];
-            $tabs['Questions']['enabled'] = 1;
-            $tabs['Participants']['enabled'] = 1;
-        }
-
-        
-
-        if ( isset( $surveyid ) && Dataset::find()->where(['surveyid' => $surveyid])->all() ){
-            $datasets = Dataset::find()->where(['surveyid' => $surveyid])->all();
-
-        }else{
-            if( file_exists(Yii::$app->params['dataset']) ){
-                $datasets = $dataset->read(Yii::$app->params['dataset'], $surveyid, $userid);
-            }else{
-                $datasets = [new Dataset()];
-            }
-        }
-
-
-        if ( isset( $_POST['Dataset'] ) && sizeof( $_POST['Dataset'] ) > sizeof( $datasets ) ){
-            $diff = sizeof( $_POST['Dataset'] ) - sizeof($datasets);
-            for ($i = 0; $i < $diff; $i++) {
-                $new_dataset = new Dataset();
-                $new_dataset->surveyid = $surveyid; 
-                $new_dataset->ownerid = $userid; 
-                $datasets[] = $new_dataset;
-                // echo "$i Creating new dataset ", $diff, " <br><br>";
-            }
-
-        }
-   
-        $fields = array_values ( array_keys ( Dataset::attributeLabels() ) );
-        $excluded = [ 'id', 'created', 'ownerid', 'surveyid', 'abstract', 'title', 'destroy'];
-        $colspan = sizeof($fields) - sizeof($excluded);
-
-        
-        if ( Model::loadMultiple($datasets, Yii::$app->request->post() ) ){
-            if ( Model::validateMultiple($datasets) ) {
-                foreach ($datasets as $dataset) {
-                    
-                    if ( ! $dataset->destroy ){
-                        $dataset->save(false);
-                    }else{
-                        if ( $dataset->id ){
-                            $dataset->delete();
-                        }
-                    }
-                }
-
-                Yii::$app->response->redirect( array( 'site/questions-create', 'surveyid' => $surveyid));
-            }
-        }
-        return $this->render('datasetcreate', [
-            'surveyid' => $surveyid,
-            'fields' => $fields,
-            'datasets' => $datasets,
-            'questions' => $questions,
-            'action' => 'generate-participants',
-            'message' => $message,
-            'excluded' => $excluded,
-            'tabs' => $tabs,
-            'colspan' => $colspan
-        ]);
-    }
-
     
     public function actionSurveyDelete()
     {
@@ -747,15 +665,68 @@ class SiteController extends Controller
 
     public function actionSurveyCreateNew()
     {
-        $survey = new Surveys();
-        $participant = new Participatesin();
+        $userid = Yii::$app->user->identity->id;
+
+        if ( isset( $_GET['surveyid'] ) ){
+            $survey = Surveys::findOne($_GET['surveyid']);
+            if ( $survey ){
+                $participant = $survey->getParticipatesin()->where(['userid' => $userid])->one();
+                if ( ! $participant ){
+                    $participant = new Participatesin();
+                }
+            }
+        }else{
+            $survey = new Surveys();
+            $participant = new Participatesin();
+        }
+        
+        
         $users = User::find()->select(['id', 'username'])->all();
         $tabs = Yii::$app->params['tabs'];
-        $tabs['Campaign']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
         $message = 'Campaign';
-        $userid = Yii::$app->user->identity->id;
+        
         $fields = [];
+        $db_survey_fields = Surveys::find()->select(['fields'])->asArray()->all();
+        
+        foreach ( array_filter( array_column( $db_survey_fields, 'fields' ) ) as $key => $value) {
+            // array_merge($fields, explode("&&", $value));
 
+            foreach (explode("&&", $value) as $v) {
+                $fields[$v] = $v;
+            }
+            
+        }
+
+        if ( $survey->load( Yii::$app->request->post() ) ) {
+            if ($survey->validate()) {
+
+                $surv_fields = [];
+                if ( is_array($survey->fields) ){
+                    foreach ($survey->fields as $key => $value) {
+                        $field = new Fields();
+                        $field->name = ucwords( $value );
+                        if ( ! Fields::find()->where(['name' => $value])->all() ){
+                            $field->save();
+                        }
+                        $surv_fields[$field->name] = $field->name;
+                    }
+                    $survey->fields = implode("&&", $surv_fields);
+                }
+                
+               
+
+                if ( $survey->save() ){
+                    $participant->userid = $userid;
+                    $participant->owner = 1;
+                    $participant->surveyid = $survey->id;
+                    $participant->save();
+                    Yii::$app->response->redirect( array( 'site/resource-create-new', 'surveyid' => $survey->id ));
+                }                
+                
+            }
+
+        }
 
         return $this->render('surveycreatenew', [
             'surveyid' => $survey->id,
@@ -768,6 +739,117 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionResourceCreateNew()
+    {
+
+        $userid = Yii::$app->user->identity->id;
+        if ( isset( $_GET['surveyid'] ) ){
+            $surveyid = $_GET['surveyid'];
+            $survey = Surveys::findOne($surveyid);
+            if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) )){
+                return $this->goBack();
+            }
+        }
+
+        $tabs = Yii::$app->params['tabs'];
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
+        $tabs['Questions']['enabled'] = 1;
+        $tabs['Participants']['enabled'] = 1;
+        $tabs['Badges']['enabled'] = 1;
+
+        $message = 'Resources';
+
+        $options = ['db-load' => 'Load Collections from database' , 'dir-load' => 'Load Collections from directory' ]; 
+
+        $resource_types = Yii::$app->params['resources_allowlist'];
+        
+        $db_available_resources = [];
+
+        foreach (array_column ( Resources::find()->select(['DISTINCT (type)'])->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->asArray()->all(), 'type' ) as $key => $value) {
+            if ( $value == 'questionaire' ){
+                $db_available_resources[$value] = 'No resources (Single Questionaire)';
+            }else{
+                $db_available_resources[$value] = ucwords($value);
+            }
+            
+        }
+
+        $dir_available_resources = [];
+        foreach ( array_diff( scandir( Yii::$app->params['resources'] ), array(".", "..")) as $key => $value) {
+           
+            $dir_available_resources[$value] = ucwords($value);
+        }
+
+        $option = 'dir-load';
+        
+        $resource_types_option = 'article';
+
+        // DEFINING USER'S NEW COLLECTION + RESOURCES
+        $user_collection = $survey->getCollection()->one();
+        $resource = new Resources();
+
+        if ( $user_collection ){
+            $resources = $user_collection->getResources()->all();
+
+        }else{
+            $user_collection = new Collection();
+            
+            $resources = $resource->read($userid, $resource_types_option);
+        }
+
+        // GETTING EXISTING COLLECTIONS + RESOURCES
+
+        
+
+         if ( Yii::$app->request->post() ){
+
+            if ( isset($_POST['resources-function'], $_POST['resources-type']) ){
+                $option = escapeshellcmd( $_POST['resources-function'] );
+                $resource_types_option = escapeshellcmd( $_POST['resources-type'] );
+            }
+
+            if( $user_collection->load( Yii::$app->request->post() ) ){
+                
+                $user_collection->userid = $userid;
+                $surveytocollections = new Surveytocollections();
+                $surveytocollections->ownerid = $userid;
+                $surveytocollections->surveyid = $surveyid;
+                // $user_collection->save();
+                $surveytocollections->collectionid = $user_collection->id;
+                // $surveytocollections->save();
+            
+            }
+
+        }
+        
+        if ( $option == 'db-load' ){
+            $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->all();
+        }else{
+            $collections = [$user_collection];
+            $resources = $resource->read($userid, $resource_types_option);
+        }
+
+        return $this->render('resourcecreatenew', 
+            [
+                'survey' => $survey,
+                'options' => $options, 
+                'option' => $option, 
+                'tabs' => $tabs, 
+                'message' => $message, 
+                'surveyid' => $surveyid,
+                'resource_types_option' => $resource_types_option,
+                'resource_types' => $resource_types,
+                'db_available_resources' => $db_available_resources,
+                'dir_available_resources' => $dir_available_resources,
+                'userid' => $userid,
+                'collections' => $collections,
+                'resources' => $resources,
+                'user_collection' => $user_collection
+            ]);
+
+    }
+
     public function actionSurveyCreate()
     {
         date_default_timezone_set("Europe/Athens"); 
@@ -775,8 +857,8 @@ class SiteController extends Controller
         $participant = new Participatesin();
         $users = User::find()->select(['id', 'username'])->all();
         $tabs = Yii::$app->params['tabs'];
-        $tabs['Campaign']['enabled'] = 1;
-        $message = 'Campaign';
+        $tabs['General Settings']['enabled'] = 1;
+        $message = 'General Settings';
         $userid = Yii::$app->user->identity->id;
         $fields = [];
         $db_survey_fields = Surveys::find()->select(['fields'])->asArray()->all();
@@ -809,7 +891,7 @@ class SiteController extends Controller
                 return $this->goBack();
             }
             $survey->fields = explode("&&", $survey->fields);
-            $tabs['Resources']['enabled'] = 1;
+            $tabs['Collection of Resources']['enabled'] = 1;
             $tabs['Questions']['enabled'] = 1;
             $tabs['Participants']['enabled'] = 1;
             $tabs['Badges']['enabled'] = 1;
@@ -876,13 +958,13 @@ class SiteController extends Controller
 
         $tabs = Yii::$app->params['tabs'];
         
-        $tabs['Campaign']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
         
-        $message = 'Resources';
+        $message = 'Collection of Resources';
 
         $options = ['db-load' => 'Load Collections from database' , 'dir-load' => 'Load Collections from directory' ]; 
 
@@ -1119,8 +1201,8 @@ class SiteController extends Controller
         $userid = Yii::$app->user->identity->id;
         $message = 'Questions';
         $tabs = Yii::$app->params['tabs'];
-        $tabs['Campaign']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
@@ -1236,8 +1318,8 @@ class SiteController extends Controller
         $users = User::find()->select(['id', 'username', 'name', 'surname', 'email', 'fields'])->where(['!=', 'username', 'superadmin'])->andWhere(['availability' => 1])->asArray()->all();
         $tabs = Yii::$app->params['tabs'];
         $message = 'Participants';
-        $tabs['Campaign']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
@@ -1361,8 +1443,8 @@ class SiteController extends Controller
         $options = ['db-load' => 'Load badges from database' , 'user-form' => 'Insert your own badges'];
         $option = 'user-form';
         $message = 'Badges';
-        $tabs['Campaign']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
@@ -1554,8 +1636,8 @@ class SiteController extends Controller
     public function actionSurveyOverview()
     {
         $tabs = Yii::$app->params['tabs'];
-        $tabs['Campaign']['enabled'] = 1;
-        $tabs['Resources']['enabled'] = 1;
+        $tabs['General Settings']['enabled'] = 1;
+        $tabs['Collection of Resources']['enabled'] = 1;
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;

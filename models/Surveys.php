@@ -68,12 +68,12 @@ class Surveys extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'name' => 'Campaign id',
             'created' => 'Created',
-            'starts' => 'Starts',
-            'ends' => 'Ends',
+            'starts' => 'Start Date',
+            'ends' => 'End Date',
             'locked' => 'Availability',
-            'about' => 'About',
+            'about' => 'Campaign Description',
             'fields' => 'Research Topics',
             'minRespPerRes' => 'Min Evaluations Per Resource',
             'maxRespPerRes' => 'Max Evaluations Per Resource',
@@ -322,9 +322,9 @@ class Surveys extends \yii\db\ActiveRecord
                 $survey['fields'] = $table."</table>"; 
             }
 
-            $survey_sections['campaign'][0] = $survey;
+            $survey_sections['General Settings'][0] = $survey;
             // $survey_sections['collection'] = $collection;
-            $survey_sections['resources'] = isset( $resources ) ? $resources : [];
+            $survey_sections['Collection of Resources'] = isset( $resources ) ? $resources : [];
             $survey_sections['questions'] = $questions;
             $survey_sections['participants'] = $participants;
             $survey_sections['badges'] = $badges;

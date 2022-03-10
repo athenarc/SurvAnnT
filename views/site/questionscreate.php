@@ -181,7 +181,7 @@ use yii\widgets\ActiveForm;
             <div class = "row button-row">
                 <div class = "col-md-10"></div>
                 <div class = "col-md-1">
-                    <?= Html::a( 'Previous', $tabs['Resources']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+                    <?= Html::a( 'Previous', $tabs['Collection of Resources']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
                 </div>
                 <div class = "col-md-1">
                     <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>

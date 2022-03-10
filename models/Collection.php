@@ -53,8 +53,8 @@ class Collection extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'userid' => 'Userid',
-            'about' => 'About',
-            'allowusers' => 'Allowusers',
+            'about' => 'Description',
+            'allowusers' => 'Public',
             'created' => 'Created',
         ];
     }

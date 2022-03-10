@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
 
         <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
             <div class = "row" style = "margin:3%;">
-                <div class = "col-md-12">
-                    <?=  Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name', 'style' => "display: $tool"]) ?>
-                </div>
+                <!-- <div class = "col-md-12"> -->
+                     <!-- Html::a( 'Options', '', ['class' => 'btn submit-button edit-button', 'name' => 'test-name', 'style' => "display: $tool"])  -->
+                <!-- </div> -->
             </div>
             <div class = "datasets-table edit-tools" style = "display: <?= $tool ?>"> 
                 
@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm;
                         
                     </div>
                     <div class = "col-md-6">
-                        <?= Html::dropDownList('resources-function', $option, $options, ['class' => 'form-control user-resource-select']) ?> 
+                        Loading method: <?= Html::dropDownList('resources-function', $option, $options, ['class' => 'form-control user-resource-select']) ?> 
                     </div>
                     <div class = "col-md-3">
                         
@@ -43,13 +43,13 @@ use yii\widgets\ActiveForm;
                         
                     </div>
                     <div class = "col-md-6 user-resource-types" style = "display: <?= ( $option == 'user-form' ) ? 'block;' : 'none;' ?>">
-                        <?= Html::dropDownList('unused-resource', $resource_types_option, $resource_types, [ 'id' => 'user-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
+                        Type of resources: <?= Html::dropDownList('unused-resource', $resource_types_option, $resource_types, [ 'id' => 'user-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
                     </div>
                     <div class = "col-md-6 db-resource-types" style = "display: <?= ( $option == 'db-load' ) ? 'block;' : 'none;' ?>">
-                        <?= Html::dropDownList('unused-resource', $resource_types_option, $db_available_resources, [ 'id' => 'db-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
+                        Type of resources: <?= Html::dropDownList('unused-resource', $resource_types_option, $db_available_resources, [ 'id' => 'db-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
                     </div>
                     <div class = "col-md-6 dir-resource-types" style = "display: <?= ( $option == 'dir-load' ) ? 'block;' : 'none;' ?>">
-                        <?= Html::dropDownList('unused-resource', $resource_types_option, $dir_available_resources, [ 'id' => 'dir-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
+                        Type of resources: <?= Html::dropDownList('unused-resource', $resource_types_option, $dir_available_resources, [ 'id' => 'dir-resource-types', 'class' => 'form-control', 'label' => 'Resource types']) ?> 
                     </div>
                     <div class = "col-md-3">
                         
@@ -259,7 +259,7 @@ use yii\widgets\ActiveForm;
             <div class = "row button-row">
                 <div class = "col-md-10"></div>
                 <div class = "col-md-1">
-                    <?= Html::a( 'Previous', $tabs['Campaign']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+                    <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
                 </div>
                 <div class = "col-md-1">
                     <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>

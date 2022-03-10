@@ -24,7 +24,7 @@ $date = date('Y-m-d hh:mm', time());
             <div class = "col-md-12 dataset-form">
             <table class="table table-striped table-bordered participants-table">     
                 <tr class = "dataset-table-header-row">
-                    <td class = "dataset-header-column"> Name </td>
+                    <td class = "dataset-header-column"> Campaign id </td>
                     <td class = "dataset-header-column"> Starts </td>
                     <td class = "dataset-header-column"> Ends </td>
                     <td class = "dataset-header-column"> Availability <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all raters, or Locked to invite those that you want." style = "color: white !important;"></a></td>
