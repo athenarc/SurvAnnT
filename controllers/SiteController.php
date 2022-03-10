@@ -1270,7 +1270,7 @@ class SiteController extends Controller
             return $this->goBack();
         }
         $fields = array_filter( explode("&&", $survey->fields) );
-        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid, 'owner' => 0])->asArray()->all();
+        $user_participants = Participatesin::find()->where(['surveyid' => $surveyid])->asArray()->all(); // 'owner' => 0
         $user_invited = Invitations::find()->where(['surveyid' => $surveyid])->asArray()->all();
         $limit_on_fields = false;
 
