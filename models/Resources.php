@@ -34,6 +34,8 @@ use Yii;
 class Resources extends \yii\db\ActiveRecord
 {
 
+    public $agree = true;
+
     /**
      * {@inheritdoc}
      */
@@ -49,7 +51,7 @@ class Resources extends \yii\db\ActiveRecord
     {
         return [
             [['ownerid', 'pubmed_id', 'allowusers'], 'integer'],
-            [['created', 'year', 'id', 'relationalid'], 'safe'],
+            [['created', 'year', 'id', 'relationalid', 'agree'], 'safe'],
             [['type'], 'required'],
             [['text', 'abstract', 'authors'], 'string'],
             [['type'], 'string', 'max' => 20],

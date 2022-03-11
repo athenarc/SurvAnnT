@@ -93,7 +93,7 @@ $date = date('Y-m-d hh:mm', time());
                         <tr>
                             <td>
                                 <?= ( $participant->owner ) ? ' <i class="fa-solid fa-crown" title = "Owner"></i>' : '' ?>
-                                <?=  $participant->getUser()->select('username')->one()['username'] ?>
+                                <?=  "<a href = 'index.php?r=user-management%2Fuser%2Fview&id=".$participant->getUser()->select('id')->one()['id']."'> ".$participant->getUser()->select('username')->one()['username']." </a><br>";  ?>
                             </td>
                             <td>
                                 <?= str_replace("&&", ", ", $participant->getUser()->select('fields')->one()['fields']) ?>

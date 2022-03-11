@@ -51,11 +51,11 @@ AppAsset::register($this);
                 // 'items' => UserManagementModule::menuItems()
                 'items' => 
                     [
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Users') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/user/index']] : '',
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Roles') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/role/index']] : '',
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Permissions') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/permission/index']] : '',
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Permission groups') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/auth-item-group/index']] : '',
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' =>  UserManagementModule::t('back', 'Visit log') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/user-visit-log/index']] : '',
+                       Yii::$app->user->identity->hasRole("Superadmin") ? ['label' =>  UserManagementModule::t('back', 'Users') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/user/index']] : '',
+                       Yii::$app->user->identity->hasRole("Superadmin") ? ['label' =>  UserManagementModule::t('back', 'Roles') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/role/index']] : '',
+                       Yii::$app->user->identity->hasRole("Superadmin") ? ['label' =>  UserManagementModule::t('back', 'Permissions') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/permission/index']] : '',
+                       Yii::$app->user->identity->hasRole("Superadmin") ? ['label' =>  UserManagementModule::t('back', 'Permission groups') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/auth-item-group/index']] : '',
+                       Yii::$app->user->identity->hasRole("Superadmin") ? ['label' =>  UserManagementModule::t('back', 'Visit log') .' <i class="fas fa-users"></i> ', 'url' => ['/user-management/user-visit-log/index']] : '',
                         ['label' => 
                             isset($this->params['requests']) && sizeof($this->params['requests']) > 0 
                             ? 'My Campaigns <span class = "dot" style = "background-color:red; color:white;">'.sizeof($this->params['requests']).'</span> <i class="fas fa-database"></i>'

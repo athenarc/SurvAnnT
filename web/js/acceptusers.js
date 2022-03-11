@@ -17,7 +17,13 @@ $(document).ready(function(){
 		}
 		var item = $(this);
 		$(this).addClass(class_change);
-		
+
+		var text = parseInt( $('.dot').html() );
+		if ( text == 1 ){
+			$(".dot").remove();
+		}else{
+			$(".dot").html(text - 1);
+		}
 		$.ajax({
             url: ['index.php?r=site%2Fsurvey-participants'],
             type: 'POST',

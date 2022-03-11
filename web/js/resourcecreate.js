@@ -143,17 +143,13 @@ $(document).ready(function(){
     });
 
     $(document).on('click', "input[id^='use-']", function(e){
+
+        // FUNCTION WHICH DESELECTS PREVIOUSLY SELECTED COLLECTIONS WHEN THE RESOURCE IS QUESTIONAIRE
+
         var flag = 0;
         var id = $(this).attr('id');
-        if ( $( '.dir-resource-types' ).css("display") == 'block' ){
-            if ( $( '#dir-resource-types' ).val() == 'questionaire' ){
-                flag = 1;
-            }
-        }
-        if ( $( '.db-resource-types' ).css("display") == 'block' ){
-            if ( $( '#db-resource-types' ).val() == 'questionaire' ){
-                flag = 1;
-            }
+        if ( $( '#user-resource-types' ).val() == 'questionaire' ){
+            flag = 1;
         }
 
         if ( flag == 1){
@@ -164,7 +160,6 @@ $(document).ready(function(){
               }
             });
         }
-        
 
         if ($(this).val() == 0){
             $(this).val(1);
@@ -181,18 +176,20 @@ $(document).ready(function(){
 
     $('button[name="next"]').click(function(e){
         e.preventDefault();
+
         var resources_count = $( "input[id^='use-']" ).length;
         var collections_count = $( "input[id^='use-collection']" ).length;
         if ( collections_count > 0 ){
             resources_count = resources_count - collections_count;
         }
-
+        
         res_count = 0;
         coll_count = 0;
         var collectionsArray = {}; 
         $( "input[id^='use-']" ).each(function() {
             
             var collection_regex = new RegExp('^use-collection-');
+
             if (collection_regex.test(this.id)) {
                 // IF WE EXAMINE COLLECTIONS
                 if (this.checked){
@@ -220,40 +217,32 @@ $(document).ready(function(){
 
         $(".error-div").html("");
         
-        for (const property in collectionsArray) {
-            if ( collectionsArray[property] == 0 ){
-                $(".error-div").append('<span>Collection <b> ' + property + ' </b> is selected but none of its resources is!&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
+        if ( coll_count > 1 && $("#user-resource-types").val() == 'questionaire'){
+            $(".error-div").append('<span> You can only select one Questionaire !&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
                 $(".error-div").css("display", "block");
-            }
+                return;
         }
-        
+
+        if ( coll_count == 0 && $('.user-resource-select').val() == 'db-load' ){
+            $(".error-div").append('<span> No Collections are selected!&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
+                $(".error-div").css("display", "block");
+                return;
+        }
+
+
         if ( $(".error-div > span ").length == 0 ){
             $(".error-div").css("display", "none");
         }else{
             return;
         }
         
-        if ( coll_count == 0 && collections_count == 0 ){
-
-            if ( res_count == 0 && resources_count != 0 ){
-                // var url=location.href;
-                // var entity_name = url.substring(url.lastIndexOf('/')+1);
-                // $(".error-div").append('<span> No Badges are selected !&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
-                // $(".error-div").css("display", "block");
-                // return;
-            }
-
-        }
-
-        
-
         $(".resources-number > .col-md-6 ").each(function( ) {
             if ( $(this).css("display") == "block" ){
                 $(this).find("select").attr("name", "resources-type");
             }
         });
         $(this).attr("name" , "submit-resource-form");
-
+        
         if ( $(".resource-before-form").length ){
             $(".resource-before-form").submit();
         }

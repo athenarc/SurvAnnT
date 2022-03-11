@@ -23,13 +23,13 @@ use yii\widgets\ActiveForm;
                 <?php foreach ($questions as $key => $question): ?>
                     <div id = "dataset-tools-<?=$key?>" class = "dataset-tools">
                         <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "<?= $colspan ?>" > 
-                            <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
+                            <span class = "float-left" style = ""> &nbsp;
                                  <!-- Html::checkbox('agree-question-'.$key, true, ['id' => 'use-question-'.$key, 'label' => 'Use']) &nbsp; -->
                             </span>
-                            <span class = "center" style = "width: 40%;">
+                            <span class = "center" style = "">
                                 Question
                             </span>
-                            <span class = "float-right" style = "width: 30%; text-align: right;"> 
+                            <span class = "float-right" style = ""> 
                                 <a id = "dataset-<?=$key?>" class="fas fa-eye link-icon white hide-dataset"></a> 
                                 <a id = "dataset-<?=$key?>" class="fas fa-times link-icon white delete-question"></a> 
                             </span> 

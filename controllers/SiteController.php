@@ -11,7 +11,6 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Surveys;
 use app\models\Participatesin;
-use app\models\Dataset;
 use app\models\Questions;
 use webvimark\modules\UserManagement\models\User;
 use yii\data\ActiveDataProvider;
@@ -145,7 +144,8 @@ class SiteController extends Controller
     {
         // print_r(Yii::$app->user->identity->getLeaderboards()->asArray()->all());
         // exit(0);
-        return $this->render('index', []);
+
+        return $this->redirect(['site/about']);
     }
 
     public function actionLeaderboard()
@@ -188,10 +188,6 @@ class SiteController extends Controller
         if ( ! Yii::$app->user->identity->hasRole(['Admin', 'Superadmin']) ){
             $query = Surveys::find()->where(['>', 'starts',  $date])->orWhere(['starts' => null]);
         }
-
-        // print_r($_GET);
-
-        // exit(0);
 
         $searchModel = new SurveysSearch();
 
@@ -427,7 +423,7 @@ class SiteController extends Controller
                 Surveytocollections::deleteAll(['surveyid' => $survey->id]);
                 Surveytobadges::deleteAll(['surveyid' => $survey->id]);
                 Rate::deleteAll(['surveyid' => $survey->id]);
-                // Leaderboard::deleteAll(['surveyid' => $survey->id]);
+                Leaderboard::deleteAll(['surveyid' => $survey->id]);
                 Usertobadges::deleteAll(['surveyid' => $survey->id]);
                 $survey->delete();
             }
@@ -582,12 +578,11 @@ class SiteController extends Controller
                     }                    
                 }
 
-                $rate_conditions = [];
                 $next_badge_goal = 0;
-                if ( sizeof( array_filter($rate_conditions ) ) > 0 ){
+                if ( isset( $rate_conditions ) && sizeof( array_filter($rate_conditions ) ) > 0 ){
                     $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
                 }
-
+                
                 if ( $survey->completed == 1 || $participant->finished == 1 ){
                     
                     // USER HAS FINISHED ANNOTATION
@@ -684,7 +679,7 @@ class SiteController extends Controller
         $users = User::find()->select(['id', 'username'])->all();
         $tabs = Yii::$app->params['tabs'];
         $tabs['General Settings']['enabled'] = 1;
-        $message = 'Campaign';
+        $message = 'General Settings';
         
         $fields = [];
         $db_survey_fields = Surveys::find()->select(['fields'])->asArray()->all();
@@ -721,7 +716,7 @@ class SiteController extends Controller
                     $participant->owner = 1;
                     $participant->surveyid = $survey->id;
                     $participant->save();
-                    Yii::$app->response->redirect( array( 'site/resource-create-new', 'surveyid' => $survey->id ));
+                    Yii::$app->response->redirect( array( 'site/resource-create', 'surveyid' => $survey->id ));
                 }                
                 
             }
@@ -739,7 +734,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionResourceCreateNew()
+    public function actionResourceCreate()
     {
 
         $userid = Yii::$app->user->identity->id;
@@ -758,7 +753,7 @@ class SiteController extends Controller
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
 
-        $message = 'Resources';
+        $message = 'Collection of Resources';
 
         $options = ['db-load' => 'Load Collections from database' , 'dir-load' => 'Load Collections from directory' ]; 
 
@@ -766,7 +761,7 @@ class SiteController extends Controller
         
         $db_available_resources = [];
 
-        foreach (array_column ( Resources::find()->select(['DISTINCT (type)'])->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->asArray()->all(), 'type' ) as $key => $value) {
+        foreach (array_column ( Resources::find()->joinWith('collection')->select(['collectionid', 'type'])->where(['collection.allowusers' => 1, 'resources.allowusers' => 1 ])->orWhere(['userid'=> $userid, 'ownerid' => $userid])->asArray()->all(), 'type' ) as $key => $value) {
             if ( $value == 'questionaire' ){
                 $db_available_resources[$value] = 'No resources (Single Questionaire)';
             }else{
@@ -775,15 +770,22 @@ class SiteController extends Controller
             
         }
 
+        // print_r($db_available_resources);
+        // exit(0);
+
         $dir_available_resources = [];
         foreach ( array_diff( scandir( Yii::$app->params['resources'] ), array(".", "..")) as $key => $value) {
            
             $dir_available_resources[$value] = ucwords($value);
         }
 
-        $option = 'dir-load';
+        // $option = 'dir-load';
+
+        $option = Yii::$app->request->post('option', 'dir-load');
         
-        $resource_types_option = 'article';
+        // $resource_types_option = 'article';
+
+        $resource_types_option = Yii::$app->request->post('resource_types_option', 'article');
 
         // DEFINING USER'S NEW COLLECTION + RESOURCES
         $user_collection = $survey->getCollection()->one();
@@ -791,16 +793,18 @@ class SiteController extends Controller
 
         if ( $user_collection ){
             $resources = $user_collection->getResources()->all();
-
+            if( ! $resources ){
+                $resources = $resource->read($userid, $resource_types_option);
+            }
+            $surveytocollections = $user_collection->getsurveytocollections()->one();
         }else{
             $user_collection = new Collection();
-            
+            $surveytocollections = new Surveytocollections();
             $resources = $resource->read($userid, $resource_types_option);
         }
 
         // GETTING EXISTING COLLECTIONS + RESOURCES
 
-        
 
          if ( Yii::$app->request->post() ){
 
@@ -809,28 +813,92 @@ class SiteController extends Controller
                 $resource_types_option = escapeshellcmd( $_POST['resources-type'] );
             }
 
-            if( $user_collection->load( Yii::$app->request->post() ) ){
+            if ( isset($_POST['discard-collection']) && $_POST['discard-collection'] == 'discard' ){
+
+                $surveytocollections = Surveytocollections::find()->where(['surveyid' => $survey->id])->all();
+                foreach ($surveytocollections as $surveytocollection) {
+                    $col_id = $surveytocollection->collectionid;
+                    $surveytocollection->delete();
+                    $resources_to_delete = Resources::find()->where(['collectionid' => $col_id])->all();
+                    foreach ($resources_to_delete as $res) {
+                        $res->delete();
+                    }
+                    $col = Collection::findOne($col_id);
+                    $col->delete();
+                }
+                return $this->redirect(['site/resource-create', 'surveyid' => $surveyid, 'edit' => 1]);
+            }
+
+            if( $user_collection->load( Yii::$app->request->post() ) && isset( $_POST['submit-resource-form'] ) ){
+               
                 
                 $user_collection->userid = $userid;
-                $surveytocollections = new Surveytocollections();
+                
                 $surveytocollections->ownerid = $userid;
                 $surveytocollections->surveyid = $surveyid;
-                // $user_collection->save();
+                $user_collection->save();
                 $surveytocollections->collectionid = $user_collection->id;
-                // $surveytocollections->save();
-            
+                $surveytocollections->save();
+
+                if ( ! $user_collection->getResources()->all() ){
+                    
+                    if ( $option == 'db-load' ){
+                        $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->all();
+                        foreach ($collections as $collection_key => $collection_value) {
+                            if ( isset($_POST['agree-collection-'.$collection_key]) ){
+                                foreach ($collection_value->getResources()->all() as $collection_resource) {
+                                    $new_resource = new Resources();
+                                    $new_resource->setAttributes($collection_resource->attributes);
+                                    $new_resource->id = null;
+                                    $new_resource->created = null;
+                                    $new_resource->collectionid = $user_collection->id;
+                                    $new_resource->ownerid = $userid;
+                                    if( $collection_resource->type == 'image' ){
+                                        $new_resource->image = $collection_resource->image;
+                                    }
+                                    $new_resource->save();
+                                }
+                            }
+                        }
+                    }else{
+                        $resources = $resource->read($userid, $resource_types_option);
+                        foreach ($resources as $resource) {
+                            $resource->collectionid = $user_collection->id;
+                            $resource->ownerid = $userid;
+                            if( $resource->type == 'image' ){
+                                $resource->image = file_get_contents( $resource->image );
+                            }
+                            $resource->save();
+                        }
+                    }
+                    
+                }else{ 
+                    
+                    foreach( $user_collection->getResources()->all() as $resource_key => $resource ){
+                        if ( ! isset($_POST['agree-'.$resource->id]) ){
+                            $resource->delete();
+                        }else{
+                            if ( isset($_POST['Resources'][$resource_key]['allowusers']) ){
+                                $resource->allowusers = $_POST['Resources'][$resource_key]['allowusers'];
+                            }
+                            $resource->save();
+                        }
+                    }
+
+                    return $this->redirect(['site/questions-create', 'surveyid' => $surveyid ]);
+                }
             }
 
         }
         
         if ( $option == 'db-load' ){
-            $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->all();
+            $collections = Collection::find()->joinWith('resources')->where(['collection.allowusers' => 1, 'resources.allowusers' => 1])->orWhere(['userid' => $userid, 'ownerid' => $userid])->andWhere(['type' => $resource_types_option])->all();
         }else{
-            $collections = [$user_collection];
+            $collections = [new Collection()];
             $resources = $resource->read($userid, $resource_types_option);
         }
-
-        return $this->render('resourcecreatenew', 
+       
+        return $this->render('resourcecreate', 
             [
                 'survey' => $survey,
                 'options' => $options, 
@@ -845,7 +913,8 @@ class SiteController extends Controller
                 'userid' => $userid,
                 'collections' => $collections,
                 'resources' => $resources,
-                'user_collection' => $user_collection
+                'user_collection' => $user_collection,
+                'use-resources' => []
             ]);
 
     }
@@ -944,7 +1013,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionResourceCreate()
+    public function actionResourceCreateOld()
     {
 
         $userid = Yii::$app->user->identity->id;
@@ -1075,7 +1144,7 @@ class SiteController extends Controller
             }
 
             if ( isset( $_POST['submit-resource-form'] ) ){
-                
+
                 $new_collection_name = isset( $_POST['Collection']['name'] ) ? $_POST['Collection']['name'] : '';
                 $new_resources = [];
 
@@ -1171,11 +1240,7 @@ class SiteController extends Controller
             $my_collection = new Collection();
             $my_collection->userid = $userid;
         }
-        // foreach ($collections as $col) {
-        //     print_r($col->getResources()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->asArray()->all());
 
-        // }
-        // exit(0);
         return $this->render('resourcecreate', 
             [
                 'tool' => $tool,
@@ -1562,7 +1627,7 @@ class SiteController extends Controller
                            
                             $badge->image = UploadedFile::getInstanceByName("Badges[$key][image]");
                             if ( $badge->upload() ) {
-                                $badge->image = file_get_contents(Yii::$app->params['images'].$badge->image->baseName.'.'.$badge->image->extension);  
+                                $badge->image = file_get_contents(Yii::$app->params['dir-badges'].$badge->image->baseName.'.'.$badge->image->extension);  
                                 if ( ! $badge->hasErrors() ){
                                     $badge->save();
                                     $validated ++;

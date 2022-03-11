@@ -61,7 +61,7 @@ class Badges extends \yii\db\ActiveRecord
     {
 
         if ( $this->validate() && ! empty($this->image) ) {
-            $this->image->saveAs( Yii::$app->params['images'] . $this->image->baseName . '.' . $this->image->extension);
+            $this->image->saveAs( Yii::$app->params['dir-badges'] . $this->image->baseName . '.' . $this->image->extension);
             return true;
         } else {
             if ( $this->id == null ){

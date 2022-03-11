@@ -52,15 +52,15 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($badge, "[$key]id")->hiddenInput()->label(false) ?>
                         <?= $form->field($badge, "[$key]ownerid")->hiddenInput()->label(false) ?>
                         <div class = "dataset-header-column dataset-table-header-row resource-header-row text-center" colspan = "3"> 
-                            <span class = "float-left" style = "width: 30%; text-align: left !important;"> &nbsp;
+                            <span class = "float-left"> &nbsp;
                                 <?= Html::checkbox('agree-badge-'.$key, $badge->isNewRecord || in_array($surveyid, array_column($badge->surveytobadges, 'surveyid') ) ? true : false, ['id' => 'use-badge-'.$key, 'label' => 'Use']) ?> &nbsp;
                                 <?= ( $userid == $badge->ownerid || ( $badge->id == '') ) ? $form->field($badge, "[$key]allowusers")->checkbox(['label' => 'Public', 'id' => 'badge-allowusers-'.$key]) : '' ?>
 
                             </span>
-                            <span class = "center" style = "width: 40%;">
+                            <span class = "center">
                                 Badge <?= $badge->id ?>
                             </span>
-                            <span class = "float-right" style = "width: 30%; text-align: right;"> 
+                            <span class = "float-right"> 
                                 &nbsp;
                                 <a id = "dataset-<?=$key?>" class="fas fa-eye link-icon white hide-dataset"></a> 
                             </span> 

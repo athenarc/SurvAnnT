@@ -225,6 +225,21 @@ h5{
     /*border-bottom: none;*/
 }
 
+.resource-header-row > .float-left{
+    width: 30%; 
+    text-align: left !important;
+}
+
+.resource-header-row > .center{
+    width: 40%  !important; 
+    
+}
+
+.resource-header-row > .float-right{
+    width: 30% !important;
+    text-align: right !important;
+}
+
 .form-group{
     margin: auto !important;
 }

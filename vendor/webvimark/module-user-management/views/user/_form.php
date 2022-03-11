@@ -32,7 +32,7 @@ use app\models\Fields;
 		<div class = "col-md-8">
 			<?= $form->field($model, 'username')->textInput(['maxlength' => 255, 'autocomplete'=>'off']) ?>
 		</div>
-		<?php if ( User::hasRole('Admin', 'Superadmin') ): ?>
+		<?php if ( User::hasRole('Superadmin') ): ?>
 			<div class = "col-md-4">
 				<?= $form->field($model->loadDefaultValues(), 'status')
 				->dropDownList(User::getStatusList()) ?>
@@ -73,13 +73,15 @@ use app\models\Fields;
 			<div class = "col-md-7">
 				<?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 			</div>
-			<div class = "col-md-5">
-				<?= $form->field($model, 'email_confirmed')->checkbox() ?>
-			</div>
+			<?php if ( User::hasRole('Superadmin') ): ?>
+				<div class = "col-md-5">
+					<?= $form->field($model, 'email_confirmed')->checkbox() ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( User::hasPermission('bindUserToIp') ): ?>
+	<?php if ( User::hasRole('Superadmin') ): ?>
 		<div class = "row">
 			<div class = "col-md-12">
 				<?= $form->field($model, 'bind_to_ip')->textInput(['maxlength' => 255])->hint(UserManagementModule::t('back','For example: 168.111.192.12')) ?>

@@ -25,13 +25,13 @@ use kartik\select2\Select2;
                     <td class = "dataset-header-column"> Last Name </td>
                     <td class = "dataset-header-column"> Fields </td>
                     <td class = "dataset-header-column"> Actions 
-                        <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all raters, or Locked to invite those that you want." style = "color: white !important;"></a>
+                        <a class = "fas fa-info-circle link-icon white" title = "Accept or Deny user." style = "color: white !important;"></a>
                     </td>
                 </tr>
                 <?php foreach($participants as $key => $participant): ?>
 
                         <tr>
-                            <td><?= Html::a($participant->getSurvey()->select(['name'])->asArray()->all()[0]['name'], '') ?></td>
+                            <td><?= Html::a($participant->getSurvey()->select(['name'])->asArray()->all()[0]['name'], 'index.php?r=site%2Fsurveys-view&surveyid='.$participant->getSurvey()->select(['id'])->asArray()->all()[0]['id']) ?></td>
                             <td><?= $participant->getUser()->select(['username'])->asArray()->all()[0]['username'] ?></td>
                             <td><?= $participant->getUser()->select(['name'])->asArray()->all()[0]['name'] ?></td>
                             <td><?= $participant->getUser()->select(['surname'])->asArray()->all()[0]['surname'] ?></td>

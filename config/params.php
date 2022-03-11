@@ -12,7 +12,7 @@ return [
     'dir-texts' => '../data/resources/text/texts.json',
     'dir-images' => '../data/resources/image/',
     'dir-questionaires' => '../data/resources/questionaire/questionaire.json',
-    'images' => '../data/images/',
+    'dir-badges' => '../data/badges/',
     'helpdesk-address' => 'survannt.helpdesk@gmail.com',
     'invitation-url' => 'http://localhost/SurveiFy/web/index.php?r=user-management%2Fauth%2Fregistration&email=',
     'title' => 'SurvAnnT',

@@ -79,7 +79,7 @@ $date = date('Y-m-d hh:mm', time());
                     <td colspan = "3">
                         <?= $form->field($survey, 'about')->textarea()->label(false) ?>
                     </td>
-                    <td> 
+                    <td style = "width: 30%;"> 
 
                         <?= $form->field($survey, 'fields')->widget
                         (
@@ -89,6 +89,7 @@ $date = date('Y-m-d hh:mm', time());
                                 'name' => 'survey-fields-selection',
                                 'data' => $fields,
                                 'maintainOrder' => true,
+                                'theme' => \kartik\select2\Select2::THEME_BOOTSTRAP ,
                                 'options' => [ 'multiple' => true ],
                                 'pluginOptions' => [ 'allowClear' => true, 'tags' => true ],
                                 ]

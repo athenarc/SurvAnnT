@@ -23,32 +23,38 @@ use yii\widgets\DetailView;
 
 	<div class="panel panel-default outside-div medium-form">
 		<div class="panel-body">
+			<?php if ( Yii::$app->user->identity->hasRole(['superadmin']) ): ?>
+			    <p>
 
-		    <p>
-			<?= GhostHtml::a(UserManagementModule::t('back', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
-			<?= GhostHtml::a(UserManagementModule::t('back', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
-			<?= GhostHtml::a(
-				UserManagementModule::t('back', 'Roles and permissions'),
-				['/user-management/user-permission/set', 'id'=>$model->id],
-				['class' => 'btn btn-sm btn-default']
-			) ?>
+				<?= GhostHtml::a(UserManagementModule::t('back', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
+				<?= GhostHtml::a(UserManagementModule::t('back', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
+				<?= GhostHtml::a(
+					UserManagementModule::t('back', 'Roles and permissions'),
+					['/user-management/user-permission/set', 'id'=>$model->id],
+					['class' => 'btn btn-sm btn-default']
+				) ?>
 
-			<?= GhostHtml::a(UserManagementModule::t('back', 'Delete'), ['delete', 'id' => $model->id], [
-			    'class' => 'btn btn-sm btn-danger pull-right',
-			    'data' => [
-				'confirm' => UserManagementModule::t('back', 'Are you sure you want to delete this user?'),
-				'method' => 'post',
-			    ],
-			]) ?>
-		    </p>
-
+				<?= GhostHtml::a(UserManagementModule::t('back', 'Delete'), ['delete', 'id' => $model->id], [
+				    'class' => 'btn btn-sm btn-danger pull-right',
+				    'data' => [
+					'confirm' => UserManagementModule::t('back', 'Are you sure you want to delete this user?'),
+					'method' => 'post',
+				    ],
+				]) ?>
+			    </p>
+			<?php endif; ?>
 			<?= DetailView::widget([
 				'model'      => $model,
 				'attributes' => [
-					'id',
+					[
+
+						'attribute' => 'id',
+						'visible'=> User::hasRole('Superadmin'),
+					],
 					[
 						'attribute'=>'status',
 						'value'=>User::getStatusValue($model->status),
+						'visible'=>User::hasRole('Superadmin'),
 					],
 					'username',
 					[
@@ -61,12 +67,12 @@ use yii\widgets\DetailView;
 						'attribute'=>'email_confirmed',
 						'value'=>$model->email_confirmed,
 						'format'=>'boolean',
-						'visible'=>User::hasPermission('viewUserEmail'),
+						'visible'=>User::hasRole('Superadmin'),
 					],
 					[
 						'label'=>UserManagementModule::t('back', 'Roles'),
 						'value'=>implode('<br>', ArrayHelper::map(Role::getUserRoles($model->id), 'name', 'description')),
-						'visible'=>User::hasPermission('viewUserRoles'),
+						'visible'=>User::hasRole('Superadmin'),
 						'format'=>'raw',
 					],
 					[
@@ -86,23 +92,31 @@ use yii\widgets\DetailView;
 						'value' => function ($model) {
 							$str = '';
 							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 0])->all() as $key => $value) {
-								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id). "<br>"; //'<a href = "index" >'.$value->survey->name.'</a><br>';
+								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id). "<br>";
 							}
 							return $str;
 						}
 					],
 					[
 						'attribute'=>'bind_to_ip',
-						'visible'=>User::hasPermission('bindUserToIp'),
+						'visible'=>User::hasRole('Superadmin'),
 					],
 					array(
 						'attribute'=>'registration_ip',
 						'value'=>Html::a($model->registration_ip, "http://ipinfo.io/" . $model->registration_ip, ["target"=>"_blank"]),
 						'format'=>'raw',
-						'visible'=>User::hasPermission('viewRegistrationIp'),
+						'visible'=>User::hasRole('Superadmin'),
 					),
-					'created_at:datetime',
-					'updated_at:datetime',
+					[
+						'attribute'=>'created_at',
+						'visible'=>User::hasRole('Superadmin'),
+					],
+					[
+						'attribute'=>'updated_at',
+						'visible'=>User::hasRole('Superadmin'),
+					],
+					// 'created_at:datetime',
+					// 'updated_at:datetime',
 				],
 			]) ?>
 

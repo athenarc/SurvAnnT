@@ -40,7 +40,7 @@ class Rate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid'], 'required'],
+            [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid', 'answer'], 'required'],
             [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid'], 'integer'],
             [['answer', 'answertype'], 'string'],
             [['created', 'tooltip'], 'safe'],

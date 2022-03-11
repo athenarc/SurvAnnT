@@ -207,7 +207,7 @@ $this->title = 'My Yii Application';
 							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Completed!']);
 							    				}
 							    				if ( $participant->request == 1 && $model->active == 1){
-							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key);
+							    					return "<br>".Html::a('Rate', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, ['class' => 'btn btn-primary btn-sm']); // <i class="fas fa-star link-icon" ></i>
 							    				}
 							    			}
 								    	}
