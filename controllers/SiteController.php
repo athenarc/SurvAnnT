@@ -1316,7 +1316,7 @@ class SiteController extends Controller
                     $surveytoquestions->ownerid = $userid;
                     $surveytoquestions->surveyid = $surveyid;
                     $answer_values = [];
-
+                    $question->ownerid = $userid; 
                     if ( $question->answertype != 'textInput' ){
                         $num_of_answers = sizeof( preg_grep( "/question-$key-".$question->answertype."-[0-9]-answer/", array_keys( $_POST ) ) );
                         $greped_arr = preg_grep( "/question-$key-".$question->answertype."-<[0-9]>-answer/", array_keys( $_POST ) );
