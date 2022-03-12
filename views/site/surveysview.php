@@ -128,7 +128,7 @@ $date = date('Y-m-d hh:mm', time());
                                 <?= '<img src="data:image/png;base64,'.base64_encode($badge->getBadge()->select('image')->one()['image'] ).'"/>'  ?>
                             </td>
                             <td>
-                                <?= $badge->ratecondition ?>
+                                <?= "Annotate <b>".$badge->ratecondition."</b> Resources to earn" ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -173,7 +173,7 @@ $date = date('Y-m-d hh:mm', time());
                                 <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
                             </td>
                             <td>
-                                <?= implode("<br>", $rates['resources'][$resource->id]) ?>
+                                <?= implode("<br>", $rates['resources'][$resource->id]['users']) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?> 
@@ -192,6 +192,9 @@ $date = date('Y-m-d hh:mm', time());
                                 # of Responses
                             </th>
                             <th class = "dataset-header-column">
+                                Response Average (for Numeric only)
+                            </th>
+                            <th class = "dataset-header-column">
                                 Users Evaluated
                             </th>
                         </tr>
@@ -203,7 +206,10 @@ $date = date('Y-m-d hh:mm', time());
                                 <?= $question->getRates()->groupBy(['questionid', 'userid'])->count() ?>
                             </td>
                             <td>
-                                <?= implode("<br>", $rates['questions'][$question->id]) ?>
+                                <?= $rates['questions'][$question->id]['answer'] ?>
+                            </td>
+                            <td>
+                                <?= implode("<br>", $rates['questions'][$question->id]['users']) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?> 
