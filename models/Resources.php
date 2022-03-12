@@ -11,7 +11,7 @@ use Yii;
  *
  * @property int $id
  * @property int|null $ownerid
- * @property string|null $created
+ * @property string $created
  * @property string $type
  * @property string|null $text
  * @property string|null $title

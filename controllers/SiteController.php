@@ -142,9 +142,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        // print_r(Yii::$app->user->identity->getLeaderboards()->asArray()->all());
-        // exit(0);
-
+        
         return $this->redirect(['site/about']);
     }
 
