@@ -192,7 +192,7 @@ $date = date('Y-m-d hh:mm', time());
                                 # of Responses
                             </th>
                             <th class = "dataset-header-column">
-                                Response Average (for Numeric only)
+                                Responses Mean (for Numeric only)
                             </th>
                             <th class = "dataset-header-column">
                                 Users Evaluated
