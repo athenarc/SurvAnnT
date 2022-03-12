@@ -18,7 +18,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3> Campaign </h3>
+                <h3> General Settings </h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -52,7 +52,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3>Resources & Questions</h3>
+                <h3> Collection of Resources & Questions</h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -139,6 +139,77 @@ $date = date('Y-m-d hh:mm', time());
                     <?php endif; ?>
                 </table>
             </div>
+            <?php if ( in_array(Yii::$app->user->identity->id, $survey->getOwner()) ): ?>
+                <div class = "header-label">
+                    <h3>Results</h3>
+                    <table class="table table-striped table-bordered participants-table">  
+                        <tr class = "dataset-table-header-row">
+                            <th class = "dataset-header-column">
+                                Resource Id
+                            </th>
+                            <th class = "dataset-header-column">
+                                Resource
+                            </th>
+                            <th class = "dataset-header-column">
+                                # of Annotations
+                            </th>
+                            <th class = "dataset-header-column">
+                                Users Evaluated
+                            </th>
+                        </tr>
+                    <?php foreach ($resources as $resource): ?>
+                        <tr>
+                            <td> <?= $resource->id ?></td>
+                            <?php if($resource->type == 'image'): ?>    
+                                <td> 
+                                    <img src="data:image/png;base64,<?=base64_encode($resource->image)?>" style = "max-height: 50px; max-width: 50px;"/>
+                                </td>
+                            <?php else: ?>
+                                <td> 
+                                    <?= $resource->title ?>
+                                </td>
+                            <?php endif; ?>
+                            <td>
+                                <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
+                            </td>
+                            <td>
+                                <?= implode("<br>", $rates['resources'][$resource->id]) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?> 
+                    </table>
+
+                    <br>
+                    <table class="table table-striped table-bordered participants-table">  
+                        <tr class = "dataset-table-header-row">
+                            <th class = "dataset-header-column">
+                                Question Id
+                            </th>
+                            <th class = "dataset-header-column">
+                                Question
+                            </th>
+                            <th class = "dataset-header-column">
+                                # of Responses
+                            </th>
+                            <th class = "dataset-header-column">
+                                Users Evaluated
+                            </th>
+                        </tr>
+                    <?php foreach ($questions as $question): ?>
+                        <tr>
+                            <td> <?= $question->id ?></td>
+                            <td> <?= $question->question ?></td>
+                            <td>
+                                <?= $question->getRates()->groupBy(['questionid', 'userid'])->count() ?>
+                            </td>
+                            <td>
+                                <?= implode("<br>", $rates['questions'][$question->id]) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?> 
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

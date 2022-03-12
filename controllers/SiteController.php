@@ -178,6 +178,47 @@ class SiteController extends Controller
 
     }
 
+    public function actionSurveyResults()
+    {
+
+        if ( isset( $_GET['surveyid'] ) ){
+            $surveyid = $_GET['surveyid'];
+            if ( Surveys::findOne($surveyid) ){
+                $survey = Surveys::findOne($surveyid);    
+                $collection = $survey->getCollection()->one();
+                $resources = $collection->getResources()->all();
+                $participants = $survey->getParticipatesin()->all();
+                $questions = $survey->getQuestions()->all();
+                
+                // RESOURCES # NUMBER OF RATINGS
+                foreach ($resources as $resource) {
+                    $rates['resources'][$resource->id] = [];
+                    foreach ($resource->getRates()->groupBy('resourceid', 'userid')->all() as $rate){
+
+                        $username = $rate->getUser()->select(['username'])->one()['username'];
+                        if ( ! in_array($username, $rates['resources'][$resource->id]) ){
+                            $rates['resources'][$resource->id][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                        }
+                    }
+                }
+                foreach ($questions as $question) {
+                    $rates['questions'][$question->id] = [];
+                    foreach ($question->getRates()->groupBy('questionid', 'userid')->all() as $rate){
+
+                        $username = $rate->getUser()->select(['username'])->one()['username'];
+                        if ( ! in_array($username, $rates['questions'][$question->id]) ){
+                            $rates['questions'][$question->id][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                        }
+                    }
+                }
+                return $this->render('surveysview', ['survey' => $survey, 'collection' => $collection, 'resources' => $resources, 'participants' => $participants, 'rates' => $rates, 'questions' => $questions]);
+            }
+        }else{
+            return $this->goHome();
+        }
+
+    }
+
     public function actionSurveysView()
     {
         $columns = ['surveys.id', 'name', 'starts', 'ends','participatesin.surveyid', 'participatesin.id', 'participatesin.owner', 'participatesin.userid', 'user.username', 'user.id' ];
@@ -211,8 +252,33 @@ class SiteController extends Controller
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
             if ( Surveys::findOne($surveyid) ){
-                $survey = Surveys::findOne($surveyid);                
-                return $this->render('surveysview', ['survey' => $survey]);
+                $survey = Surveys::findOne($surveyid);        
+                $collection = $survey->getCollection()->one();
+                $resources = $collection->getResources()->all();
+                $participants = $survey->getParticipatesin()->all();
+                $questions = $survey->getQuestions()->all();
+                // RESOURCES # NUMBER OF RATINGS
+                foreach ($resources as $resource) {
+                    $rates['resources'][$resource->id] = [];
+                    foreach ($resource->getRates()->groupBy(['resourceid', 'userid'])->all() as $rate){
+
+                        $username = $rate->getUser()->select(['username'])->one()['username'];
+                        if ( ! in_array($username, $rates['resources'][$resource->id]) ){
+                            $rates['resources'][$resource->id][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                        }
+                    }
+                }
+                foreach ($questions as $question) {
+                    $rates['questions'][$question->id] = [];
+                    foreach ($question->getRates()->groupBy(['questionid', 'userid'])->all() as $rate){
+
+                        $username = $rate->getUser()->select(['username'])->one()['username'];
+                        if ( ! in_array($username, $rates['questions'][$question->id]) ){
+                            $rates['questions'][$question->id][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                        }
+                    }
+                }        
+                return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates]);
             }
         }
 

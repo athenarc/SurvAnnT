@@ -163,7 +163,7 @@ $this->title = 'My Yii Application';
 				            'header' => 'actions',
 				            'headerOptions' => ['style'=>'text-align: center;'],
 				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-				            'template' => '{view} {update} {delete} {rate} {open} {requests}',
+				            'template' => '{view} {update} {delete} {rate} {open} {requests} {results}',
 				            'buttons' =>
 				            [
 				            	'view' => function ($url, $model, $key) {
@@ -207,7 +207,7 @@ $this->title = 'My Yii Application';
 							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Completed!']);
 							    				}
 							    				if ( $participant->request == 1 && $model->active == 1){
-							    					return "<br>".Html::a('Rate', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, ['class' => 'btn btn-primary btn-sm']); // <i class="fas fa-star link-icon" ></i>
+							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, []); // 'class' => 'btn btn-primary btn-sm'
 							    				}
 							    			}
 								    	}
@@ -242,7 +242,16 @@ $this->title = 'My Yii Application';
 							    		return Html::a('<i class="fas fa-inbox" style = "color: green"></i>', 'index.php?r=site%2Fuser-requests&surveyid='.$key);
 							    	}
 							    	
-							    }
+							    },
+
+							    'results' => function ($url, $model, $key){
+							    	
+							    	if( $model->completed && Yii::$app->user->identity->getParticipatesin()->where(['owner' => 1, 'surveyid' => $model->id ])->all()){
+
+							    		return Html::a('<i class="fa-solid fa-square-poll-vertical"></i>', 'index.php?r=site%2Fsurvey-results&surveyid='.$key);
+							    	}
+							    	
+							    },
 							],
 				        ],
 				    ],

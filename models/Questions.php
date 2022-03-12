@@ -20,6 +20,7 @@ use webvimark\modules\UserManagement\models\User;
  * @property int|null $allowusers
  *
  * @property User $owner
+ * @property Rate[] $rates
  * @property Surveys $survey
  */
 class Questions extends \yii\db\ActiveRecord
@@ -121,6 +122,16 @@ class Questions extends \yii\db\ActiveRecord
     public function getSurvey()
     {
         return $this->hasOne(Surveys::className(), ['id' => 'surveyid']);
+    }
+
+    /**
+     * Gets query for [[Rates]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRates()
+    {
+        return $this->hasMany(Rate::className(), ['questionid' => 'id']);
     }
 
     public function read($file, $surveyid, $userid){
