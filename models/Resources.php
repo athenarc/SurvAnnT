@@ -5,7 +5,7 @@ use yii\base\Model;
 use webvimark\modules\UserManagement\models\User;
 use yii\web\UploadedFile;
 use Yii;
-
+date_default_timezone_set("Europe/Athens"); 
 /**
  * This is the model class for table "resources".
  *
@@ -52,6 +52,7 @@ class Resources extends \yii\db\ActiveRecord
         return [
             [['ownerid', 'pubmed_id', 'allowusers'], 'integer'],
             [['created', 'year', 'id', 'relationalid', 'agree'], 'safe'],
+            [['created'], 'default', 'value' => date('Y-m-d H:i:s', time())],
             [['type'], 'required'],
             [['text', 'abstract', 'authors'], 'string'],
             [['type'], 'string', 'max' => 20],

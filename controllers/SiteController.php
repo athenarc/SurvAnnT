@@ -31,6 +31,9 @@ use app\models\Fields;
 use app\models\Rate;
 use app\models\Usertobadges;
 use app\models\Leaderboard;
+
+date_default_timezone_set("Europe/Athens"); 
+
 class SiteController extends Controller
 {
     /**
@@ -142,7 +145,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        
+
         return $this->redirect(['site/about']);
     }
 
