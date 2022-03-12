@@ -179,6 +179,8 @@ $(document).ready(function(){
 
         var resources_count = $( "input[id^='use-']" ).length;
         var collections_count = $( "input[id^='use-collection']" ).length;
+        var badges_count = $( "input[id^='use-badge']" ).length;
+
         if ( collections_count > 0 ){
             resources_count = resources_count - collections_count;
         }
@@ -214,7 +216,7 @@ $(document).ready(function(){
             }
             
         });
-
+ 
         $(".error-div").html("");
         
         if ( coll_count > 1 && $("#user-resource-types").val() == 'questionaire'){
@@ -223,7 +225,7 @@ $(document).ready(function(){
                 return;
         }
 
-        if ( coll_count == 0 && $('.user-resource-select').val() == 'db-load' ){
+        if ( coll_count == 0 && $('.user-resource-select').val() == 'db-load' && badges_count == 0 ){
             $(".error-div").append('<span> No Collections are selected!&nbsp;<a class="fas fa-info-circle" style = "color: #dd7777;"></a></span><br>');
                 $(".error-div").css("display", "block");
                 return;
