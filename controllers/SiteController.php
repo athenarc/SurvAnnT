@@ -187,7 +187,7 @@ class SiteController extends Controller
         $surveys = Surveys::find()->joinWith('participatesin');
 
         if ( ! $user->hasRole(['Superadmin']) ){
-            $surveys->where(['owner' => 1, 'userid' => 1]);
+            $surveys->where(['owner' => 1, 'userid' => $userid]);
         }
         $surveys = $surveys->all();
 
