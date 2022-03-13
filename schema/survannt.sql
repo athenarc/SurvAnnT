@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Φιλοξενητής: 127.0.0.1
--- Χρόνος δημιουργίας: 13 Μαρ 2022 στις 17:22:04
+-- Χρόνος δημιουργίας: 13 Μαρ 2022 στις 17:27:52
 -- Έκδοση διακομιστή: 10.4.11-MariaDB
 -- Έκδοση PHP: 7.2.30
 
@@ -32,34 +32,6 @@ CREATE TABLE `auth_assignment` (
   `user_id` int(11) NOT NULL,
   `created_at` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Άδειασμα δεδομένων του πίνακα `auth_assignment`
---
-
-INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
-('Admin', 2, 1643797643),
-('Admin', 3, 1643818377),
-('Admin', 4, 1643819731),
-('Rater', 2, 1645967368),
-('Rater', 3, 1643881767),
-('Rater', 4, 1643819731),
-('Rater', 21, 1646953119),
-('Rater', 22, 1645091029),
-('Rater', 31, 1646743442),
-('Rater', 32, 1646743472),
-('Rater', 35, 1646953116),
-('Rater', 36, 1646578077),
-('Rater', 37, 1646578076),
-('Rater', 41, 1646230808),
-('User', 21, 1644328794),
-('User', 22, 1645089764),
-('User', 31, 1646061455),
-('User', 32, 1646066647),
-('User', 35, 1646129169),
-('User', 36, 1646129682),
-('User', 37, 1646224864),
-('User', 41, 1646228642);
 
 -- --------------------------------------------------------
 
@@ -664,6 +636,12 @@ CREATE TABLE `user` (
   `availability` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Άδειασμα δεδομένων του πίνακα `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `confirmation_token`, `status`, `superadmin`, `created_at`, `updated_at`, `registration_ip`, `bind_to_ip`, `email`, `email_confirmed`, `name`, `surname`, `fields`, `orcidid`, `availability`) VALUES
+(1, 'superadmin', '1nIM-Vq57uEw2C4VrMuYVrcX_u4tOMMT', '$2y$13$Z0JPtazBC263YU4x4h2M7OP3qBgoX1gWhJgp43cAPc3g.d0lgox2i', NULL, 1, 1, 1643795415, 1643795415, NULL, NULL, NULL, 0, '', '', '', '', 1);
 -- --------------------------------------------------------
 
 --
