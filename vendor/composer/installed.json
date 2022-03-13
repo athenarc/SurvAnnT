@@ -1633,6 +1633,61 @@
             "install-path": "../npm-asset/bootstrap"
         },
         {
+            "name": "onmotion/yii2-widget-apexcharts",
+            "version": "v1.0.7",
+            "version_normalized": "1.0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/onmotion/yii2-widget-apexcharts.git",
+                "reference": "51624de0f68d564e2a8eed94960457e2cf0d170e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/onmotion/yii2-widget-apexcharts/zipball/51624de0f68d564e2a8eed94960457e2cf0d170e",
+                "reference": "51624de0f68d564e2a8eed94960457e2cf0d170e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0",
+                "yiisoft/yii2": ">=2.0.1"
+            },
+            "time": "2020-10-30T06:36:38+00:00",
+            "type": "yii2-extension",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "onmotion\\apexcharts\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexandr Kozhevnikov",
+                    "email": "onmotion1@gmail.com",
+                    "homepage": "http://kozhevnikov.site",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Yii2 charts widget - wrapper for the ApexCharts.js",
+            "keywords": [
+                "apexcharts",
+                "chart",
+                "charts",
+                "diagram",
+                "extension",
+                "widget",
+                "yii2"
+            ],
+            "support": {
+                "issues": "https://github.com/onmotion/yii2-widget-apexcharts/issues",
+                "source": "https://github.com/onmotion/yii2-widget-apexcharts/tree/v1.0.7"
+            },
+            "install-path": "../onmotion/yii2-widget-apexcharts"
+        },
+        {
             "name": "opis/closure",
             "version": "3.6.3",
             "version_normalized": "3.6.3.0",

@@ -93,4 +93,13 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
+  'onmotion/yii2-widget-apexcharts' => 
+  array (
+    'name' => 'onmotion/yii2-widget-apexcharts',
+    'version' => '1.0.7.0',
+    'alias' => 
+    array (
+      '@onmotion/apexcharts' => $vendorDir . '/onmotion/yii2-widget-apexcharts',
+    ),
+  ),
 );

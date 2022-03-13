@@ -61,7 +61,7 @@ AppAsset::register($this);
                             ? 'My Campaigns <span class = "dot" style = "background-color:red; color:white;">'.sizeof($this->params['requests']).'</span> <i class="fas fa-database"></i>'
                             : 'My Campaigns <i class="fas fa-database"></i>'
                             , 'url' => ['/site/my-surveys-view']],
-                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' => 'Statistics <i class="fas fa-chart-bar"></i>', 'url' => ['/site/index']] : '',
+                       Yii::$app->user->identity->hasRole(["Admin", "Superadmin"]) ? ['label' => 'Statistics <i class="fas fa-chart-bar"></i>', 'url' => ['/site/surveys-statistics']] : '',
                        ['label' => 'Password <i class="fas fa-key"></i>', 'url'=>['/user-management/auth/change-own-password']],
                        ['label' => 'My profile <i class="fas fa-user"></i>', 'url' =>  Url::to(['/user-management/user/update', 'id' => Yii::$app->user->identity->id])],
                     ]

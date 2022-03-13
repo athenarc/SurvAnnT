@@ -178,6 +178,141 @@ class SiteController extends Controller
 
     }
 
+    public function actionSurveysStatistics()
+    {
+        $userid = Yii::$app->user->identity->id;
+
+        $user = User::findOne(Yii::$app->user->identity->id);
+
+        $surveys = Surveys::find()->joinWith('participatesin');
+
+        if ( ! $user->hasRole(['Superadmin']) ){
+            $surveys->where(['owner' => 1, 'userid' => 1]);
+        }
+        $surveys = $surveys->all();
+
+        $survey_names['all_surveys'] = 'All Surveys';
+       
+        $surveyid = 'all_surveys';
+
+        foreach ($surveys as $survey) {
+            $survey_names[$survey->id] = ucwords( $survey->name );
+        }
+
+        if ( Yii::$app->request->post() ){
+            
+            $surveyid = isset( $_POST['surveyid'] ) ?  $_POST['surveyid'] : '';
+            if ( $surveyid != 'all_surveys'){
+                $surveyid = $_POST['surveyid'];
+                $surveys = [];
+                $surveys[0] = Surveys::findOne($surveyid);
+            }
+            
+        }
+        
+        $series = [];
+        $categories = [];
+        // $test_2 = 
+        // [ 
+        //     [   
+        //         'name' => 'question 1',
+        //         'data' => 
+        //             [
+        //                 [ 'x' => 'Vergoulis', 'y' => 1],
+        //                 [ 'x' => 'Kanellos', 'y' => 2], 
+        //                 [ 'x' => 'Tzerefos', 'y' => 3] 
+        //             ]
+        //     ],
+        //     [   
+        //         'name' => 'question 2',
+        //         'data' => 
+        //             [
+        //                 [ 'x' => 'Vergoulis', 'y' => 3],
+        //                 [ 'x' => 'Kanellos', 'y' => 2], 
+        //                 [ 'x' => 'Tzerefos', 'y' => 1] 
+        //             ]
+        //     ]
+            
+
+        // ];
+
+        // $test = 
+        // [ 
+        //     [   
+        //         'name' => 'test',
+        //         'data' => 
+        //         [ 
+        //             [ 'x' => 'Artificial Intelligence', 'y' => 1 ], 
+        //             [ 'x' => 'Machine Learning', 'y' => 2 ], 
+        //             [ 'x' => 'Data Science', 'y' => 4 ] 
+        //         ] 
+        //     ]
+        // ];
+        foreach ($surveys as $key => $survey) {
+            $series[$survey->id]['user_res_fields']['data'] = [];
+            $series[$survey->id]['user_res_fields']['categories'] = [];
+            $data = [];
+            
+            $participants = $survey->getParticipatesin()->where(['owner' => 0 ])->all(); 
+
+            foreach ($participants as $participant) {
+
+                if ( isset($participant->getUser()->select(['fields'])->one()['fields']) ){
+                    $fields = explode("&&", $participant->getUser()->select(['fields'])->one()['fields']);
+                    $username = $participant->getUser()->select(['username'])->one()['username'];
+                    
+                    foreach ($fields as $field) {
+                        if ( $field == '' ){
+                            $field = 'No Field';
+                        }
+                        if ( isset($data[$field]) ){
+                            $data[$field] += 1;
+                        }else{
+                            $data[$field] = 1;
+                        }
+                    }
+                }
+            }
+            $d[0]['name'] = 'Research Fields count';
+            $d[0]['data'] = [];
+            foreach ( $data as $d_k => $d_v ){
+                array_push( $d[0]['data'], ['x' => $d_k, 'y' => $d_v]);
+            }
+            // CALCULATION OF AVERAGE VALUE PER QUESTION ANSWER PER RESOURCE (FOR NUMERIC ANSWERS ONLY)
+            foreach ($survey->getQuestions()->all() as $question_key => $question_value) {
+                
+                if ( $question_value->answertype != 'textInput' ){
+                    $r["Question: ".$question_key]['name'] = "Question: ".($question_key + 1);
+                    $r["Question: ".$question_key]['data'] = [];
+                    $rates = $question_value->getRates()->groupBy(['resourceid'])->all();
+                    foreach ($rates as $rate) {
+                        // echo $rate->id." rate q id: ".$rate->questionid." rate re id: ".$rate->resourceid." ".$username." ".$rate->answer."<br><br>";
+                        $avg = $question_value->getRates()->select(['AVG(answer) AS avg_ans'])->where(['!=', 'answertype', 'textInput'])->andWhere(['resourceid' => $rate->resourceid, 'questionid' => $question_value->id])->groupBy(['resourceid'])->asArray()->one();
+                        // echo "AVG: ";
+                        // print_r($avg);
+                        // echo "<br><br>";
+                        $username = $rate->getUser()->select(['username'])->one()['username'];
+                        $resourceid = $rate->resourceid;
+                        array_push( $r["Question: ".$question_key]['data'], ['x' => "Resource id: ".$resourceid, 'y' => number_format($avg['avg_ans'], 3)]);
+                        
+                    }
+                }
+
+            }
+            $rates = [];
+            foreach ($r as $d_k => $d_v) {
+                $rates[] = $d_v;
+            }
+
+            $series[$survey->id]['user_res_fields']['data'][] = $d[0];
+            $series[$survey->id]['questions']['data'] = $rates;
+            $series[$survey->id]['questions']['categories'] = array_column( $survey->getRates()->groupBy(['resourceid'])->all(), 'resourceid') ;
+           
+        }
+        // exit(0);
+        return $this->render('surveysstatistics', ['survey_names' => $survey_names, 'surveyid' => $surveyid, 'surveys' => $surveys, 'series' => $series]);
+    }
+
     public function actionSurveysView()
     {
         $columns = ['surveys.id', 'name', 'starts', 'ends','participatesin.surveyid', 'participatesin.id', 'participatesin.owner', 'participatesin.userid', 'user.username', 'user.id' ];
@@ -526,9 +661,21 @@ class SiteController extends Controller
 
                 $survey_ratings = $survey->getNumberOfRatings();
                 
+
                 if ( $minimum_resources_goal ){
-                    // MINIMUM RESOURCES EVALUATED FOR SURVEY, MAYBE A NOTIFICATION;
-                    if ( $survey_ratings >= $minimum_resources_goal && ( ! isset($maximum_resources_goal) || $maximum_resources_goal == 0 ) ){
+                    // MINIMUM RESOURCES EVALUATED x TIMES FOR SURVEY, MAYBE A NOTIFICATION;
+                    if ( $minimum_resources_eval_goal && $minimum_resources_eval_goal > 0 ){
+                        // IF A LOWER LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MINIMUM RES EVAL GOAL * MIN RESOURCES
+                        $expression = $survey_ratings >= $minimum_resources_goal * $minimum_resources_eval_goal;
+                    }else if( $maximum_resources_eval_goal && $maximum_resources_eval_goal > 0 ) {
+                        // IF AN UPPER LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MAXIMUM RES EVAL GOAL * MIN RESOURCES
+                        $expression = $survey_ratings >= $minimum_resources_goal * $maximum_resources_eval_goal;
+                    }else{
+                        // IF NO LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MIN RESOURCES
+                        $expression = $survey_ratings >= $minimum_resources_goal;
+                    }
+
+                    if ( $expression && ( ! isset($maximum_resources_goal) || $maximum_resources_goal == 0 ) ){
                         $survey->completed = 1;
                         $survey->active = 0;
                         $survey->save();
@@ -536,14 +683,23 @@ class SiteController extends Controller
                 }
 
                 if ( $maximum_resources_goal ){
-                    if ( $survey_ratings >= $maximum_resources_goal ){
+                    if ( $minimum_resources_eval_goal && $minimum_resources_eval_goal > 0 ){
+                        // IF A LOWER LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MINIMUM RES EVAL GOAL * MAX RESOURCES
+                        $expression = $survey_ratings >= $maximum_resources_goal * $minimum_resources_eval_goal;
+                    }else if( $maximum_resources_eval_goal && $maximum_resources_eval_goal > 0 ) {
+                        // IF AN UPPER LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MAXIMUM RES EVAL GOAL * MAX RESOURCES
+                        $expression = $survey_ratings >= $maximum_resources_goal * $maximum_resources_eval_goal;
+                    }else{
+                        // IF NO LIMIT IS SET THEN SURVEY RATINGS MUST BE >= MAX RESOURCES
+                        $expression = $survey_ratings >= $maximum_resources_goal;
+                    }
+                    if ( $expression ){
                         // MAXIMUM RESOURCES EVALUATED FOR SURVEY, SO SURVEY FINISHES
                         $survey->completed = 1;
                         $survey->active = 0;
                         $survey->save();
                     }
                 }
-                
 
                 // GET RESOURCES THAT HAVE NOT BEEN ANNOTATED YET BY CURRENT USER
                 $resource = Collection::find()->joinWith(['resources', 'surveytocollections'])->where(['surveytocollections.surveyid' => $survey->id])->andWhere(['NOT IN', 'resources.id', $rates_query]);
@@ -1073,254 +1229,6 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionResourceCreateOld()
-    {
-
-        $userid = Yii::$app->user->identity->id;
-        if ( isset( $_GET['surveyid'] ) ){
-            $surveyid = $_GET['surveyid'];
-            $survey = Surveys::findOne($surveyid);
-            if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) )){
-                return $this->goBack();
-            }
-        }
-
-        $tabs = Yii::$app->params['tabs'];
-        
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-        
-        $message = 'Collection of Resources';
-
-        $options = ['db-load' => 'Load Collections from database' , 'dir-load' => 'Load Collections from directory' ]; 
-
-        $resource_types = Yii::$app->params['resources_allowlist'];
-        
-        $db_available_resources = [];
-
-        foreach (array_column ( Resources::find()->select(['DISTINCT (type)'])->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->asArray()->all(), 'type' ) as $key => $value) {
-            if ( $value == 'questionaire' ){
-                $db_available_resources[$value] = 'No resources (Single Questionaire)';
-            }else{
-                $db_available_resources[$value] = ucwords($value);
-            }
-            
-        }
-
-        $dir_available_resources = [];
-        foreach ( array_diff( scandir( Yii::$app->params['resources'] ), array(".", "..")) as $key => $value) {
-           
-            $dir_available_resources[$value] = ucwords($value);
-        }
-
-        $option = 'dir-load';
-        $resource_types_option = 'article';
-        
-        // 1) RETRIEVE COLLECTIONS FOR SURVEY
-        // 2) IF NONE RETRIEVE ALLOWED COLLECTIONS
-        // 3) IF NONE LOAD FROM DIRECTORY
-
-
-        
-        $collections = Collection::find()->joinWith('surveytocollections')->where(['surveyid' => $surveyid])->all();
-        $my_collection = Collection::find()->joinWith('surveytocollections')->where(['surveyid' => $surveyid])->one();
-
-
-        $tool = "block";
-        $resources = [];
-        if ( empty( $collections ) ){
-            
-            $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->all();
-            if ( empty( $collections ) ){
-                // $resource_types_option = 'image';
-                $collection = new Collection();
-                $collection->userid = $userid;
-                $collection->name = '';
-                $collections = [ $collection ];
-
-                $resource = new Resources();
-                $resources = $resource->read( $userid, $resource_types_option );
-            }
-            
-
-        }else{
-            $tool = "none";
-            $resource_types_option = isset($collections[0]->getResources()->all()[0]['type']) ? $collections[0]->getResources()->all()[0]['type'] : $resource_types_option;
-            $resource_types = [$resource_types_option => ucwords($resource_types_option)];
-            $dir_available_resources = [$resource_types_option => ucwords($resource_types_option)];
-            $db_available_resources = [$resource_types_option => ucwords($resource_types_option)];
-            // $option = "user-form";
-
-        }
-
-        if ( Yii::$app->request->post() ){
-            
-            if ( isset($_POST['resources-function'], $_POST['resources-type']) ){
-                $option = escapeshellcmd( $_POST['resources-function'] );
-                $resource_types_option = escapeshellcmd( $_POST['resources-type'] );
-            }
-
-            if ( $option == 'db-load' ){
-                $resources = [];
-
-                $collections = Collection::find()->joinWith('surveytocollections')->where(['surveyid' => $surveyid])->all();
-                if ( empty( $collections ) ){
-                    $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->orWhere(['type' => $resource_types_option, 'collection.userid' => $userid, 'resources.ownerid' => $userid])->all();
-                }
-                foreach ($collections as $collection) {
-                    foreach ($collection->getResources()->where(['type' => $resource_types_option])->all() as $resource) {
-
-                        if ( $resource->allowusers == 1 || $resource->ownerid == $userid){
-                            $resources[] = $resource;
-                        }
-                    }
-                }
-            }else{
-                // OPTION == DIR LOAD 
-                $collections = Collection::find()->joinWith('surveytocollections')->where(['surveyid' => $surveyid])->all();
-                    if ( empty( $collections ) ){
-                        // USER LOADS FROM DIRECTORY
-                        $collection = new Collection();
-                        $collection->userid = $userid;
-                        $collection->name = '';
-                        $collections = [ $collection ];
-
-                        if ( $option == 'dir-load' ){
-                            $resource = new Resources();
-                            $resources = $resource->read( $userid, $resource_types_option );
-                        }
-                    }else{
-                        
-                        // USER IS IN FINAL STEP OF COLLECTION CREATION
-                        foreach ($collections as $collection) {
-                            foreach ($collection->getResources()->where(['type' => $resource_types_option])->all() as $resource) {
-                                $resources[] = $resource;       
-                            }
-                        }
-                    }
-            }
-
-            if ( isset( $_POST['submit-resource-form'] ) ){
-
-                $new_collection_name = isset( $_POST['Collection']['name'] ) ? $_POST['Collection']['name'] : '';
-                $new_resources = [];
-
-                foreach ($collections as $col_key => $collection) {
-                    // echo "Name: ".$collection->name." id: $collection->id <br><br>";
-                    if ( isset( $_POST['agree-collection-'.$col_key] ) || $option == 'dir-load'  ){
-                        if ( $option == 'dir-load' ){
-                            $collection->name = $new_collection_name;
-                        }
-
-                        $collection->allowusers = isset( $_POST['Collection'][$col_key]['allowusers'] ) ? (int) $_POST['Collection'][$col_key]['allowusers'] : $collection->allowusers;
-                        $new_collection_allowusers = $collection->allowusers;
-
-                        foreach ($resources as $res_key => $resource) {
-                            if ( isset( $_POST['agree-'.$col_key.'-'.$resource->type."-".$res_key] ) || $option == 'dir-load' ){
-
-                                // NEW COLLECTION FROM DIRECTORY ( RESOURCE DOES NOT HAVE ID )
-                                // NEW COLLECTION FROM DB ( RESOURCE HAS ID )
-                                // MY COLLECTION ( RESOURCE HAS ID )
-                                $resource->allowusers = isset( $_POST['Resources'][$res_key]['allowusers'] ) ? (int) $_POST['Resources'][$res_key]['allowusers'] : $resource->allowusers;
-
-                                if ( empty( $my_collection ) ){
-                                    $new_resource = new Resources();                                        
-                                    $new_resource->attributes = $resource->attributes;
-                                    if ( $resource->type == 'image' ){  
-                                        if ( $resource->isNewRecord ){
-                                            $new_resource->image = file_get_contents( $resource->image );
-                                        }else{
-                                            $new_resource->image = $resource->image;
-                                        }
-                                    }
-                                    $new_resource->isNewRecord = true;
-                                    $new_resource->id = null;
-                                    $new_resources[] = $new_resource;
-                                    // echo "Creating new resource from $resource->id <br><br>";
-                                }else{
-                                    $new_resources[] = $resource;
-                                    // echo "Saving new resource from $resource->id <br><br>";
-                                }
-                            }
-                        }
-                    }
-                }
-                if ( empty( $my_collection ) ){
-                    $collection = new Collection();
-                    $collection->userid = $userid;
-
-                    $surveytocollections = new Surveytocollections();
-                    $surveytocollections->ownerid = $userid;
-                    $surveytocollections->surveyid = $surveyid;
-                    $url = 'site/resource-create';
-                }else{
-                    $url = 'site/questions-create';
-                    $collection = $my_collection;
-                    $surveytocollections = $collection->getsurveytocollections()->one();
-                }
-                
-                    $collection->name = $new_collection_name;
-                    $collection->allowusers = (int)$new_collection_allowusers;
-                    $collection->save();
-
-                    $surveytocollections->collectionid = $collection->id;
-                    $surveytocollections->save();
-
-                foreach ($new_resources as $new_resource) {
-                    $new_resource->collectionid = $collection->id;
-                    $new_resource->ownerid = $userid;
-                    // echo "Saving resource $resource->id <br><br>";
-                    $new_resource->save();
-                }
-                return $this->redirect([$url, 'surveyid' => $surveyid, 'edit' => 1]);
-            }
-              
-            if ( isset($_POST['discard-collection']) && $_POST['discard-collection'] == 'discard' ){
-
-                $surveytocollections = Surveytocollections::find()->where(['surveyid' => $surveyid])->all();
-                foreach ($surveytocollections as $surveytocollection) {
-                    $col_id = $surveytocollection->collectionid;
-                    $surveytocollection->delete();
-                    $resources_to_delete = Resources::find()->where(['collectionid' => $col_id])->all();
-                    foreach ($resources_to_delete as $res) {
-                        $res->delete();
-                    }
-                    $col = Collection::findOne($col_id);
-                    $col->delete();
-                }
-                return $this->redirect(['site/resource-create', 'surveyid' => $surveyid, 'edit' => 1]);
-            }
-
-        }
-
-        if ( empty( $my_collection ) ){
-            $my_collection = new Collection();
-            $my_collection->userid = $userid;
-        }
-
-        return $this->render('resourcecreate', 
-            [
-                'tool' => $tool,
-                'options' => $options, 
-                'option' => $option, 
-                'tabs' => $tabs, 
-                'message' => $message, 
-                'surveyid' => $surveyid,
-                'resource_types_option' => $resource_types_option,
-                'resource_types' => $resource_types,
-                'db_available_resources' => $db_available_resources,
-                'dir_available_resources' => $dir_available_resources,
-                'userid' => $userid,
-                'collections' => $collections,
-                'resources' => $resources,
-                'collection' => $my_collection
-            ]);
-
-    }
-
     public function actionQuestionsCreate(){
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
@@ -1817,22 +1725,6 @@ class SiteController extends Controller
 
     }
 
-    public function actionUpload()
-    {
-        $model = new UploadForm();
-
-        if (Yii::$app->request->isPost) {
-            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-            var_dump(UploadedFile::getInstances($model, 'imageFiles'));
-            exit(0);
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
-            }
-        }
-
-        return $this->render('upload', ['model' => $model]);
-    }
     /**
      * Login action.
      *

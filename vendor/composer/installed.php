@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '4ca15ae412178cbad0b6145f1aac1c553c843d9c',
         'name' => 'yiisoft/yii2-app-basic',
         'dev' => true,
     ),
@@ -283,6 +283,15 @@
             'install_path' => __DIR__ . '/../npm-asset/bootstrap',
             'aliases' => array(),
             'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'onmotion/yii2-widget-apexcharts' => array(
+            'pretty_version' => 'v1.0.7',
+            'version' => '1.0.7.0',
+            'type' => 'yii2-extension',
+            'install_path' => __DIR__ . '/../onmotion/yii2-widget-apexcharts',
+            'aliases' => array(),
+            'reference' => '51624de0f68d564e2a8eed94960457e2cf0d170e',
             'dev_requirement' => false,
         ),
         'opis/closure' => array(
@@ -901,12 +910,12 @@
             'dev_requirement' => false,
         ),
         'yiisoft/yii2-app-basic' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '4ca15ae412178cbad0b6145f1aac1c553c843d9c',
             'dev_requirement' => false,
         ),
         'yiisoft/yii2-bootstrap' => array(
