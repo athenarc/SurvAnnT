@@ -192,23 +192,45 @@ class SiteController extends Controller
         $surveys = $surveys->all();
 
         $survey_names['all_surveys'] = 'All Surveys';
-       
+
         $surveyid = 'all_surveys';
 
         foreach ($surveys as $survey) {
             $survey_names[$survey->id] = ucwords( $survey->name );
+
+        }
+
+        if( Yii::$app->request->get() && isset($_GET['surveyid']) ){
+            $surveyid = isset( $_GET['surveyid'] ) ?  $_GET['surveyid'] : '';
+
+            if ( $surveyid != 'all_surveys'){
+                $surveyid = $_GET['surveyid'];
+                $surveys = [];
+                $surveys[0] = Surveys::findOne($surveyid);
+            }
         }
 
         if ( Yii::$app->request->post() ){
             
             $surveyid = isset( $_POST['surveyid'] ) ?  $_POST['surveyid'] : '';
             if ( $surveyid != 'all_surveys'){
+                $_GET = null;
                 $surveyid = $_POST['surveyid'];
                 $surveys = [];
                 $surveys[0] = Surveys::findOne($surveyid);
+            }else{
+                $surveys = Surveys::find()->joinWith('participatesin');
+
+                if ( ! $user->hasRole(['Superadmin']) ){
+                    $surveys->where(['owner' => 1, 'userid' => $userid]);
+                }
+                $surveys = $surveys->all();
             }
             
         }
+
+        
+
         
         $series = [];
         $categories = [];

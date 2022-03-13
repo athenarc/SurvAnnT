@@ -246,9 +246,9 @@ $this->title = 'My Yii Application';
 
 							    'results' => function ($url, $model, $key){
 							    	
-							    	if( $model->completed && Yii::$app->user->identity->getParticipatesin()->where(['owner' => 1, 'surveyid' => $model->id ])->all()){
+							    	if( Yii::$app->user->identity->getParticipatesin()->where(['owner' => 1, 'surveyid' => $model->id ])->all()){
 
-							    		return Html::a('<i class="fa-solid fa-square-poll-vertical"></i>', 'index.php?r=site%2Fsurveys-view&surveyid='.$key);
+							    		return Html::a('<i class="fa-solid fa-square-poll-horizontal"></i>', 'index.php?r=site%2Fsurveys-statistics&surveyid='.$key);
 							    	}
 							    	
 							    },

@@ -35,7 +35,7 @@ $this->registerCssFile(
                 <?=  Html::a( '<i class="fas fa-angle-down"></i>', '', ['class' => 'btn submit-button pull-left display-section', 'id' => 'show-'.$survey->id, 'style' => 'float: unset !important;']) ?>
               </div>
             </div>
-            <div class="row surveys-view-header survey-row section-<?=$survey->id?>" style = "display: none;">
+            <div class="row surveys-view-header survey-row section-<?=$survey->id?>" style = "display: <?= (sizeof($surveys) > 1 ) ? 'none;' : 'block;' ?>;">
               <table class="table table-striped table-bordered participants-table">  
                 <tr class = "dataset-table-header-row">
                     <th class = "dataset-header-column">
