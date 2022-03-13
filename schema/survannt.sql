@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Φιλοξενητής: 127.0.0.1
--- Χρόνος δημιουργίας: 07 Μαρ 2022 στις 18:27:54
+-- Χρόνος δημιουργίας: 13 Μαρ 2022 στις 17:22:04
 -- Έκδοση διακομιστή: 10.4.11-MariaDB
 -- Έκδοση PHP: 7.2.30
 
@@ -37,25 +37,29 @@ CREATE TABLE `auth_assignment` (
 -- Άδειασμα δεδομένων του πίνακα `auth_assignment`
 --
 
--- INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
--- ('Admin', 2, 1643797643),
--- ('Admin', 3, 1643818377),
--- ('Admin', 4, 1643819731),
--- ('Rater', 2, 1645967368),
--- ('Rater', 3, 1643881767),
--- ('Rater', 4, 1643819731),
--- ('Rater', 22, 1645091029),
--- ('Rater', 36, 1646578077),
--- ('Rater', 37, 1646578076),
--- ('Rater', 41, 1646230808),
--- ('User', 21, 1644328794),
--- ('User', 22, 1645089764),
--- ('User', 31, 1646061455),
--- ('User', 32, 1646066647),
--- ('User', 35, 1646129169),
--- ('User', 36, 1646129682),
--- ('User', 37, 1646224864),
--- ('User', 41, 1646228642);
+INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
+('Admin', 2, 1643797643),
+('Admin', 3, 1643818377),
+('Admin', 4, 1643819731),
+('Rater', 2, 1645967368),
+('Rater', 3, 1643881767),
+('Rater', 4, 1643819731),
+('Rater', 21, 1646953119),
+('Rater', 22, 1645091029),
+('Rater', 31, 1646743442),
+('Rater', 32, 1646743472),
+('Rater', 35, 1646953116),
+('Rater', 36, 1646578077),
+('Rater', 37, 1646578076),
+('Rater', 41, 1646230808),
+('User', 21, 1644328794),
+('User', 22, 1645089764),
+('User', 31, 1646061455),
+('User', 32, 1646066647),
+('User', 35, 1646129169),
+('User', 36, 1646129682),
+('User', 37, 1646224864),
+('User', 41, 1646228642);
 
 -- --------------------------------------------------------
 
@@ -80,28 +84,6 @@ CREATE TABLE `auth_item` (
 
 INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`, `group_code`) VALUES
 ('/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//controller', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//crud', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//extension', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//form', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//model', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('//module', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/asset/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/asset/compress', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/asset/template', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/badges/*', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/badges/create', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/badges/delete', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/badges/index', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/badges/update', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/badges/view', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/cache/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/cache/flush', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/cache/flush-all', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/cache/flush-schema', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/cache/index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/debug/*', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/debug/default/*', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/debug/default/db-explain', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
@@ -112,9 +94,6 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/debug/user/*', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/debug/user/reset-identity', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/debug/user/set-identity', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
-('/fixture/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/fixture/load', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/fixture/unload', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/gii/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/gii/default/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/gii/default/action', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
@@ -122,35 +101,11 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/gii/default/index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/gii/default/preview', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/gii/default/view', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/hello/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/hello/index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/help/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/help/index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/help/list', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/help/list-action-options', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/help/usage', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/message/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/message/config', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/message/config-template', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/message/extract', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/create', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/down', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/fresh', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/history', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/mark', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/new', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/redo', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/to', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/migrate/up', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/serve/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
-('/serve/index', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/site/*', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/about', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/badges-create', 3, NULL, NULL, NULL, 1645087080, 1645087080, NULL),
 ('/site/captcha', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/contact', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
-('/site/dataset-create', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/error', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/index', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
 ('/site/invite-user', 3, NULL, NULL, NULL, 1645966191, 1645966191, NULL),
@@ -160,26 +115,16 @@ INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `cr
 ('/site/my-surveys-view', 3, NULL, NULL, NULL, 1643823224, 1643823224, NULL),
 ('/site/participants-invite', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/questions-create', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/questions-create-new', 3, NULL, NULL, NULL, 1646069597, 1646069597, NULL),
-('/site/questions-create-old', 3, NULL, NULL, NULL, 1645087080, 1645087080, NULL),
-('/site/questions-create-old2', 3, NULL, NULL, NULL, 1646069597, 1646069597, NULL),
-('/site/rate-submit', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/request-participation', 3, NULL, NULL, NULL, 1645956310, 1645956310, NULL),
 ('/site/resource-create', 3, NULL, NULL, NULL, 1645087080, 1645087080, NULL),
-('/site/resource-create-before', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/resource-create-before-old2', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/resource-create-before3', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/resource-create-old', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/resource-create-old2', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
-('/site/resource-update', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/survey-create', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
+('/site/survey-create-new', 3, NULL, NULL, NULL, 1646753414, 1646753414, NULL),
 ('/site/survey-delete', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
 ('/site/survey-overview', 3, NULL, NULL, NULL, 1646566575, 1646566575, NULL),
 ('/site/survey-participants', 3, NULL, NULL, NULL, 1643898999, 1643898999, NULL),
 ('/site/survey-rate', 3, NULL, NULL, NULL, 1643823224, 1643823224, NULL),
-('/site/survey-updates', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
+('/site/surveys-statistics', 3, NULL, NULL, NULL, 1647163311, 1647163311, NULL),
 ('/site/surveys-view', 3, NULL, NULL, NULL, 1643818553, 1643818553, NULL),
-('/site/upload', 3, NULL, NULL, NULL, 1644865983, 1644865983, NULL),
 ('/site/user-requests', 3, NULL, NULL, NULL, 1645966191, 1645966191, NULL),
 ('/user-management/*', 3, NULL, NULL, NULL, 1643795416, 1643795416, NULL),
 ('/user-management/auth-item-group/*', 3, NULL, NULL, NULL, 1643795446, 1643795446, NULL),
@@ -321,16 +266,15 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('adminPermissions', '/site/my-surveys-view'),
 ('adminPermissions', '/site/participants-invite'),
 ('adminPermissions', '/site/questions-create'),
-('adminPermissions', '/site/questions-create-old'),
-('adminPermissions', '/site/rate-submit'),
 ('adminPermissions', '/site/request-participation'),
 ('adminPermissions', '/site/resource-create'),
 ('adminPermissions', '/site/survey-create'),
+('adminPermissions', '/site/survey-create-new'),
 ('adminPermissions', '/site/survey-delete'),
 ('adminPermissions', '/site/survey-overview'),
 ('adminPermissions', '/site/survey-participants'),
 ('adminPermissions', '/site/survey-rate'),
-('adminPermissions', '/site/survey-updates'),
+('adminPermissions', '/site/surveys-statistics'),
 ('adminPermissions', '/site/surveys-view'),
 ('adminPermissions', '/site/user-requests'),
 ('adminPermissions', '/user-management/auth-item-group/*'),
@@ -374,7 +318,6 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('changeOwnPassword', '/user-management/auth/change-own-password'),
 ('changeUserPassword', '/user-management/user/change-password'),
 ('changeUserPassword', 'viewUsers'),
-('commonPermission', '//index'),
 ('commonPermission', '/site/about'),
 ('commonPermission', '/site/index'),
 ('commonPermission', '/site/logout'),
@@ -396,7 +339,6 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('raterPermissions', '/site/login'),
 ('raterPermissions', '/site/logout'),
 ('raterPermissions', '/site/my-surveys-view'),
-('raterPermissions', '/site/rate-submit'),
 ('raterPermissions', '/site/request-participation'),
 ('raterPermissions', '/site/survey-rate'),
 ('raterPermissions', '/site/surveys-view'),
@@ -722,12 +664,6 @@ CREATE TABLE `user` (
   `availability` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Άδειασμα δεδομένων του πίνακα `user`
---
-
-INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `confirmation_token`, `status`, `superadmin`, `created_at`, `updated_at`, `registration_ip`, `bind_to_ip`, `email`, `email_confirmed`, `name`, `surname`, `fields`, `orcidid`, `availability`) VALUES
-(1, 'superadmin', '1nIM-Vq57uEw2C4VrMuYVrcX_u4tOMMT', '$2y$13$Z0JPtazBC263YU4x4h2M7OP3qBgoX1gWhJgp43cAPc3g.d0lgox2i', NULL, 1, 1, 1643795415, 1643795415, NULL, NULL, NULL, 0, '', '', '', '', 1);
 -- --------------------------------------------------------
 
 --
@@ -1033,7 +969,7 @@ ALTER TABLE `surveytoresources`
 -- AUTO_INCREMENT για πίνακα `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT για πίνακα `usertobadges`
