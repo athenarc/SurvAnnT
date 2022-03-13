@@ -37,7 +37,8 @@ $this->title = 'My Yii Application';
 					</div>
 				<?php 	endif; ?>
 				<br>
-
+				<h3>Please provide us with your annotations!</h3>
+				<br>
 				<?php foreach ($rates as $key => $rate): ?>
 					<div class = "row question">
 	            		<!-- <span id = 'Question' >  -->
@@ -60,31 +61,38 @@ $this->title = 'My Yii Application';
 	        
 
 		        <div class = "progress-bar-widget row">
-					<?php if(( $minimum_resources_goal > 0 )): ?>
-			        	<div class = "col-md-6">
-			        		<h4> Annotation Goal </h4>
-			        		
-							<?= Progress::widget([
-				            'percent' => substr( ( $user_feedback_provided / $minimum_resources_goal ) * 100, 0, 4 ),
-				            'barOptions' => ['class' => 'progress-bar-success'],
-				            'options' => ['class' => 'active progress-striped']
-				            ]), substr( ( $user_feedback_provided / $minimum_resources_goal ) * 100, 0, 4 ), "% (", $minimum_resources_goal - $user_feedback_provided, " at least more Resources need to be annotated) " ?>
-				       
-				        </div>
-			    	<?php endif; ?>
-			    	<?php if(( $next_badge_goal > 0 )): ?>
-				        <div class = "col-md-6">
-			        		<h4> Next Badge Goal </h4>
+		        	<div class="row">
+						<?php if(( $minimum_resources_goal > 0 )): ?>
+				        	<div class = "col-md-4">
+				        		<h5 class = "goals-title"> Annotation Goal </h5>
+				        		
+								<?= Progress::widget([
+					            'percent' => substr( ( $user_feedback_provided / $minimum_resources_goal ) * 100, 0, 4 ),
+					            'barOptions' => ['class' => 'progress-bar-success'],
+					            'options' => ['class' => 'active progress-striped']
+					            ]), substr( ( $user_feedback_provided / $minimum_resources_goal ) * 100, 0, 4 ), "% (", $minimum_resources_goal - $user_feedback_provided, " more Resources need to be annotated) " ?>
+					       
+					        </div>
+				    	<?php endif; ?>
+				    	<?php if(( $next_badge_goal > 0 )): ?>
+					        <div class = "col-md-4">
+				        		<h5 class = "goals-title"> Next Badge Goal </h5>
 
-							<?= Progress::widget([
-				            'percent' => substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ),
-				            'barOptions' => ['class' => 'progress-bar-success'],
-				            'options' => ['class' => 'active progress-striped']
-				            ]), substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ), "% ( Annotate ", $next_badge_goal, " more resources for the next badge! ) " ?>
+								<?= Progress::widget([
+					            'percent' => substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ),
+					            'barOptions' => ['class' => 'progress-bar-success'],
+					            'options' => ['class' => 'active progress-striped']
+					            ]), substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ), "% (", $next_badge_goal, " more resources for the next badge! ) " ?>
+					        </div>
+				        <?php endif; ?>
+			        	<div class = "col-md-4">
+			        		<h5 class = "goals-title"> Acquired Badges (This Campaign)</h5>
+			        		<?php foreach($acquired_badges as $badge): ?>
+								<img class = "acquired-badges" src="data:image/png;base64,<?= base64_encode($badge) ?>"/>
+							<?php endforeach; ?>
 				        </div>
-			        <?php endif; ?>
-	        	</div>
-
+		        	</div>
+				</div>
 				<div class = "row button-row">
 					<div class = "col-md-10"></div>
 					<div class = "col-md-1">

@@ -526,11 +526,14 @@ class SiteController extends Controller
 
                 $survey_ratings = $survey->getNumberOfRatings();
                 
-                // if ( $minimum_resources_goal ){
-                //      MINIMUM RESOURCES EVALUATED FOR SURVEY, MAYBE A NOTIFICATION;
-                //     if ( $survey_ratings >= $minimum_resources_goal ){
-                //     }
-                // }
+                if ( $minimum_resources_goal ){
+                    // MINIMUM RESOURCES EVALUATED FOR SURVEY, MAYBE A NOTIFICATION;
+                    if ( $survey_ratings >= $minimum_resources_goal && ( ! isset($maximum_resources_goal) || $maximum_resources_goal == 0 ) ){
+                        $survey->completed = 1;
+                        $survey->active = 0;
+                        $survey->save();
+                    }
+                }
 
                 if ( $maximum_resources_goal ){
                     if ( $survey_ratings >= $maximum_resources_goal ){
@@ -540,16 +543,24 @@ class SiteController extends Controller
                         $survey->save();
                     }
                 }
+                
 
-
+                // GET RESOURCES THAT HAVE NOT BEEN ANNOTATED YET BY CURRENT USER
                 $resource = Collection::find()->joinWith(['resources', 'surveytocollections'])->where(['surveytocollections.surveyid' => $survey->id])->andWhere(['NOT IN', 'resources.id', $rates_query]);
 
+                if ( $minimum_resources_eval_goal && ( ! isset( $maximum_resources_eval_goal ) || $maximum_resources_eval_goal == 0 ) ){
+                    // IF SURVEY HAS MINIMUM RESOURCE EVALUATIONS SET AND NOT A MAX, THEN WE LIMIT THE RESOURCE QUERY TO THE RESOURCES THAT HAVE NOT EXCEEDED THIS LIMIT
+                    $resource_rates_query_min = Rate::find()->select(['resourceid'])->groupBy(['surveyid', 'resourceid'])->where(['surveyid' => $survey->id])->having(['>', 'count(distinct userid, resourceid)', $minimum_resources_eval_goal])->createCommand()->getRawSql();
+                                        
+                    $resource->andWhere(['NOT IN', 'resources.id', $resource_rates_query_min]);
+
+                }
+
                 if ( $maximum_resources_eval_goal ){
-                    // IF SURVEY HAS MAXIMUM RESOURCE EVALUATIONS SET, THEN WE LIMIT THE RESOURCE QUERY TO THE RESOURCES THAT HAVE NOT EXCEEDED THIS LIMIT
+                    // IF SURVEY HAS MAXIMUM RESOURCE EVALUATIONS SET AND NOT A MIN, THEN WE LIMIT THE RESOURCE QUERY TO THE RESOURCES THAT HAVE NOT EXCEEDED THIS LIMIT
+                    $resource_rates_query_max = Rate::find()->select(['resourceid'])->groupBy(['surveyid', 'resourceid'])->where(['surveyid' => $survey->id])->having(['>', 'count(distinct userid, resourceid)', $maximum_resources_eval_goal]);
                     
-                    $resource_rates_query = Rate::find()->select(['resourceid'])->groupBy(['surveyid', 'resourceid'])->having(['>=', 'count(distinct userid, resourceid)', $maximum_resources_eval_goal]);
-                    
-                    $resource->andWhere(['NOT IN', 'resources.id', $resource_rates_query]);
+                    $resource->andWhere(['NOT IN', 'resources.id', $resource_rates_query_max]);
 
                 }
 
@@ -591,7 +602,8 @@ class SiteController extends Controller
                         $usertobadges->userid = $userid;
                         $usertobadges->badgeid = $badge->id;
                         $usertobadges->surveyid = $survey->id;
-                        $rate_conditions[] = (int)$surveytobadge->ratecondition - (int)$user_feedback_provided;
+                        $rate_cond = (int)$surveytobadge->ratecondition - (int)$user_feedback_provided;
+                        $rate_conditions[] = ($rate_cond >= 0 ) ? $rate_cond : -1 * $rate_cond;
                         $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition && (int)$surveytobadge->ratecondition > 0;
 
                         if ( $ratings_expression ){
@@ -618,7 +630,9 @@ class SiteController extends Controller
 
                 $next_badge_goal = 0;
                 if ( isset( $rate_conditions ) && sizeof( array_filter($rate_conditions ) ) > 0 ){
+                    
                     $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
+                    // print_r($next_badge_goal);
                 }else{
                     $rate_conditions = [];
                 }
@@ -671,7 +685,13 @@ class SiteController extends Controller
                 return $this->redirect(['site/survey-rate', 'surveyid' => $surveyid]);
             }
         }
-        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal, 'rate_conditions' => $rate_conditions, 'next_badge_goal' => $next_badge_goal]);
+
+        $acquired_badges = [];
+        foreach (Yii::$app->user->identity->getUsertobadges()->where(['surveyid' => $survey->id])->all() as $usertobadge) {
+            $acquired_badges[] = $usertobadge->getBadge()->select(['image'])->one()['image'];
+        }
+        // exit(0);
+        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal, 'rate_conditions' => $rate_conditions, 'next_badge_goal' => $next_badge_goal, 'acquired_badges' => $acquired_badges]);
     }
 
     public function actionRequestParticipation()
@@ -1360,6 +1380,9 @@ class SiteController extends Controller
                     if ( $question->answertype != 'textInput' ){
                         $num_of_answers = sizeof( preg_grep( "/question-$key-".$question->answertype."-[0-9]-answer/", array_keys( $_POST ) ) );
                         $greped_arr = preg_grep( "/question-$key-".$question->answertype."-<[0-9]>-answer/", array_keys( $_POST ) );
+                        if ( sizeof ($greped_arr) == 0 ){
+                            $greped_arr = preg_grep( "/question-$key-".$question->answertype."-[0-9]-answer/", array_keys( $_POST ) );
+                        }
                         foreach ($greped_arr as $key => $value) {
                             $answer_values[] = array($_POST[str_replace("answer", "value", $value)] => $_POST[$value]);
                         }

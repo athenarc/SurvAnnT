@@ -4,11 +4,8 @@
 }
 
 .rate-box{
-	/*margin: 2%;*/
-	/*background-color: #dadeefa8;*/
 	color: black;
 	border-radius: 25px;
-	/*padding: 2%;*/
 }
 
 .marg-left-right{
@@ -19,7 +16,6 @@
 
 .question-box{
 	background-color: #dadeefa8;
-	/*padding: 1em;*/
 	border-radius: 25px;
 }
 
@@ -41,19 +37,13 @@
 }
 
 .progress-bar-widget{
-	/*width: 30%;*/
-	/*margin-left: 2em;*/
-	margin-right: 2em;
+	margin-left: 1em;
+	margin-right: 1em;
 	margin-bottom: 1em;
 }
 
 .progress-bar-widget > .col-md-6{
-	/*color: white;*/
-	/*border-radius: 25px;*/
-	/*padding: 2%;*/
 	padding-top: 1%;
-	/*padding-bottom: 1%;*/
-	/*border: 1px solid grey;*/
 	margin-right: 1em;
 }
 
@@ -62,7 +52,6 @@
 }
 
 .question-radiolist{
-	/*background-color: #C7CEEA;*/
 	background-color: #C7CEEA;
 	border-radius: 25px;
 	padding: 0.5%;
@@ -77,3 +66,13 @@
 	margin-left: 0%;
 }
 
+.acquired-badges{
+	max-height: 50px;
+	max-width: 50px;
+}
+
+.goals-title{
+	color: black;
+	margin-left: 0px !important;
+	padding-left: 0px !important;
+}

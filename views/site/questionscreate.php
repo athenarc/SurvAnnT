@@ -67,7 +67,7 @@ use yii\widgets\ActiveForm;
                                     <?php 
                                     $counter = 0;
                                     $question->answervalues = ($question->answervalues == '') ? $likert_5 : json_decode($question->answervalues) ;
-                                    ?>
+                                    ?> 
                                     
                                     <table class = "table table-striped table-bordered">
                                         <tr class = "dataset-table-header-row">

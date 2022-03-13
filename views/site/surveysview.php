@@ -18,7 +18,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3> General Settings </h3>
+                <h3 class = "surveys-view-header"> General Settings </h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -52,7 +52,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3> Collection of Resources & Questions</h3>
+                <h3 class = "surveys-view-header"> Collection of Resources & Questions</h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -76,7 +76,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3>Participants</h3>
+                <h3 class = "surveys-view-header">Participants</h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -112,11 +112,14 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <br>
             <div class = "header-label">
-                <h3>Badges</h3>
+                <h3 class = "surveys-view-header">Badges</h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
-                        <th class = "dataset-header-column" style = "width: 50%;">
+                        <th class = "dataset-header-column">
                             Preview
+                        </th>
+                        <th class = "dataset-header-column">
+                            Name
                         </th>
                         <th class = "dataset-header-column">
                             Earn Condition
@@ -126,6 +129,9 @@ $date = date('Y-m-d hh:mm', time());
                         <tr>
                             <td>
                                 <?= '<img src="data:image/png;base64,'.base64_encode($badge->getBadge()->select('image')->one()['image'] ).'"/>'  ?>
+                            </td>
+                            <td>
+                                <?= $badge->getBadge()->select('name')->one()['name']  ?>
                             </td>
                             <td>
                                 <?= "Annotate <b>".$badge->ratecondition."</b> Resources to earn" ?>
@@ -141,7 +147,7 @@ $date = date('Y-m-d hh:mm', time());
             </div>
             <?php if ( in_array(Yii::$app->user->identity->id, $survey->getOwner()) ): ?>
                 <div class = "header-label">
-                    <h3>Results</h3>
+                    <h3 class = "surveys-view-header">Results</h3>
                     <table class="table table-striped table-bordered participants-table">  
                         <tr class = "dataset-table-header-row">
                             <th class = "dataset-header-column">

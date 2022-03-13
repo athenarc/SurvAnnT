@@ -28,10 +28,10 @@ $(document).ready(function(){
                     // alert('key='+key+', value='+likert_obj[key]);
                     table +=    `<tr> 
                                     <td> 
-                                        <input type="text" value="` + likert_obj[key] + `" name="question-` + id + `-` + answer_type + `-` + counter + `-answer" class = "form-control"> 
+                                        <input type="text" value="` + likert_obj[key] + `" name="question-` + id + `-` + answer_type + `-<` + counter + `>-answer" class = "form-control"> 
                                     </td> 
                                     <td> 
-                                        <input type="text" value="` + key + `" name="question-` + id + `-` + answer_type + `-` + counter + `-value" class = "form-control"> 
+                                        <input type="text" value="` + key + `" name="question-` + id + `-` + answer_type + `-<` + counter + `>-value" class = "form-control"> 
                                     </td> 
                                     <td> 
                                         <a id = "delete-radioList-` + key + `-` + likert_obj[key] + `" class="fas fa-trash-alt link-icon delete-radioList-key"></a> 
