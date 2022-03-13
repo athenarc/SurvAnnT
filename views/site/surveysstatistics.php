@@ -67,7 +67,7 @@ $this->registerCssFile(
                     <td> <?= isset( $survey->ends ) ? $survey->ends : '<i>Not determined yet</i>' ?> </td>
                     <td> <?= ( $survey->locked ) ? 'Restricted' : 'Available' ?> </td>
                     <td> <?= ( $survey->minResEv > 0 ) ? $survey->minResEv : '<i>Not set</i>' ?> </td>
-                    <td> <?= $survey->getParticipatesin()->where(['owner' => 0])->count() ?></td>
+                    <td> <?= $survey->getParticipatesin()->count() ?></td>
                 </tr>
               </table>
               <table class="table table-striped table-bordered participants-table">  

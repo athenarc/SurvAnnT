@@ -197,9 +197,7 @@ $date = date('Y-m-d hh:mm', time());
                             <th class = "dataset-header-column">
                                 # of Responses
                             </th>
-                            <th class = "dataset-header-column">
-                                Responses Mean (for Numeric only)
-                            </th>
+                            
                             <th class = "dataset-header-column">
                                 Users Evaluated
                             </th>
@@ -211,9 +209,7 @@ $date = date('Y-m-d hh:mm', time());
                             <td>
                                 <?= $question->getRates()->groupBy(['questionid', 'userid'])->count() ?>
                             </td>
-                            <td>
-                                <?= $rates['questions'][$question->id]['answer'] ?>
-                            </td>
+                            
                             <td>
                                 <?= implode("<br>", $rates['questions'][$question->id]['users']) ?>
                             </td>

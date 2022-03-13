@@ -212,42 +212,6 @@ class SiteController extends Controller
         
         $series = [];
         $categories = [];
-        // $test_2 = 
-        // [ 
-        //     [   
-        //         'name' => 'question 1',
-        //         'data' => 
-        //             [
-        //                 [ 'x' => 'Vergoulis', 'y' => 1],
-        //                 [ 'x' => 'Kanellos', 'y' => 2], 
-        //                 [ 'x' => 'Tzerefos', 'y' => 3] 
-        //             ]
-        //     ],
-        //     [   
-        //         'name' => 'question 2',
-        //         'data' => 
-        //             [
-        //                 [ 'x' => 'Vergoulis', 'y' => 3],
-        //                 [ 'x' => 'Kanellos', 'y' => 2], 
-        //                 [ 'x' => 'Tzerefos', 'y' => 1] 
-        //             ]
-        //     ]
-            
-
-        // ];
-
-        // $test = 
-        // [ 
-        //     [   
-        //         'name' => 'test',
-        //         'data' => 
-        //         [ 
-        //             [ 'x' => 'Artificial Intelligence', 'y' => 1 ], 
-        //             [ 'x' => 'Machine Learning', 'y' => 2 ], 
-        //             [ 'x' => 'Data Science', 'y' => 4 ] 
-        //         ] 
-        //     ]
-        // ];
         foreach ($surveys as $key => $survey) {
             $series[$survey->id]['user_res_fields']['data'] = [];
             $series[$survey->id]['user_res_fields']['categories'] = [];
@@ -287,11 +251,7 @@ class SiteController extends Controller
                     $r["Question: ".$question_key]['data'] = [];
                     $rates = $question_value->getRates()->groupBy(['resourceid'])->all();
                     foreach ($rates as $rate) {
-                        // echo $rate->id." rate q id: ".$rate->questionid." rate re id: ".$rate->resourceid." ".$username." ".$rate->answer."<br><br>";
                         $avg = $question_value->getRates()->select(['AVG(answer) AS avg_ans'])->where(['!=', 'answertype', 'textInput'])->andWhere(['resourceid' => $rate->resourceid, 'questionid' => $question_value->id])->groupBy(['resourceid'])->asArray()->one();
-                        // echo "AVG: ";
-                        // print_r($avg);
-                        // echo "<br><br>";
                         $username = $rate->getUser()->select(['username'])->one()['username'];
                         $resourceid = $rate->resourceid;
                         array_push( $r["Question: ".$question_key]['data'], ['x' => "Resource id: ".$resourceid, 'y' => number_format($avg['avg_ans'], 3)]);
@@ -379,9 +339,6 @@ class SiteController extends Controller
                         if ( ! in_array($username, $rates['questions'][$question->id]['users']) ){
                             $rates['questions'][$question->id]['users'][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
                         }
-                    }
-                    if ( $rates['questions'][$question->id]['answer'] != '-' && $rates['questions'][$question->id]['answer'] != 0 ){
-                        $rates['questions'][$question->id]['answer'] = $rates['questions'][$question->id]['answer'] / $question->getRates()->groupBy(['questionid', 'userid'])->count();
                     }
                 }        
 
