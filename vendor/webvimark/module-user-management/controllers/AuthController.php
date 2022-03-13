@@ -186,8 +186,9 @@ class AuthController extends BaseController
 							{
 								User::assignRole($user->id, $role);
 							}
+							User::assignRole($user->id, 'Rater');
+							User::assignRole($user->id, 'Admin');
 							if ( isset( $invitation ) ){
-								User::assignRole($user->id, 'Rater');
 								$participant = new Participatesin();
 								$participant->surveyid = $invitation->surveyid;
 								$participant->userid = $user->id;
