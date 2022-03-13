@@ -108,6 +108,7 @@ class RegistrationForm extends Model
 		$user->status = User::STATUS_ACTIVE;
 		$user->email_confirmed = 1;
 		$fields = [];
+		print_r($this->fields);
 		if ( is_array($this->fields) ){
 			$fields = [];
 			foreach ($this->fields as $key => $value) {
@@ -118,13 +119,14 @@ class RegistrationForm extends Model
 				}
 				$fields[$field->name] = $field->name;
 			}
-			$user->fields = implode( "&&", $fields );
+			$user->fields = implode( "&&", array_values($fields) );
 		}else{
 			$user->fields = '';
 		}
+
 		$user->orcidid = $this->orcidid;
 		$user->availability = $this->availability;
-
+		
 		if ( Yii::$app->getModule('user-management')->useEmailAsLogin )
 		{
 			// $user->email = $this->username;

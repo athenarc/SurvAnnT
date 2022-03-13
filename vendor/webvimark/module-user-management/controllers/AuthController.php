@@ -123,7 +123,10 @@ class AuthController extends BaseController
 		}
 
 		$model = new $this->module->registrationFormClass;
-		$fields = array_column ( Fields::find()->select(['name'])->asArray()->all(), 'name' );
+		$fields = [];
+		foreach (array_column ( Fields::find()->select(['name'])->asArray()->all(), 'name' ) as $field) {
+        	$fields[$field] = $field;
+        }
 		if ( sizeof($fields) == 0 ){
 			foreach (Yii::$app->params['fields'] as $key => $value) {
 	            $fields[$value] = $value;
@@ -134,8 +137,7 @@ class AuthController extends BaseController
 	            }
 	        }
 		}
-        
-		
+
 		if ( isset ( $_GET['email'] ) ){
 			// CASE IN WHICH USER HAS BEEN INVITED TO PARTICIPATE IN A SURVEY THROUGH EMAIL
 			$email = escapeshellcmd( $_GET['email'] );
