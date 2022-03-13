@@ -278,6 +278,7 @@ class SiteController extends Controller
             foreach ( $data as $d_k => $d_v ){
                 array_push( $d[0]['data'], ['x' => $d_k, 'y' => $d_v]);
             }
+            $r = [];
             // CALCULATION OF AVERAGE VALUE PER QUESTION ANSWER PER RESOURCE (FOR NUMERIC ANSWERS ONLY)
             foreach ($survey->getQuestions()->all() as $question_key => $question_value) {
                 
