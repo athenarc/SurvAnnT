@@ -96,6 +96,7 @@ use kartik\select2\Select2;
                                 [
                                 'name' => 'user-fields-selection',
                                 'data' => $fields,
+                                'theme' => \kartik\select2\Select2::THEME_BOOTSTRAP ,
                                 'options' => [ 'multiple' => true ],
                                 'pluginOptions' => [ 'allowClear' => true, 'tags' => true ],
                                 ]
