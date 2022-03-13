@@ -619,6 +619,8 @@ class SiteController extends Controller
                 $next_badge_goal = 0;
                 if ( isset( $rate_conditions ) && sizeof( array_filter($rate_conditions ) ) > 0 ){
                     $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
+                }else{
+                    $rate_conditions = [];
                 }
                 
                 if ( $survey->completed == 1 || $participant->finished == 1 ){
