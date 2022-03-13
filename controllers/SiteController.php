@@ -253,7 +253,7 @@ class SiteController extends Controller
             $series[$survey->id]['user_res_fields']['categories'] = [];
             $data = [];
             
-            $participants = $survey->getParticipatesin()->where(['owner' => 0 ])->all(); 
+            $participants = $survey->getParticipatesin()->all(); // ->where(['owner' => 0 ])
 
             foreach ($participants as $participant) {
 
