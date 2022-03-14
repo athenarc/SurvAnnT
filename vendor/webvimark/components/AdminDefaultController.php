@@ -136,16 +136,18 @@ class AdminDefaultController extends BaseController
 	{
 
 		$model = $this->findModel($id);
-
+		
 		$fields = [];
 		foreach (Yii::$app->params['fields'] as $key => $value) {
 	        $fields[$value] = $value;
 	    }
-
-	    foreach ( explode("&&", $model->fields) as $key => $value ) {
-	        $fields[$value] = $value;
+	    if ( $this->modelClass == 'webvimark\modules\UserManagement\models\User' ){
+	    	foreach ( explode("&&", $model->fields) as $key => $value ) {
+		        $fields[$value] = $value;
+		    }
+		    $model->fields = explode("&&", $model->fields);
 	    }
-	    $model->fields = explode("&&", $model->fields);
+	    
 
 		if ( $this->scenarioOnUpdate )
 		{
