@@ -94,7 +94,7 @@ return [
             'Architecture' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'SurvAnnT architecture',
+                    'text' => 'SurvAnnT architecture <br> <img src ="images/survannt.png">',
                     'enabled' => 1,
                 ],
             'Citations' => 

@@ -265,6 +265,7 @@ class SiteController extends Controller
                 array_push( $d[0]['data'], ['x' => $d_k, 'y' => $d_v]);
             }
             $r = [];
+            $r_textInput = [];
             // CALCULATION OF AVERAGE VALUE PER QUESTION ANSWER PER RESOURCE (FOR NUMERIC ANSWERS ONLY)
             foreach ($survey->getQuestions()->all() as $question_key => $question_value) {
                 
@@ -273,12 +274,29 @@ class SiteController extends Controller
                     $r["Question: ".$question_key]['data'] = [];
                     $rates = $question_value->getRates()->groupBy(['resourceid'])->all();
                     foreach ($rates as $rate) {
+                        // echo "Non Text Input Question: ".$question_value->id." user: ".$rate->userid." answer: ".$rate->answer." <br><br>";
                         $avg = $question_value->getRates()->select(['AVG(answer) AS avg_ans'])->where(['!=', 'answertype', 'textInput'])->andWhere(['resourceid' => $rate->resourceid, 'questionid' => $question_value->id])->groupBy(['resourceid'])->asArray()->one();
                         $username = $rate->getUser()->select(['username'])->one()['username'];
                         $resourceid = $rate->resourceid;
                         array_push( $r["Question: ".$question_key]['data'], ['x' => "Resource id: ".$resourceid, 'y' => number_format($avg['avg_ans'], 3)]);
                         
                     }
+                }else{
+                    $rates = $question_value->getRates()->select(['DISTINCT(answer)', 'COUNT(*) AS cnt'])->groupBy(['resourceid'])->asArray()->all();
+                    $text_input_labels = array_values( array_column( $rates, 'answer' ) );
+                    $labels = [];
+                    foreach ($text_input_labels as $label) {
+                        foreach ( explode(",", $label) as $expl_label ){
+                            if ( isset($labels[$expl_label]) ){
+                                $labels[$expl_label] += 1;
+                            }else{
+                                $labels[$expl_label] = 1;
+                            }
+                        }
+                    }
+                    $series[$survey->id]['questions_text_input']['data'][$question_value->id] = array_values( $labels );
+                    $series[$survey->id]['questions_text_input']['categories'][$question_value->id] = array_keys( $labels );
+                    $text_input_count = array_values( array_column( $rates, 'cnt' ) );
                 }
 
             }
@@ -331,17 +349,19 @@ class SiteController extends Controller
             if ( Surveys::findOne($surveyid) ){
                 $survey = Surveys::findOne($surveyid);        
                 $collection = $survey->getCollection()->one();
-                $resources = $collection->getResources()->all();
+                $resources = ( $collection !== null ) ? $collection->getResources()->all() : [] ;
                 $participants = $survey->getParticipatesin()->all();
                 $questions = $survey->getQuestions()->all();
+                $rates = [];
                 // RESOURCES # NUMBER OF RATINGS
                 foreach ($resources as $resource) {
                     $rates['resources'][$resource->id]['users'] = [];
                     foreach ($resource->getRates()->groupBy(['resourceid', 'userid'])->all() as $rate){
 
                         $username = $rate->getUser()->select(['username'])->one()['username'];
+                        $user_id = $rate->getUser()->select(['id'])->one()['id'];
                         if ( ! in_array($username, $rates['resources'][$resource->id]['users']) ){
-                            $rates['resources'][$resource->id]['users'][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                            $rates['resources'][$resource->id]['users'][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$user_id.'">'.$username."</a>";
                         }
                     }
                 }
@@ -351,7 +371,7 @@ class SiteController extends Controller
                     foreach ($question->getRates()->groupBy(['questionid', 'userid'])->all() as $rate){
 
                         $username = $rate->getUser()->select(['username'])->one()['username'];
-                        
+                        $user_id = $rate->getUser()->select(['id'])->one()['id'];
                         if ( is_numeric($rate->answer) ){
                             $rates['questions'][$question->id]['answer'] += (int)$rate->answer;
                         }else{
@@ -359,7 +379,7 @@ class SiteController extends Controller
                         }
 
                         if ( ! in_array($username, $rates['questions'][$question->id]['users']) ){
-                            $rates['questions'][$question->id]['users'][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$username.'">'.$username."</a>";
+                            $rates['questions'][$question->id]['users'][] = '<a href = "index.php?r=user-management%2Fuser%2Fview&id='.$user_id.'">'.$username."</a>";
                         }
                     }
                 }        

@@ -37,7 +37,16 @@ $date = date('Y-m-d hh:mm', time());
                             Availability
                         </th>
                         <th class = "dataset-header-column">
-                            Annotations Goal
+                            Minimum # of Resources Annotated
+                        </th>
+                        <th class = "dataset-header-column">
+                            Maximum # of Resources Annotated
+                        </th>
+                        <th class = "dataset-header-column">
+                            Minimum # of Evaluations per Resource
+                        </th>
+                        <th class = "dataset-header-column">
+                            Maximum # of Evaluations per Resource
                         </th>
                     </tr>
                     <tr>
@@ -47,6 +56,9 @@ $date = date('Y-m-d hh:mm', time());
                         <td> <?= isset( $survey->ends ) ? $survey->ends : '<i>Not determined yet</i>' ?> </td>
                         <td> <?= ( $survey->locked ) ? 'Restricted' : 'Available' ?> </td>
                         <td> <?= ( $survey->minResEv > 0 ) ? $survey->minResEv : '<i>Not set</i>' ?> </td>
+                        <td> <?= ( $survey->maxResEv > 0 ) ? $survey->maxResEv : '<i>Not set</i>' ?> </td>
+                        <td> <?= ( $survey->minRespPerRes > 0 ) ? $survey->minRespPerRes : '<i>Not set</i>' ?> </td>
+                        <td> <?= ( $survey->maxRespPerRes > 0 ) ? $survey->maxRespPerRes : '<i>Not set</i>' ?> </td>
                     </tr>
                 </table>
             </div>
@@ -140,7 +152,7 @@ $date = date('Y-m-d hh:mm', time());
                     <?php endforeach; ?>
                     <?php if( sizeof( $survey->getSurveytobadges()->all() ) == 0 ): ?>
                         <tr>
-                            <td colspan = "2" style = "text-align: center;"> <i>No badges used</i></td>
+                            <td colspan = "3" style = "text-align: center;"> <i>No badges used</i></td>
                         </tr>
                     <?php endif; ?>
                 </table>

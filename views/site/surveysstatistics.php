@@ -90,8 +90,7 @@ $this->registerCssFile(
                       <?= 
                         \onmotion\apexcharts\ApexchartsWidget::widget([
                           'type' => 'bar', // default area
-                          'height' => '200', // default 350
-                          // 'width' => '800', // default 100%
+                          'height' => '350', // default 350
                           'chartOptions' => [
                               'chart' => [
                                   'toolbar' => [
@@ -108,7 +107,7 @@ $this->registerCssFile(
                                   ],
                               ],
                               'dataLabels' => [
-                                  'enabled' => true,
+                                  'enabled' => false,
                               ],
                               'stroke' => [
                                   'show' => true,
@@ -129,7 +128,7 @@ $this->registerCssFile(
                   </td>
                 </tr>
               </table>
-               <table class="table table-striped table-bordered participants-table">  
+              <table class="table table-striped table-bordered participants-table">  
                 <tr class = "dataset-table-header-row">
                     <th class = "dataset-header-column">
                         Mean Question Values Per Resource (Numeric Questions)
@@ -166,13 +165,13 @@ $this->registerCssFile(
                                   'curve' => 'smooth',
                                   // 'colors' => ['transparent']
                               ],
-                              // 'legend' => [
-                              //     'position' => 'bottom',
-                              //     'horizontalAlign' => 'center',
-                              //     'onItemHover' => [
-                              //       'highlightDataSeries' => true
-                              //     ],
-                              // ],
+                              'legend' => [
+                                  'position' => 'bottom',
+                                  'horizontalAlign' => 'center',
+                                  'onItemHover' => [
+                                    'highlightDataSeries' => true
+                                  ],
+                              ],
                           ],
                           'series' => $series[$survey->id]['questions']['data']
                       ]);
@@ -181,7 +180,67 @@ $this->registerCssFile(
                   </td>
                 </tr>
               </table>
+              <?php foreach ($survey->getQuestions()->where(['answertype' => 'textInput'])->all() as $question): ?>
+                <table class="table table-striped table-bordered participants-table">  
+                  <tr class = "dataset-table-header-row">
+                      <th class = "dataset-header-column">
+                          Text Labels (Text Input Questions)
+                      </th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class = "chart">
+                        <?= 
+                          \onmotion\apexcharts\ApexchartsWidget::widget([
+                            'type' => 'pie', 
+                            'height' => '300', 
+                            'chartOptions' => [
+                                'chart' => [
+                                    'toolbar' => [
+                                        'show' => true,
+                                        'autoSelected' => 'zoom'
+                                    ],
+                                ],
+                                'labels' => $series[$survey->id]['questions_text_input']['categories'][$question->id],
+
+                                'plotOptions' => [
+                                    'bar' => [
+                                        'horizontal' => false,
+                                    ],
+                                ],
+                                'dataLabels' => [
+                                    'enabled' => true,
+                                ],
+                                'stroke' => [
+                                    'show' => true,
+                                    'curve' => 'smooth',
+                                    // 'colors' => ['transparent']
+                                ],
+                                'legend' => [
+                                    'position' => 'bottom',
+                                    'horizontalAlign' => 'center',
+                                    'onItemHover' => [
+                                      'highlightDataSeries' => true
+                                    ],
+                                ],
+                            ],
+                            'series' => $series[$survey->id]['questions_text_input']['data'][$question->id]
+                        ]);
+                        ?>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              <?php endforeach; ?>
+              <table class="w-100">
+                <tr class = "text-right">
+                  <td>
+                    <?=  Html::a( 'Export <i class="fa-solid fa-download"></i>', '#', ['class' => 'btn submit-button', 'style' => 'float: unset !important;']) ?>
+                  </td>
+                </tr>
+              </table>
             </div>
+            
           <?php endforeach; ?>
         <?php ActiveForm::end(); ?>
       </div>

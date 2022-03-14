@@ -17,11 +17,12 @@ use yii\widgets\DetailView;
 // $this->params['breadcrumbs'][] = ['label' => UserManagementModule::t('back', 'Users'), 'url' => ['index']];
 // $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-view">
+
+<div class="user-view outside-div medium-form">
 
 	<h2 class="lte-hide-title"><?= $this->title ?></h2>
 
-	<div class="panel panel-default outside-div medium-form">
+	<div class="panel panel-default ">
 		<div class="panel-body">
 			<?php if ( Yii::$app->user->identity->hasRole(['superadmin']) ): ?>
 			    <p>
@@ -92,10 +93,32 @@ use yii\widgets\DetailView;
 						'value' => function ($model) {
 							$str = '';
 							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 0])->all() as $key => $value) {
-								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id). "<br>";
+								if ( $value->owner == 1 ){
+									$str.= '<i class="fa-solid fa-crown" title="Owner"></i>';
+								}
+								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id)."<br>";
+								
 							}
 							return $str;
 						}
+					],
+					[
+						'attribute'=>'Runs',
+						'format' => 'raw',
+						'value' => function ($model) {
+							$str = '';
+							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 1])->all() as $key => $value) {
+								
+								$str .= Html::a($value->survey->name, 'index.php?r=site%2Fsurveys-view&surveyid='.$value->survey->id)."<br>";
+								
+							}
+							return $str;
+						}
+					],
+					[
+						'attribute'=>'Total Annotations Provided',
+						'format' => 'raw',
+						'value' => $model->getRates()->groupBy('resourceid')->count()
 					],
 					[
 						'attribute'=>'bind_to_ip',
