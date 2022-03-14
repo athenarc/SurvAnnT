@@ -59,6 +59,12 @@ $this->registerCssFile(
                     <th class = "dataset-header-column">
                         # of Participants
                     </th>
+                    <th class = "dataset-header-column">
+                        # of Resources
+                    </th>
+                    <th class = "dataset-header-column">
+                        # of Questions
+                    </th>
                 </tr>
                 <tr>
                     <td> <?= $survey->name ?></td>
@@ -68,6 +74,8 @@ $this->registerCssFile(
                     <td> <?= ( $survey->locked ) ? 'Restricted' : 'Available' ?> </td>
                     <td> <?= ( $survey->minResEv > 0 ) ? $survey->minResEv : '<i>Not set</i>' ?> </td>
                     <td> <?= $survey->getParticipatesin()->count() ?></td>
+                    <td> <?= $survey->getCollection()->one() ? $survey->getCollection()->one()->getResources()->count() : 0 ?></td>
+                    <td> <?= $survey->getQuestions()->count() ?></td>
                 </tr>
               </table>
               <table class="table table-striped table-bordered participants-table">  
