@@ -37,7 +37,7 @@ $this->title = 'My Yii Application';
 					</div>
 				<?php 	endif; ?>
 				<br>
-				<h3>Please provide us with your annotations!</h3>
+				<h4>Please provide us with your feedback!</h4>
 				<br>
 				<?php foreach ($rates as $key => $rate): ?>
 					<div class = "row question">
@@ -60,9 +60,9 @@ $this->title = 'My Yii Application';
 		        <?php endforeach; ?>  
 	        
 
-		        <div class = "progress-bar-widget row">
+		        <div class = "progress-bar-widget">
 		        	<div class="row">
-						<?php if(( $minimum_resources_goal > 0 )): ?>
+						<?php if( $minimum_resources_goal > 0 ): ?>
 				        	<div class = "col-md-4">
 				        		<h5 class = "goals-title"> Annotation Goal </h5>
 				        		
@@ -74,7 +74,7 @@ $this->title = 'My Yii Application';
 					       
 					        </div>
 				    	<?php endif; ?>
-				    	<?php if(( $next_badge_goal > 0 )): ?>
+				    	<?php if( $next_badge_goal > 0 ): ?>
 					        <div class = "col-md-4">
 				        		<h5 class = "goals-title"> Next Badge Goal </h5>
 
@@ -85,12 +85,14 @@ $this->title = 'My Yii Application';
 					            ]), substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ), "% (", $next_badge_goal, " more resources for the next badge! ) " ?>
 					        </div>
 				        <?php endif; ?>
-			        	<div class = "col-md-4">
-			        		<h5 class = "goals-title"> Acquired Badges (This Campaign)</h5>
-			        		<?php foreach($acquired_badges as $badge): ?>
-								<img class = "acquired-badges" src="data:image/png;base64,<?= base64_encode($badge) ?>"/>
-							<?php endforeach; ?>
-				        </div>
+				        <?php if( sizeof( $acquired_badges ) > 0): ?>
+				        	<div class = "col-md-4">
+				        		<h5 class = "goals-title"> Acquired Badges (This Campaign)</h5>
+				        		<?php foreach($acquired_badges as $badge): ?>
+									<img class = "acquired-badges" src="data:image/png;base64,<?= base64_encode($badge) ?>"/>
+								<?php endforeach; ?>
+					        </div>
+				        <?php endif; ?>
 		        	</div>
 				</div>
 				<div class = "row button-row">
