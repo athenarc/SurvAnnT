@@ -130,13 +130,64 @@ $this->registerCssFile(
               </table>
               <?php if ( sizeof( array_filter( array_column( $series[$survey->id]['questions']['data'], 'data' ) ) ) > 0 ): ?>
                 <table class="table table-striped table-bordered participants-table">  
+                  
                   <tr class = "dataset-table-header-row">
                       <th class = "dataset-header-column">
+                          Question ID
+                      </th>
+                      <th class = "dataset-header-column">
+                          Question
+                      </th>
+                      <th class = "dataset-header-column">
+                          Answer Type
+                      </th>
+                      <th class = "dataset-header-column">
+                          Answer Values
+                      </th>
+                  </tr>
+                  <?php foreach ( $survey->getQuestions()->where(['!=', 'answertype', 'textInput'])->all() as $q): ?>
+                    <tr>
+                      <td>
+                        <?= $q->id ?>
+                      </td>
+                      <td>
+                        <?= $q->question ?>
+                      </td>
+                      <td>
+                        <?= $q->answertype ?>
+                        
+                      </td>
+                      <td>
+                        <table class="table table-striped table-bordered participants-table">
+                          <tr class = "dataset-table-header-row">
+                            <th class="dataset-header-column">
+                              DB Value
+                            </th>
+                            <th class="dataset-header-column">
+                              User Value 
+                            </th>
+                          </tr>
+                        <?php foreach (json_decode( $q->answervalues ) as $ans_key => $ans_val ): ?>
+                          <tr>
+                            <td>
+                              <?= key($ans_val) ?>
+                            </td>
+                            <td>
+                              <?= end($ans_val) ?>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                        </table>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <tr class = "dataset-table-header-row">
+                      <th colspan = "4" class = "dataset-header-column">
                           Mean Question Values Per Resource (Numeric Questions)
                       </th>
                   </tr>
                   <tr>
-                    <td>
+                    <td colspan = "4" >
                       <div class = "chart">
                         <?= 
                           \onmotion\apexcharts\ApexchartsWidget::widget([
@@ -203,12 +254,23 @@ $this->registerCssFile(
                 <?php if ( sizeof( $series[$survey->id]['questions_text_input']['data'][$question->id] ) > 0 ): ?>
                   <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
-                        <th class = "dataset-header-column">
+                        <th colspan = "3" class = "dataset-header-column">
                             Text Labels ( Question: <?=$question->id?> <a class="fas fa-info-circle link-icon white" title = "<?= $question->question ?>"> </a> )
                         </th>
                     </tr>
                     <tr>
                       <td>
+                        <?= $question->id ?>
+                      </td>
+                      <td>
+                        <?= $question->question ?>
+                      </td>
+                      <td>
+                        <?= $question->answertype ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
                         <div class = "chart">
                           <?= 
                             \onmotion\apexcharts\ApexchartsWidget::widget([
