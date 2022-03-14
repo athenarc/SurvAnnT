@@ -318,7 +318,7 @@ class SiteController extends Controller
     {
         $columns = ['surveys.id', 'name', 'starts', 'ends','participatesin.surveyid', 'participatesin.id', 'participatesin.owner', 'participatesin.userid', 'user.username', 'user.id' ];
         date_default_timezone_set("Europe/Athens"); 
-        $date = date('Y-m-d h:i:s', time());
+        $date = date('Y-m-d H:i:s', time());
         $query = Surveys::find();
 
         // LIMIT ONLY TO AVAILABLE SURVEYS UNLESS USER IS ADMIN OR SUPERADMIN

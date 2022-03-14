@@ -200,14 +200,13 @@ $this->title = 'My Yii Application';
 							    },
 							    'rate' => function ($url, $model, $key) {
 							        if ( ( Yii::$app->user->identity->hasRole(["Admin"]) && $model['locked'] == 0 ) || in_array(Yii::$app->user->identity->id, array_column($model->participatesin, 'userid') ) ){
-							        	$date = date('Y-m-d h:i:s', time());
-							        	
+							        	$date = date('Y-m-d H:i:s', time());
 							        	foreach ($model->participatesin as $participant) {
 							    			if ( $participant->userid ==  Yii::$app->user->identity->id ){
 							    				if ( $participant->finished == 1 ){
 							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Completed!']);
 							    				}
-							    				if ( $participant->request == 1 && $model->active == 1 && ( $model->starts > strval($date) || $model->starts == '' ) ){
+							    				if ( $participant->request == 1 && $model->active == 1 && ( $model->starts <= strval($date) || $model->starts == '' ) ){
 							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, []);
 							    				}
 							    			}
@@ -216,7 +215,7 @@ $this->title = 'My Yii Application';
 							    },
 
 							    'open' => function ($url, $model, $key){
-							    	$date = date('Y-m-d h:i:s', time());
+							    	$date = date('Y-m-d H:i:s', time());
 
 							    	if ( ( $model['ends'] < strval( $date ) && $model['ends'] != '' ) || $model['locked'] == 1 && !Yii::$app->user->identity->hasRole('Superadmin') && !in_array(Yii::$app->user->identity->id, array_column($model->participatesin, 'userid') )){
 							    		return Html::a('<i class="fas fa-lock" style = "color: #dd7777"></i>');
