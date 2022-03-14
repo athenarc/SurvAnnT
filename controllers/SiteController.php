@@ -846,8 +846,39 @@ class SiteController extends Controller
         foreach (Yii::$app->user->identity->getUsertobadges()->where(['surveyid' => $survey->id])->all() as $usertobadge) {
             $acquired_badges[] = $usertobadge->getBadge()->select(['image'])->one()['image'];
         }
-        // exit(0);
-        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal, 'rate_conditions' => $rate_conditions, 'next_badge_goal' => $next_badge_goal, 'acquired_badges' => $acquired_badges]);
+        $progresses =
+            [
+                'annotation_goal' =>
+                    [
+                        'title' => 'Annotation Goal',
+                        'progress' => ( $minimum_resources_goal > 0 ) ? substr( ( $user_feedback_provided / $minimum_resources_goal ) * 100, 0, 4 ) : 0,
+                        'message' => "% (".($minimum_resources_goal - $user_feedback_provided)." more Resources need to be annotated) "
+                    ],
+                'additional_annotation_goal' =>
+                    [
+                        'title' => 'Additional Annotation Goal',
+                        'progress' => ( $maximum_resources_goal > 0 ) ? substr( ( ( $user_feedback_provided - $minimum_resources_goal ) /  $maximum_resources_goal ) * 100, 0, 4 ) : 0,
+                        'message' => "% (".(  $maximum_resources_goal - $user_feedback_provided )." more Resources can be annotated) "
+                    ],
+                'next_badge_goal' =>
+                    [
+                        'title' => 'Next Badge Goal',
+                        'progress' => ( $next_badge_goal > 0 ) ? substr( ( $user_feedback_provided /  ( $user_feedback_provided + $next_badge_goal ) ) * 100, 0, 4 ) : 0,
+                        'message' => "% (".$next_badge_goal." more resources for the next badge) "
+                    ]
+            ];
+
+            if(  $minimum_resources_goal > 0 && $user_feedback_provided >= $minimum_resources_goal ){
+                $progresses['annotation_goal']['message'] = '% ';
+                $progresses['annotation_goal']['title'] .= ' <a class = "fas fa-check link-icon" title = "completed"></a> ';
+            }
+
+            if( $maximum_resources_goal > 0 && $user_feedback_provided >= $maximum_resources_goal ){
+                $progresses['additional_annotation_goal']['message'] = '% ';
+                $progresses['additional_annotation_goal']['title'] .= ' <a class = "fas fa-check link-icon" title = "completed"></a> ';
+            }
+       
+        return $this->render('rate.php', ['resource' => $resource, 'questions' => $questions, 'rates' => $rates, 'user_feedback_provided' => $user_feedback_provided, 'survey' => $survey, 'user_feedback_provided_general' => $user_feedback_provided_general, 'minimum_resources_goal' => $minimum_resources_goal, 'maximum_resources_goal' => $maximum_resources_goal, 'rate_conditions' => $rate_conditions, 'next_badge_goal' => $next_badge_goal, 'acquired_badges' => $acquired_badges, 'progresses' => $progresses]);
     }
 
     public function actionRequestParticipation()

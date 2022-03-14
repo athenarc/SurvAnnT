@@ -141,7 +141,7 @@ return [
 
                         [
                             'name' => 'Anargiros Tzerefos',
-                            'title' => 'Senior researcher',
+                            'title' => 'Developer',
                             'url' => 'https://www.imsi.athenarc.gr/en/people/member/100',
                             'email' => 'tzerefos@athenarc.gr',
                             'image' => 'images/tzerefos.jpg',
