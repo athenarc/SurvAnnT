@@ -4,6 +4,11 @@
 use yii\bootstrap4\Progress;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\web\View;
+if($survey->time){
+	$this->registerJsFile('@web/js/time.js', ['position' => View::POS_END, 'depends' => [\yii\web\JqueryAsset::className()]]);
+}
+
 
 $this->title = 'My Yii Application';
 ?>
@@ -57,6 +62,7 @@ $this->title = 'My Yii Application';
 			                <?php endif; ?>
 			            </div>
 		           	</div>
+		           	<?= $form->field($rate, "[$key]time") -> hiddenInput(['id' => 'time', 'class' => 'time'])->label(false) ?>
 		        <?php endforeach; ?>  
 	        
 
@@ -109,6 +115,13 @@ $this->title = 'My Yii Application';
 								<?php endforeach; ?>
 					        </div>
 				        <?php endif; ?>
+
+				        <?php if($survey->time): ?>
+
+					        <label id="seconds_active" style = "display: none;">0</label>
+			                <label id="seconds_inactive" style = "display: none;">0</label>
+			                <span class="notice-message"><i>Response times are recorded</i>&nbsp;</span><i class = "fas fa-info-circle notice-tooltip" title = "The response time is acquired in order to discover possible correlations with a text's reading time as measured by various metrics."></i>
+		            	<?php endif; ?>
 		        	</div>
 				</div>
 				<div class = "row button-row">
@@ -118,7 +131,7 @@ $this->title = 'My Yii Application';
 					</div>
 		            <div class = "col-md-1">
 		            	
-				    	<?= Html::submitButton(($resource['type'] != 'questionaire') ? 'Next' : 'Submit', ['class' => 'btn btn-primary submit-button']); ?>
+				    	<?= Html::submitButton(($resource['type'] != 'questionaire') ? 'Next' : 'Submit', ['class' => 'btn btn-primary submit-button', 'id' => 'save']); ?>
 					</div>
 				</div>
 			</div>

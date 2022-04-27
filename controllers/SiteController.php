@@ -31,6 +31,7 @@ use app\models\Fields;
 use app\models\Rate;
 use app\models\Usertobadges;
 use app\models\Leaderboard;
+use yii\db\Expression;
 
 date_default_timezone_set("Europe/Athens"); 
 
@@ -348,7 +349,6 @@ class SiteController extends Controller
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
             if ( isset( $_POST['finalize'] ) ){
-                // exit(0);
                 $survey = Surveys::findOne($surveyid);
                 $survey->active = 1;
                 $survey->save();
@@ -738,8 +738,12 @@ class SiteController extends Controller
                     $resource->andWhere(['NOT IN', 'resources.id', $resource_rates_query_max]);
 
                 }
-
-                $resource = $resource->select(['resources.*'])->asArray()->one();
+                if ( $survey->randomness ){
+                    $resource = $resource->select(['resources.*'])->orderBy(new Expression('rand()'))->asArray()->one();
+                }else{
+                    $resource = $resource->select(['resources.*'])->asArray()->one();
+                }
+                
                 
                 // $fetched_resource_id = $resource['id'];
                 // $fetched_resource_evals = Rate::find()->select(['count(*)'])->where(['resourceid' => $fetched_resource_id])->groupBy(['resourceid', 'questionid'])->all();
@@ -856,7 +860,6 @@ class SiteController extends Controller
                 
                 $leaderboard->points += Yii::$app->params['Scoring-system']['Annotation'];
                 $leaderboard->save();
-                
                 return $this->redirect(['site/survey-rate', 'surveyid' => $surveyid]);
             }
         }

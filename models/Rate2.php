@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-use webvimark\modules\UserManagement\models\User;
+
 use Yii;
 
 /**
@@ -14,18 +14,18 @@ use Yii;
  * @property int $questionid
  * @property int $collectionid
  * @property string|null $answer
- * @property string $created
  * @property string $answertype
+ * @property string $created
  * @property int|null $time
+ *
  * @property Collection $collection
  * @property Questions $question
  * @property Resources $resource
  * @property Surveys $survey
  * @property User $user
  */
-class Rate extends \yii\db\ActiveRecord
+class Rate2 extends \yii\db\ActiveRecord
 {
-    public $tooltip;
     /**
      * {@inheritdoc}
      */
@@ -40,10 +40,11 @@ class Rate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid', 'answer'], 'required'],
+            [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid', 'answertype'], 'required'],
             [['userid', 'surveyid', 'resourceid', 'questionid', 'collectionid', 'time'], 'integer'],
-            [['answer', 'answertype'], 'string'],
-            [['created', 'tooltip'], 'safe'],
+            [['answer'], 'string'],
+            [['created'], 'safe'],
+            [['answertype'], 'string', 'max' => 20],
             [['userid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['userid' => 'id']],
             [['surveyid'], 'exist', 'skipOnError' => true, 'targetClass' => Surveys::className(), 'targetAttribute' => ['surveyid' => 'id']],
             [['resourceid'], 'exist', 'skipOnError' => true, 'targetClass' => Resources::className(), 'targetAttribute' => ['resourceid' => 'id']],
@@ -65,6 +66,7 @@ class Rate extends \yii\db\ActiveRecord
             'questionid' => 'Questionid',
             'collectionid' => 'Collectionid',
             'answer' => 'Answer',
+            'answertype' => 'Answertype',
             'created' => 'Created',
             'time' => 'Time',
         ];
@@ -118,9 +120,5 @@ class Rate extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'userid']);
-    }
-
-    public function selectResource($userid, $surveyid){
-
     }
 }

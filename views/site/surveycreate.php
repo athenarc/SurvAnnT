@@ -116,8 +116,8 @@ $date = date('Y-m-d hh:mm', time());
                     <td><?= $form->field($survey, 'maxResEv')->textInput()->label(false) ?></td>
                 </tr>
                 <tr class = "dataset-table-header-row">
-                    <td colspan = "2" class = "dataset-header-column"> Measure Time </td>
-                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources </td>
+                    <td colspan = "2" class = "dataset-header-column"> Capture Response Times </td>
+                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources Pool </td>
                 </tr>
                 <tr>
                     <td colspan = "2" ><?= $form->field($survey, 'time')->checkbox([], false)->label(false) ?></td>
