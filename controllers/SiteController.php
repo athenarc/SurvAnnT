@@ -348,7 +348,7 @@ class SiteController extends Controller
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
             if ( isset( $_POST['finalize'] ) ){
-                exit(0);
+                // exit(0);
                 $survey = Surveys::findOne($surveyid);
                 $survey->active = 1;
                 $survey->save();

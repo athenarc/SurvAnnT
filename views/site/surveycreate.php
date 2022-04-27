@@ -115,6 +115,14 @@ $date = date('Y-m-d hh:mm', time());
                     <td><?= $form->field($survey, 'minResEv')->textInput()->label(false) ?></td>
                     <td><?= $form->field($survey, 'maxResEv')->textInput()->label(false) ?></td>
                 </tr>
+                <tr class = "dataset-table-header-row">
+                    <td colspan = "2" class = "dataset-header-column"> Measure Time </td>
+                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources </td>
+                </tr>
+                <tr>
+                    <td colspan = "2" ><?= $form->field($survey, 'time')->checkbox([], false)->label(false) ?></td>
+                    <td colspan = "2" ><?= $form->field($survey, 'randomness')->checkbox([], false)->label(false) ?></td>
+                </tr>
             </table>
             </div>
         

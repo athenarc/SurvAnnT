@@ -22,6 +22,8 @@ use Yii;
  * @property int $active
  * @property int $badgesused
  * @property int $completed
+ * @property int $time
+ * @property int $randomness
  * @property Invitations[] $invitations
  * @property Participatesin[] $participatesins
  * @property Rate[] $rates
@@ -54,7 +56,7 @@ class Surveys extends \yii\db\ActiveRecord
             [['name', 'about'], 'required'],
             [['created', 'starts', 'ends', 'fields', 'active', 'badgesused', 'completed'], 'safe'],
             ['ends', 'compare', 'compareAttribute' => 'starts', 'operator'=>'>','message' => 'Survey can not expire before it starts!'],
-            [['locked', 'minRespPerRes', 'maxRespPerRes', 'minResEv', 'maxResEv'], 'integer'],
+            [['locked', 'minRespPerRes', 'maxRespPerRes', 'minResEv', 'maxResEv', 'time', 'randomness'], 'integer'],
             ['maxRespPerRes', 'compare', 'compareAttribute' => 'minRespPerRes', 'operator'=>'>=','message' => 'Maximum evaluations per resource can not be smaller than Minimum!'],
             ['maxResEv', 'compare', 'compareAttribute' => 'minResEv', 'operator'=>'>=','message' => 'Maximum evaluations can not be smaller than Minimum!'],
             [['about'], 'string'],
@@ -82,6 +84,8 @@ class Surveys extends \yii\db\ActiveRecord
             'minResEv' => 'Min Resources Evaluated',
             'maxResEv' => 'Max Resources Evaluated',
             'active' => 'Active',
+            'time' => 'Time',
+            'randomness' => 'Randomness',
         ];
     }
 
