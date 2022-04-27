@@ -78,7 +78,7 @@ return [
                 ],
             'Overview' => 
                 [
-                    'link' => 'index.php?r=site%2Fsurvey-overview&surveyid=',
+                    'link' => 'index.php?r=site%2Fsurveys-view&surveyid=',
                     'enabled' => 0 
                 ]
         ],

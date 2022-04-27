@@ -7,7 +7,7 @@ use kartik\select2\Select2;
 
 date_default_timezone_set("Europe/Athens"); 
 $date = date('Y-m-d hh:mm', time());
-
+ 
 ?>
 <div class="survey-form">
 

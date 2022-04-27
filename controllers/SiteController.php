@@ -344,8 +344,16 @@ class SiteController extends Controller
                     ]
             ];
 
+
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
+            if ( isset( $_POST['finalize'] ) ){
+                exit(0);
+                $survey = Surveys::findOne($surveyid);
+                $survey->active = 1;
+                $survey->save();
+                return $this->redirect(['site/surveys-view']);
+            }
             if ( Surveys::findOne($surveyid) ){
                 $survey = Surveys::findOne($surveyid);        
                 $collection = $survey->getCollection()->one();
@@ -383,8 +391,19 @@ class SiteController extends Controller
                         }
                     }
                 }        
-
-                return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates]);
+                $message = '';
+                if ( !$survey->active && in_array(Yii::$app->user->identity->id, $survey->getOwner()) ){
+                    $tabs = Yii::$app->params['tabs'];
+                    $tabs['General Settings']['enabled'] = 1;
+                    $tabs['Collection of Resources']['enabled'] = 1;
+                    $tabs['Questions']['enabled'] = 1;
+                    $tabs['Participants']['enabled'] = 1;
+                    $tabs['Badges']['enabled'] = 1;
+                    $tabs['Overview']['enabled'] = 1;
+                    $message = 'Overview';
+                }
+                
+                return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates, 'tabs' => $tabs, 'message' => $message, 'surveyid' => $surveyid]);
             }
         }
 
@@ -1541,7 +1560,7 @@ class SiteController extends Controller
                     Surveytobadges::deleteAll(['surveyid' => $surveyid]);
                 }
                 $survey->save();
-                return $this->redirect(['site/survey-overview', 'surveyid' => $surveyid]);
+                return $this->redirect(['site/surveys-view', 'surveyid' => $surveyid]);
 
             }else{
                 $survey->badgesused = 1;
@@ -1658,7 +1677,7 @@ class SiteController extends Controller
                     // return $this->redirect('index');
                     $option = 'user-form';
                     if ( $validated == sizeof($badges) ){
-                        return $this->redirect(['site/survey-overview', 'surveyid' => $surveyid]);                        
+                        return $this->redirect(['site/surveys-view', 'surveyid' => $surveyid]);                        
                     }else{
                         $badges = Badges::find()->joinWith('surveytobadges')->where(['surveyid' => $surveyid])->all();
                     }

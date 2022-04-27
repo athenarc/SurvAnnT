@@ -12,10 +12,21 @@ $date = date('Y-m-d hh:mm', time());
 <div class="survey-form">
 
     <div class ="outside-div about-div">
-        <div class ="about-text">
-            <div class = "row about-row">
-                <h2>Campaign Overview</h2>
+        <?php if($message != ''): ?>
+            <div class = "row header-row dataset-header-row"> 
+                <?php foreach ($tabs as $tab => $url): ?>
+                    <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
+                        <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$surveyid : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>"> <?= $tab ?></h5></a>
+                    </div>
+                <?php endforeach; ?>
             </div>
+        <?php endif; ?>
+        <div class ="about-text">
+            <?php if($message == ''): ?>
+                <div class = "row about-row">
+                    <h2>Campaign Overview</h2>
+                </div>
+            <?php endif; ?>
             <br>
             <div class = "header-label">
                 <h3 class = "surveys-view-header"> General Settings </h3>
@@ -61,6 +72,9 @@ $date = date('Y-m-d hh:mm', time());
                         <td> <?= ( $survey->maxRespPerRes > 0 ) ? $survey->maxRespPerRes : '<i>Not set</i>' ?> </td>
                     </tr>
                 </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->completed && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/survey-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
             </div>
             <br>
             <div class = "header-label">
@@ -85,6 +99,9 @@ $date = date('Y-m-d hh:mm', time());
                         </td>
                     </tr>
                 </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/resource-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
             </div>
             <br>
             <div class = "header-label">
@@ -121,6 +138,9 @@ $date = date('Y-m-d hh:mm', time());
                         </tr>
                     <?php endif; ?>
                 </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/participants-invite&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
             </div>
             <br>
             <div class = "header-label">
@@ -156,6 +176,10 @@ $date = date('Y-m-d hh:mm', time());
                         </tr>
                     <?php endif; ?>
                 </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
+                <br>
             </div>
             <?php if ( in_array(Yii::$app->user->identity->id, $survey->getOwner()) ): ?>
                 <div class = "header-label">
@@ -229,6 +253,22 @@ $date = date('Y-m-d hh:mm', time());
                     <?php endforeach; ?> 
                     </table>
                 </div>
+            <?php endif; ?>
+            <br>
+            <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
+                    <div class = "row button-row">
+                        <div class = "col-md-10"></div>
+                        <div class = "col-md-1">
+                            <?= Html::a('Previous', 'index.php?r=site/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                        </div>
+                        <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 ): ?>
+                            <div class = "col-md-1">
+                                <?= Html::submitButton('Finish', ['class' => 'btn btn-primary submit-button', 'name' => 'finalize']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php ActiveForm::end(); ?>
             <?php endif; ?>
         </div>
     </div>
