@@ -73,7 +73,7 @@ use yii\widgets\ActiveForm;
                                         <td class = "dataset-header-column"> Image </td>
                                     <?php endif; ?>
                                     <td class = "dataset-header-column"> Rating Condition 
-                                        <a class="fas fa-info-circle tooltip-icon" title="Number of surveys to earn this badge"></a>
+                                        <a class="fas fa-info-circle tooltip-icon" title="Number of annotations to earn this badge"></a>
                                     </td>
                                     <td class = "dataset-header-column"> Badge Preview </td>
                                 </tr>

@@ -352,4 +352,91 @@ class Surveys extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Surveytobadges::className(), ['surveyid' => 'id']);
     }
+
+    public function getCompletionCriteria(){
+        // GET # OF RESOURCES EVALUATED
+        $numRes = 0;
+        if ( $this->getCollection()->one() ){
+            $numRes = ( $this->getCollection()->one()->getResources()->count() ) ? $this->getCollection()->one()->getResources()->count() : 0 ;
+        }
+        
+        $numResEval = $this->getRates()->groupBy(['resourceid'])->count();
+
+        $numRespPerRes = $this->getRates()->select(['resourceid', 'COUNT(*)'])->groupBy(['resourceid'])->having(['>=', 'COUNT(*)', $this->minResEv])->count();
+        $minResEv = ( $this->minResEv != null ) ? $this->minResEv : 'Not Set';
+
+        $maxResEv = ( $this->maxResEv != null ) ? $this->maxResEv : 'Not Set';
+        $minRespPerRes = ( $this->minRespPerRes != null ) ? $this->minRespPerRes : 'Not Set';
+        $maxRespPerRes = ( $this->maxRespPerRes != null ) ? $this->maxRespPerRes : 'Not Set';
+        // echo "Resources Evaluated: ".$numResEval."<br>";
+        
+        $minTotalProgress = '-';
+        $maxTotalProgress = '-';
+        $minRespPerResProgress = '-';
+        $maxRespPerResProgress = '-';
+
+        
+        if ( $this->minResEv > 0 ){
+            $minTotalProgress = "($numResEval/$this->minResEv) ".( round( $numResEval / $this->minResEv, 2 ) * 100 )."%";
+            if( $numResEval / $this->minResEv >= 1){
+                $minTotalProgress .= ' <a class ="fas fa-check" title = "Goal achieved!"></a>';
+            }
+            if ( $this->minRespPerRes > 0 ){
+                $minRespPerResProgress = "($numRespPerRes/$this->minResEv) ".( round( $numRespPerRes / $this->minResEv, 2 ) * 100 )."%";
+                if($numRespPerRes / $this->minResEv >= 1){
+                    $minRespPerResProgress .= ' <a class ="fas fa-check" title = "Goal achieved!"></a>'; 
+                }
+            }else if ( $this->maxRespPerRes > 0 && $this->maxResEv > 0 ){
+                $minRespPerResProgress = "($numRespPerRes/$this->maxResEv) ".( round( $numRespPerRes / $this->maxResEv, 2 ) * 100 )."%";
+            }
+        }
+
+        if ( $this->maxResEv > 0 ){
+            $maxTotalProgress = "($numResEval/$this->maxResEv) ".( round( $numResEval / $this->maxResEv, 2 ) * 100 )."%";
+            
+
+            if ( $this->maxRespPerRes > 0 ){
+                $maxRespPerResProgress = "($numRespPerRes/$this->maxResEv) ".( round( $numRespPerRes / $this->maxResEv, 2 ) * 100 )."%";
+            }else if ( $this->minRespPerRes > 0 && $this->minResEv > 0 ){
+                $maxRespPerResProgress = "($numRespPerRes/$this->minResEv) ".( round( $numRespPerRes / $this->minResEv, 2 ) * 100 )."%";
+            }
+        }
+        
+
+        
+        // GET # OF EVALUATIONS PER RESOURCE
+
+        // CALCULATE MINIMUM TOTAL PROGRESS
+
+        // CALCULATE MAXIMUM TOTAL PROGRESS
+
+        $progressArray = [
+            [
+                'description' => 'Minimum Number Of Resources Evaluated',
+                'goal' => $minResEv,
+                'progress' => $minTotalProgress,
+                // 'query' => $this->getRates()->groupBy(['resourceid'])->createCommand()->getRawSql()
+            ],
+            [
+                'description' => 'Maximum Number Of Resources Evaluated',
+                'goal' => $maxResEv,
+                'progress' => $maxTotalProgress, 
+                // 'query' => $this->getRates()->groupBy(['resourceid'])->createCommand()->getRawSql()
+            ],
+            [
+                'description' => 'Minimum Number Of Evaluations Per Resource',
+                'goal' => $minRespPerRes,
+                'progress' => $minRespPerResProgress, 
+                // 'query' => $this->getRates()->groupBy(['resourceid'])->createCommand()->getRawSql()
+            ],
+            [
+                'description' => 'Maximum Number Of Evaluations Per Resource',
+                'goal' =>  $maxRespPerRes,
+                'progress' => $maxRespPerResProgress, 
+                // 'query' => $this->getRates()->groupBy(['resourceid'])->createCommand()->getRawSql()
+            ],
+        ];
+        return $progressArray;
+        // return [$minResEv, $maxResEv, $minRespPerRes, $maxRespPerRes, $minTotalProgress, $maxTotalProgress];
+    }
 }

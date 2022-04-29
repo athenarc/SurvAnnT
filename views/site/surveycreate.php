@@ -27,7 +27,7 @@ $date = date('Y-m-d hh:mm', time());
                     <td class = "dataset-header-column"> Campaign id </td>
                     <td class = "dataset-header-column"> Starts </td>
                     <td class = "dataset-header-column"> Ends </td>
-                    <td class = "dataset-header-column"> Availability <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all raters, or Locked to invite those that you want." style = "color: white !important;"></a></td>
+                    <td class = "dataset-header-column"> Availability <a class = "fas fa-info-circle link-icon white" title = "Select Open to make this survey available to all platform users, or Locked to invite those that you want." style = "color: white !important;"></a></td>
                 </tr>
                 <tr>
                     <td><?= $form->field($survey, 'name')->textInput()->label(false) ?></td>
@@ -116,8 +116,8 @@ $date = date('Y-m-d hh:mm', time());
                     <td><?= $form->field($survey, 'maxResEv')->textInput()->label(false) ?></td>
                 </tr>
                 <tr class = "dataset-table-header-row">
-                    <td colspan = "2" class = "dataset-header-column"> Capture Response Times </td>
-                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources Pool </td>
+                    <td colspan = "2" class = "dataset-header-column"> Capture Response Times <a class = "fas fa-info-circle link-icon white" title = "Capture the time needed for a participant to provide an annotation for a resource. Participants are notified when this option is on." style = "color: white !important;"></a></td>
+                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources Pool <a class = "fas fa-info-circle link-icon white" title = "Randomize the way resources are retrieved during annotation process." style = "color: white !important;"></a></td>
                 </tr>
                 <tr>
                     <td colspan = "2" ><?= $form->field($survey, 'time')->checkbox([], false)->label(false) ?></td>

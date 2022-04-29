@@ -236,7 +236,10 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                             <?= $form->field($user_collection, "allowusers")->checkbox(['label' => 'Public']) ?>
                         </span>
                         <span class = "center" style = "width: 40%;">
-                            <?=  $user_collection->name.' <i>('.$user_collection->getUser()->select(['username'])->asArray()->all()[0]['username'].') ('.sizeof($user_collection->getResources()->all()).' resources)</i>' ?>
+                            <?=  $user_collection->name.' <i>('.$user_collection->getUser()->select(['username'])->asArray()->all()[0]['username'].') ('.sizeof($user_collection->getResources()->all()).' resources )</i>' ?>
+                            <?php if( sizeof($user_collection->getResources()->all()) < $survey->minResEv ): ?>
+                                <a class="fas fa-circle-exclamation tooltip-icon" title = "Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources." style = "background-color: white; border-radius: 25px; color: red !important;"></a>
+                            <?php endif; ?>
                             
                         </span>
                         <span class = "float-right" style = "width: 30%; text-align: right;"> 
@@ -376,7 +379,11 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                         <!-- Html::a( 'Back', Yii::$app->request->referrer, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); -->
                     </div>
                     <div class = "col-md-1">
-                        <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'next']) ?>
+                        <?php if( sizeof($user_collection->getResources()->all()) < $survey->minResEv ): ?>
+                            <?= Html::a( 'Back', Yii::$app->request->referrer, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+                        <?php else: ?>
+                            <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'next']) ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

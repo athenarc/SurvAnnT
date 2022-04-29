@@ -356,6 +356,8 @@ class SiteController extends Controller
             }
             if ( Surveys::findOne($surveyid) ){
                 $survey = Surveys::findOne($surveyid);        
+                // print_r($survey->getCompletionCriteria());
+                // exit(0);
                 $collection = $survey->getCollection()->one();
                 $resources = ( $collection !== null ) ? $collection->getResources()->all() : [] ;
                 $participants = $survey->getParticipatesin()->all();
@@ -1292,6 +1294,7 @@ class SiteController extends Controller
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
+        $tabs['Overview']['enabled'] = 1;
         
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
@@ -1413,7 +1416,7 @@ class SiteController extends Controller
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
         
-        // $tabs['Overview']['enabled'] = 1;
+        $tabs['Overview']['enabled'] = 1;
         
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
@@ -1537,6 +1540,7 @@ class SiteController extends Controller
         $tabs['Questions']['enabled'] = 1;
         $tabs['Participants']['enabled'] = 1;
         $tabs['Badges']['enabled'] = 1;
+        $tabs['Overview']['enabled'] = 1;
         if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
             $tabs['Overview']['enabled'] = 1;
         }

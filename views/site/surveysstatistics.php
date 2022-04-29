@@ -54,9 +54,6 @@ $this->registerCssFile(
                         Availability
                     </th>
                     <th class = "dataset-header-column">
-                        Annotations Goal
-                    </th>
-                    <th class = "dataset-header-column">
                         # of Participants
                     </th>
                     <th class = "dataset-header-column">
@@ -72,11 +69,30 @@ $this->registerCssFile(
                     <td> <?= isset( $survey->starts ) ? $survey->starts : '<i>Not determined yet</i>' ?> </td>
                     <td> <?= isset( $survey->ends ) ? $survey->ends : '<i>Not determined yet</i>' ?> </td>
                     <td> <?= ( $survey->locked ) ? 'Restricted' : 'Available' ?> </td>
-                    <td> <?= ( $survey->minResEv > 0 ) ? $survey->minResEv : '<i>Not set</i>' ?> </td>
                     <td> <?= $survey->getParticipatesin()->count() ?></td>
                     <td> <?= $survey->getCollection()->one() ? $survey->getCollection()->one()->getResources()->count() : 0 ?></td>
                     <td> <?= $survey->getQuestions()->count() ?></td>
                 </tr>
+              </table>
+              <table class="table table-striped table-bordered participants-table">
+                <tr class = "dataset-table-header-row">
+                  <th class = "dataset-header-column">
+                    Campaign Goal Description
+                  </th>
+                  <th class = "dataset-header-column">
+                    Goal
+                  </th>
+                  <th class = "dataset-header-column">
+                    Progress
+                  </th>
+                </tr>
+                <?php foreach ($survey->getCompletionCriteria() as $criteria): ?>
+                  <tr>
+                    <td><?=$criteria['description']?></td>
+                    <td><?=$criteria['goal']?></td>
+                    <td><?=$criteria['progress']?></td>
+                  </tr>
+                <?php endforeach; ?>
               </table>
               <table class="table table-striped table-bordered participants-table">  
                 <tr class = "dataset-table-header-row">

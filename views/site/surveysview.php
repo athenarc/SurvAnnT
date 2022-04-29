@@ -72,13 +72,6 @@ $date = date('Y-m-d hh:mm', time());
                         <td> <?= ( $survey->maxRespPerRes > 0 ) ? $survey->maxRespPerRes : '<i>Not set</i>' ?> </td>
                     </tr>
                 </table>
-                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->completed && ! $survey->active ): ?>
-                    <?= Html::a('Edit', 'index.php?r=site/survey-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
-                <?php endif; ?>
-            </div>
-            <br>
-            <div class = "header-label">
-                <h3 class = "surveys-view-header"> Collection of Resources & Questions</h3>
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -99,8 +92,88 @@ $date = date('Y-m-d hh:mm', time());
                         </td>
                     </tr>
                 </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->completed && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/survey-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
+            </div>
+            <br>
+            <div class="header-label">
+                <h3 class="surveys-view-header"> Resources </h3>
+                <table class="table table-striped table-bordered participants-table">  
+                    <tr class = "dataset-table-header-row">
+                        <th class = "dataset-header-column">
+                            Resource Id
+                        </th>
+                        <th class = "dataset-header-column">
+                            Resource
+                        </th>
+                        <th class = "dataset-header-column">
+                            # of Annotations
+                        </th>
+                        <th class = "dataset-header-column">
+                            Users Evaluated
+                        </th>
+                    </tr>
+                <?php foreach ($resources as $resource): ?>
+                    <tr>
+                        <td> <?= $resource->id ?></td>
+                        <?php if($resource->type == 'image'): ?>    
+                            <td> 
+                                <img src="data:image/png;base64,<?=base64_encode($resource->image)?>" style = "max-height: 50px; max-width: 50px;"/>
+                            </td>
+                        <?php else: ?>
+                            <td> 
+                                <?= $resource->title ?>
+                            </td>
+                        <?php endif; ?>
+                        <td>
+                            <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
+                        </td>
+                        <td>
+                            <?= implode("<br>", $rates['resources'][$resource->id]['users']) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?> 
+                </table>
                 <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
                     <?= Html::a('Edit', 'index.php?r=site/resource-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
+                <?php endif; ?>
+            </div>
+            <br>
+            <div class="header-label">
+                <h3 class="surveys-view-header"> Questions </h3>
+                <table class="table table-striped table-bordered participants-table">  
+                    <tr class = "dataset-table-header-row">
+                        <th class = "dataset-header-column">
+                            Question Id
+                        </th>
+                        <th class = "dataset-header-column">
+                            Question
+                        </th>
+                        <th class = "dataset-header-column">
+                            # of Responses
+                        </th>
+                        
+                        <th class = "dataset-header-column">
+                            Users Evaluated
+                        </th>
+                    </tr>
+                <?php foreach ($questions as $question): ?>
+                    <tr>
+                        <td> <?= $question->id ?></td>
+                        <td> <?= $question->question ?></td>
+                        <td>
+                            <?= $question->getRates()->groupBy(['questionid', 'userid'])->count() ?>
+                        </td>
+                        
+                        <td>
+                            <?= implode("<br>", $rates['questions'][$question->id]['users']) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?> 
+                </table>
+                <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                    <?= Html::a('Edit', 'index.php?r=site/questions-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
                 <?php endif; ?>
             </div>
             <br>
@@ -181,79 +254,6 @@ $date = date('Y-m-d hh:mm', time());
                 <?php endif; ?>
                 <br>
             </div>
-            <?php if ( in_array(Yii::$app->user->identity->id, $survey->getOwner()) ): ?>
-                <div class = "header-label">
-                    <h3 class = "surveys-view-header">Results</h3>
-                    <table class="table table-striped table-bordered participants-table">  
-                        <tr class = "dataset-table-header-row">
-                            <th class = "dataset-header-column">
-                                Resource Id
-                            </th>
-                            <th class = "dataset-header-column">
-                                Resource
-                            </th>
-                            <th class = "dataset-header-column">
-                                # of Annotations
-                            </th>
-                            <th class = "dataset-header-column">
-                                Users Evaluated
-                            </th>
-                        </tr>
-                    <?php foreach ($resources as $resource): ?>
-                        <tr>
-                            <td> <?= $resource->id ?></td>
-                            <?php if($resource->type == 'image'): ?>    
-                                <td> 
-                                    <img src="data:image/png;base64,<?=base64_encode($resource->image)?>" style = "max-height: 50px; max-width: 50px;"/>
-                                </td>
-                            <?php else: ?>
-                                <td> 
-                                    <?= $resource->title ?>
-                                </td>
-                            <?php endif; ?>
-                            <td>
-                                <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
-                            </td>
-                            <td>
-                                <?= implode("<br>", $rates['resources'][$resource->id]['users']) ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?> 
-                    </table>
-
-                    <br>
-                    <table class="table table-striped table-bordered participants-table">  
-                        <tr class = "dataset-table-header-row">
-                            <th class = "dataset-header-column">
-                                Question Id
-                            </th>
-                            <th class = "dataset-header-column">
-                                Question
-                            </th>
-                            <th class = "dataset-header-column">
-                                # of Responses
-                            </th>
-                            
-                            <th class = "dataset-header-column">
-                                Users Evaluated
-                            </th>
-                        </tr>
-                    <?php foreach ($questions as $question): ?>
-                        <tr>
-                            <td> <?= $question->id ?></td>
-                            <td> <?= $question->question ?></td>
-                            <td>
-                                <?= $question->getRates()->groupBy(['questionid', 'userid'])->count() ?>
-                            </td>
-                            
-                            <td>
-                                <?= implode("<br>", $rates['questions'][$question->id]['users']) ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?> 
-                    </table>
-                </div>
-            <?php endif; ?>
             <br>
             <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
                 <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
