@@ -103,9 +103,12 @@ AppAsset::register($this);
 
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <p class="float-left">&copy; SurvAnnT <?= date('Y') ?></p>
+        <p class="float-left">
+            &copy; SurvAnnT <?= date('Y') ?>
+            <a href="https://github.com/athenarc/SurvAnnT" target="_blank" class="fa-brands fa-github link-icon"></a>
+        </p>
         <p class="float-right">
-            Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            Icons made by <a href="https://www.flaticon.com/authors/iconixar" target="_blank" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
         </p>
     </div>
 </footer>

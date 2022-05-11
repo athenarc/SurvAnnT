@@ -350,9 +350,18 @@ class SiteController extends Controller
             $surveyid = $_GET['surveyid'];
             if ( isset( $_POST['finalize'] ) ){
                 $survey = Surveys::findOne($surveyid);
-                $survey->active = 1;
-                $survey->save();
-                return $this->redirect(['site/surveys-view']);
+                if ( $survey ){
+                    if ( $survey->getCollection()->one() ){
+                        if ( $survey->getCollection()->one()->getResources()->all() ){
+                            if ( $survey->getQuestions()->all() ){
+                                $survey->active = 1;
+                                $survey->save();
+                                return $this->redirect(['site/surveys-view']);
+                            }
+                        }
+                    }
+                }
+                
             }
             if ( Surveys::findOne($surveyid) ){
                 $survey = Surveys::findOne($surveyid);        
@@ -395,14 +404,8 @@ class SiteController extends Controller
                 }        
                 $message = '';
                 if ( !$survey->active && in_array(Yii::$app->user->identity->id, $survey->getOwner()) ){
-                    $tabs = Yii::$app->params['tabs'];
-                    $tabs['General Settings']['enabled'] = 1;
-                    $tabs['Collection of Resources']['enabled'] = 1;
-                    $tabs['Questions']['enabled'] = 1;
-                    $tabs['Participants']['enabled'] = 1;
-                    $tabs['Badges']['enabled'] = 1;
-                    $tabs['Overview']['enabled'] = 1;
                     $message = 'Overview';
+                    $tabs = $this->tabsManagement($message, $survey);
                 }
                 
                 return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates, 'tabs' => $tabs, 'message' => $message, 'surveyid' => $surveyid]);
@@ -929,7 +932,7 @@ class SiteController extends Controller
 
     }
 
-    public function actionSurveyCreateNew()
+    public function actionSurveyCreate()
     {
         $userid = Yii::$app->user->identity->id;
 
@@ -948,9 +951,9 @@ class SiteController extends Controller
         
         
         $users = User::find()->select(['id', 'username'])->all();
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['General Settings']['enabled'] = 1;
+
         $message = 'General Settings';
+        $tabs = $this->tabsManagement($message, $survey);
         
         $fields = [];
         $db_survey_fields = Surveys::find()->select(['fields'])->asArray()->all();
@@ -1017,14 +1020,8 @@ class SiteController extends Controller
             }
         }
 
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-
-        $message = 'Collection of Resources';
+        $message = 'Resources';
+        $tabs = $this->tabsManagement($message, $survey);
 
         $options = ['db-load' => 'Load Collections from database' , 'dir-load' => 'Load Collections from directory' ]; 
 
@@ -1111,11 +1108,14 @@ class SiteController extends Controller
                 $surveytocollections->collectionid = $user_collection->id;
                 $surveytocollections->save();
 
+
                 if ( ! $user_collection->getResources()->all() ){
-                    
+
                     if ( $option == 'db-load' ){
-                        $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->all();
+                        $collections = Collection::find()->joinWith('resources')->where(['type' => $resource_types_option, 'collection.allowusers' => 1, 'resources.allowusers' => 1])->orWhere(['type' => $resource_types_option, 'userid'=> $userid, 'ownerid' => $userid])->all();
+
                         foreach ($collections as $collection_key => $collection_value) {
+                           
                             if ( isset($_POST['agree-collection-'.$collection_key]) ){
                                 foreach ($collection_value->getResources()->all() as $collection_resource) {
                                     $new_resource = new Resources();
@@ -1155,11 +1155,9 @@ class SiteController extends Controller
                             $resource->save();
                         }
                     }
-
                     return $this->redirect(['site/questions-create', 'surveyid' => $surveyid ]);
                 }
             }
-
         }
         
         if ( $option == 'db-load' ){
@@ -1190,16 +1188,79 @@ class SiteController extends Controller
 
     }
 
-    public function actionSurveyCreate()
+    public function tabsManagement($tab = null, $survey = null)
+    {
+        $tabs = Yii::$app->params['tabs'];
+
+        if ( $survey->isNewRecord ){
+
+            $tabs['General Settings']['enabled'] = 1;
+            
+        }else{
+            $tabs['General Settings']['enabled'] = 1;
+            $tabs['General Settings']['set'] = '<i class="fas fa-circle-check"></i>';
+            $tabs['Resources']['enabled'] = 1;
+            $tabs['Questions']['enabled'] = 1;
+            $tabs['Badges']['enabled'] = 1;
+            $tabs['Participants']['enabled'] = 1;
+            $tabs['Overview']['enabled'] = 1;
+
+            if ( $survey->getCollection()->all() ){
+                if ( $survey->getCollection()->one()->getResources()->all() ){
+                    
+                    if ( sizeof( $survey->getCollection()->one()->getResources()->all() ) >= $survey->minResEv ){
+                        $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>';
+                    }else{
+                        $tabs['Resources']['set'] = '<i class="fas fa-circle-exclamation" title = "Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."></i>';
+                    }
+                }
+            }
+
+            if ( $survey->getQuestions()->all() ){
+                $tabs['Questions']['set'] = '<i class="fas fa-circle-check"></i>';
+            }
+
+            if ( $survey->badgesused ){
+                if ( $survey->getSurveytobadges()->all() ){
+                    $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i>';
+                }
+            }else{
+                $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i>';
+            }
+
+            $tabs['Participants']['set'] = '<i class="fas fa-circle-check"></i>';
+
+            if ( $survey->active ){
+                $tabs['Overview']['set'] = '<i class="fas fa-circle-check"></i>';
+            }
+            
+        }
+        return $tabs;
+
+    }    
+
+    public function actionSurveyCreateOld()
     {
         date_default_timezone_set("Europe/Athens"); 
-        $survey = new Surveys();
         $participant = new Participatesin();
         $users = User::find()->select(['id', 'username'])->all();
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['General Settings']['enabled'] = 1;
-        $message = 'General Settings';
         $userid = Yii::$app->user->identity->id;
+
+        if ( isset( $_GET['surveyid'] ) ){
+            $surveyid = $_GET['surveyid'];
+            $survey = Surveys::findOne($surveyid);
+            if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
+                return $this->goBack();
+            }
+            $survey->fields = explode("&&", $survey->fields);
+        }else{
+            $survey = new Surveys();
+        }
+        
+
+        $message = 'General Settings';
+        $tabs = $this->tabsManagement($message, $survey);
+
         $fields = [];
         $db_survey_fields = Surveys::find()->select(['fields'])->asArray()->all();
         
@@ -1224,19 +1285,6 @@ class SiteController extends Controller
             }
         }
 
-        if ( isset( $_GET['surveyid'] ) ){
-            $surveyid = $_GET['surveyid'];
-            $survey = Surveys::findOne($surveyid);
-            if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
-                return $this->goBack();
-            }
-            $survey->fields = explode("&&", $survey->fields);
-            $tabs['Collection of Resources']['enabled'] = 1;
-            $tabs['Questions']['enabled'] = 1;
-            $tabs['Participants']['enabled'] = 1;
-            $tabs['Badges']['enabled'] = 1;
-            $tabs['Overview']['enabled'] = 1;
-        }
 
 
         if ( $survey->load( Yii::$app->request->post() ) ) {
@@ -1287,14 +1335,7 @@ class SiteController extends Controller
     public function actionQuestionsCreate(){
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
-        $message = 'Questions';
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-        $tabs['Overview']['enabled'] = 1;
+        
         
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
@@ -1308,6 +1349,9 @@ class SiteController extends Controller
             }
             
         }
+        $message = 'Questions';
+        $tabs = $this->tabsManagement($message, $survey);
+
         $questions = Questions::find()->joinWith('surveytoquestions')->where(['surveyid' => $surveyid])->all();
         $survey_questions = sizeof($questions);
         if ( empty($questions) ){
@@ -1408,15 +1452,6 @@ class SiteController extends Controller
         date_default_timezone_set("Europe/Athens"); 
         $userid = Yii::$app->user->identity->id;
         $users = User::find()->select(['id', 'username', 'name', 'surname', 'email', 'fields'])->where(['!=', 'username', 'superadmin'])->andWhere(['availability' => 1])->asArray()->all();
-        $tabs = Yii::$app->params['tabs'];
-        $message = 'Participants';
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-        
-        $tabs['Overview']['enabled'] = 1;
         
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
@@ -1428,6 +1463,9 @@ class SiteController extends Controller
         }
 
         $survey = Surveys::findOne( $surveyid );
+
+        $message = 'Participants';
+        $tabs = $this->tabsManagement($message, $survey);
 
         if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
             $tabs['Overview']['enabled'] = 1;
@@ -1531,19 +1569,12 @@ class SiteController extends Controller
         }
         
         $users = User::find()->select(['id', 'username'])->asArray()->all();
-        $tabs = Yii::$app->params['tabs'];
-        $options = ['db-load' => 'Load badges from database' , 'user-form' => 'Insert your own badges'];
+        
+
+        $options = ['db-load' => 'Load badges from database' , 'user-form' => 'Create your own badges'];
         $option = 'user-form';
         $message = 'Badges';
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-        $tabs['Overview']['enabled'] = 1;
-        if ( $survey->getCollection()->all() && $survey->getQuestions()->all() ){
-            $tabs['Overview']['enabled'] = 1;
-        }
+        $tabs = $this->tabsManagement($message, $survey);
         
         $use_badges = true;
         $badges = Badges::find()->joinWith('surveytobadges')->where(['surveyid' => $surveyid])->all();
@@ -1728,14 +1759,7 @@ class SiteController extends Controller
 
     public function actionSurveyOverview()
     {
-        $tabs = Yii::$app->params['tabs'];
-        $tabs['General Settings']['enabled'] = 1;
-        $tabs['Collection of Resources']['enabled'] = 1;
-        $tabs['Questions']['enabled'] = 1;
-        $tabs['Participants']['enabled'] = 1;
-        $tabs['Badges']['enabled'] = 1;
-        $tabs['Overview']['enabled'] = 1;
-        $message = 'Overview';
+
         $collection = null;
         $survey_sections = [];
         $resources = [];
@@ -1759,6 +1783,9 @@ class SiteController extends Controller
             $survey_sections = $survey->getOverview($surveyid);
 
         }
+
+        $message = 'Overview';
+        $tabs = $this->tabsManagement($message, $survey);
 
         if ( isset( $_POST['finalize'] ) ){
             $survey = Surveys::findOne($surveyid);

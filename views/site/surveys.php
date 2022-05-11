@@ -107,7 +107,7 @@ $this->title = 'My Yii Application';
 			            [
 			            	'headerOptions' => ['style'=>'text-align: center;'],
 				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-			                'label' => 'Active',
+			                'label' => 'Configured',
 			                'attribute'=>'active',
 			                'value' => function($model) {
 			                    return ($model->active == '1') ? 'True' : 'False';
@@ -159,15 +159,15 @@ $this->title = 'My Yii Application';
 
 				            'class' => 'yii\grid\ActionColumn',
 				            'controller' => 'site',
-				            'header' => 'actions',
+				            'header' => 'Actions',
 				            'headerOptions' => ['style'=>'text-align: center;'],
 				            'contentOptions' => ['style'=>'text-align: center; vertical-align: middle;'],
-				            'template' => '{view} {update} {delete} {rate} {open} {requests} {results}',
+				            'template' => '{update} {delete} {rate} {open} {requests} {results}', //{view} 
 				            'buttons' =>
 				            [
 				            	'view' => function ($url, $model, $key) {
 							    	
-							        return Html::a('<i class="fas fa-eye" ></i>', 'index.php?r=site%2Fsurveys-view&surveyid='.$key);
+							        return Html::a('<i class="fas fa-eye"></i>', 'index.php?r=site%2Fsurveys-view&surveyid='.$key, ['title' => 'View campaign']);
 							    },
 
 							    'update' => function ($url, $model, $key) {
@@ -181,7 +181,7 @@ $this->title = 'My Yii Application';
 				                    }
 							        return 
 							        ( Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin") ) && ( $model->active != 1 )
-							        ? Html::a('<i class="fas fa-edit link-icon"></i>', 'index.php?r=site%2Fsurvey-create&surveyid='.$key.'&edit=1') 
+							        ? Html::a('<i class="fas fa-edit link-icon"></i>', 'index.php?r=site%2Fsurvey-create&surveyid='.$key.'&edit=1', ['title' => 'Edit campaign']) 
 							        : '';
 							    },
 							    'delete' => function ($url, $model, $key) {
@@ -195,7 +195,7 @@ $this->title = 'My Yii Application';
 				                    }
 							        return 
 							        Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin")
-							        ? Html::a('<i class="fas fa-trash-alt link-icon" ></i>', 'index.php?r=site%2Fsurvey-delete&surveyid='.$key) 
+							        ? Html::a('<i class="fas fa-trash-alt link-icon" ></i>', 'index.php?r=site%2Fsurvey-delete&surveyid='.$key, ['title' => 'Delete campaign']) 
 							        : '';
 							    },
 							    'rate' => function ($url, $model, $key) {
@@ -204,10 +204,10 @@ $this->title = 'My Yii Application';
 							        	foreach ($model->participatesin as $participant) {
 							    			if ( $participant->userid ==  Yii::$app->user->identity->id ){
 							    				if ( $participant->finished == 1 ){
-							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Completed!']);
+							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Campaign completed']);
 							    				}
 							    				if ( $participant->request == 1 && $model->active == 1 && ( $model->starts <= strval($date) || $model->starts == '' ) ){
-							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, []);
+							    					return Html::a('<i class="fas fa-star link-icon" ></i>', 'index.php?r=site%2Fsurvey-rate&surveyid='.$key, ['title' => 'Proceed to annotation']);
 							    				}
 							    			}
 								    	}
@@ -218,20 +218,20 @@ $this->title = 'My Yii Application';
 							    	$date = date('Y-m-d H:i:s', time());
 
 							    	if ( ( $model['ends'] < strval( $date ) && $model['ends'] != '' ) || $model['locked'] == 1 && !Yii::$app->user->identity->hasRole('Superadmin') && !in_array(Yii::$app->user->identity->id, array_column($model->participatesin, 'userid') )){
-							    		return Html::a('<i class="fas fa-lock" style = "color: #dd7777"></i>');
+							    		return Html::a('<i class="fas fa-lock"></i>');
 							    	}else{
 							    		
 								    	if ( in_array(Yii::$app->user->identity->id, array_column($model->participatesin, 'userid') ) ){
 								    		foreach ($model->participatesin as $participant) {
 								    			if ( $participant->userid ==  Yii::$app->user->identity->id ){
 								    				if ( $participant->request == 0 ){
-								    					return Html::a('<i class="fas fa-hourglass-half link-icon" title = "Pending acceptance" style ="color: orange;"></i>');
+								    					return Html::a('<i class="fas fa-hourglass-half link-icon"></i>', 'javascript:void(0);', ['title' => 'Participation request sent']);
 								    				}
 								    			}
 								    		}
 								    	}else{
 								    		
-								    		return Html::a('<i class="fas fa-unlock link-icon" title = "Request to participate" "></i>', 'index.php?r=site%2Frequest-participation&surveyid='.$key);
+								    		return Html::a('<i class="fas fa-unlock link-icon"></i>', 'index.php?r=site%2Frequest-participation&surveyid='.$key, ['title' => 'Request to participate']);
 								    	}
 								    }
 							    },
@@ -239,7 +239,7 @@ $this->title = 'My Yii Application';
 							    'requests' => function ($url, $model, $key){
 							    	
 							    	if ( in_array( $model->id, array_column ($this->params['requests'], 'surveyid') ) ){
-							    		return Html::a('<i class="fas fa-inbox" style = "color: green"></i>', 'index.php?r=site%2Fuser-requests&surveyid='.$key);
+							    		return Html::a('<i class="fas fa-inbox" style = "color: #dd7777"></i>', 'index.php?r=site%2Fuser-requests&surveyid='.$key, ['title' => 'Participation request for this campaign']);
 							    	}
 							    	
 							    },
@@ -248,7 +248,7 @@ $this->title = 'My Yii Application';
 							    	
 							    	if( Yii::$app->user->identity->getParticipatesin()->where(['owner' => 1, 'surveyid' => $model->id ])->all()){
 
-							    		return Html::a('<i class="fa-solid fa-square-poll-horizontal"></i>', 'index.php?r=site%2Fsurveys-statistics&surveyid='.$key);
+							    		return Html::a('<i class="fa-solid fa-square-poll-horizontal"></i>', 'index.php?r=site%2Fsurveys-statistics&surveyid='.$key, ['title' => 'Campaign statistics']);
 							    	}
 							    	
 							    },

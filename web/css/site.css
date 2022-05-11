@@ -187,11 +187,13 @@ a.desc:after {
 }
 
 .accept-user{
-    color: #77dd77;
+    /*color: #77dd77;*/
+    color: #949494;
 }
 
 .reject-user{
-    color: #dd7777;
+    /*color: #dd7777;*/
+    color: #949494;
 }
 
 .panel-body{

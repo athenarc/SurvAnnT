@@ -57,12 +57,19 @@ $(document).ready(function(){
     $(document).on('click', '#badges-used', function(e){
         if ( this.checked ){
             $(".datasets-table").css("display", "block");
+            $(".badges-hide").css("display", "flex");
             $(".edit-button").css("display", "block");
         }else{
             // alert("not checked");   
             $(".datasets-table").css("display", "none");
+            $(".badges-hide").css("display", "none");
             $(".edit-button").css("display", "none");
         }
+    });
+
+    $(document).on('change', '.badges-option-select', function(e){
+
+        $("#badges-form").submit();
     });
 
 });

@@ -15,9 +15,9 @@ $(document).ready(function(){
 		var participants = '<table class="table table-striped table-bordered participants-table"> <thead class="control-label" for="surveys-starts" style = "text-decoration: none;"><tr><th colspan = "3" style = "width:80%;">Participants</th><th  style = "text-align: center;" ><a class="fas fa-angle-down" style = "cursor: pointer; text-decoration: none;"></a></tr></thead><tbody class = "participants-body">';
 		var non_participants =  participants.replace("Participants", "Already in SurvAnnT").replace("participants", "non-participants").replace("participants-body", "non-participants-body");
 		participants = '<div class = "col-md-6" style ="position: relative; max-height: 635px; overflow: auto;">' + participants;
-		var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
-		var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
-		var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
+		var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=<id>" target = "_blank" class="fas fa-eye" title = "View user" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
+		var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Invite!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
+		var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#949494;"></a>';
 		var pending_icon = '<a class="fas fa-hourglass-start" title ="Pending registration" style = "cursor: pointer; text-decoration: none; color:orange;"></a>&nbsp;&nbsp;';
 		for (var i = users.length - 1; i >= 0; i--) {
 
@@ -28,7 +28,7 @@ $(document).ready(function(){
 				
 				row += '<td style = "text-align: center;">'+ view_icon.replace('<id>', users[i].id) + '&nbsp;&nbsp;';
 				if ( users[i].request == '0' ){
-					var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Allow user to participate!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
+					var invite_icon = '<a id = "add-user-<id>" class="fas fa-user-check add-user" title = "Allow user to participate!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
 					row += invite_icon.replace('<id>', users[i].id) + '&nbsp;&nbsp;';
 				}
 				if ( users[i].owner != 1 ){
@@ -96,8 +96,8 @@ $(document).ready(function(){
 			userid = userid.replace('delete-user-', '');
 			var to_replace = '</table>';
 			var calling_td = $(this).parent().html();
-			var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
-			var invite_icon = '<a id = "add-user-' + userid + '" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
+			var view_icon = '<a href="/SurvAnnT/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
+			var invite_icon = '<a id = "add-user-' + userid + '" class="fas fa-user-check add-user" title = "Invite!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
 			var row = $(this).parent().parent().html().replace( calling_td, view_icon + invite_icon );
 			var participants = $(".participants-table").html().replace(to_replace, "");
 			
@@ -135,7 +135,7 @@ $(document).ready(function(){
 	$('body').on('click', 'a#add-invitations', function() {
 
 		var input = '<input type="email" name="new-user-email" class ="form-control">';
-		var inv_icon = '<a id = "invite-new-user" class="fas fa-envelope add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>';
+		var inv_icon = '<a id = "invite-new-user" class="fas fa-envelope add-user" title = "Invite!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>';
 		$(".invite-body > tr:last").before("<tr><td>" + input + "</td><td>" + inv_icon + "</td></tr>");
 	});
 	$('body').on('click', 'a.add-user', function() {
@@ -156,7 +156,7 @@ $(document).ready(function(){
 					$(this).parent().prev().find('.help-block').remove();
 				}
 				var pending_icon = '<a class="fas fa-hourglass-start" title ="Pending registration" style = "cursor: pointer; text-decoration: none; color:orange;"></a>&nbsp;&nbsp;';
-				var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
+				var delete_icon = '<a id = "delete-user-<id>" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#949494;"></a>';
 				var row = '<td>-</td><td>-</td><td>' + email + '</td><td>' + pending_icon + delete_icon + '</td>';
 				var rand_id = String( Math.random() );
 				userid = 'add-user--1';
@@ -172,8 +172,8 @@ $(document).ready(function(){
 			var to_replace = '</table>';
 			userid = userid.replace('add-user-', '');
 			var calling_td = $(this).parent().html();
-			var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
-			var delete_icon = '<a id = "delete-user-' + userid + '" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#dd7777;"></a>';
+			var view_icon = '<a href="/SurveiFy/web/index.php?r=user-management%2Fuser%2Fview&id=' + userid + '" target = "_blank" class="fas fa-eye" title = "View user" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp;&nbsp;';
+			var delete_icon = '<a id = "delete-user-' + userid + '" class="fas fa-user-slash delete-user" title = "Revoke participation!" style = "cursor: pointer; text-decoration: none; color:#949494;"></a>';
 			var row = $(this).parent().parent().html().replace( calling_td, view_icon + delete_icon );
 			var to_remove = $(this).parent().parent();
 			var participants = $(".participants-table").html().replace(to_replace, "");
@@ -211,7 +211,7 @@ $(document).ready(function(){
             	}
             	if ( response.response != 'User already invited' && response.response != 'User already participating' && response.response != 'User already registered'){
             		if ( item ){
-            			item.append('<a class = "fas fa-check" title ="Invited!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>');
+            			item.append('<a class = "fas fa-check" title ="Invited!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>');
             		}
             		$(".participants-table").append("<tr>" + row + "</tr></table>");
 
@@ -221,7 +221,7 @@ $(document).ready(function(){
 					addToExpertSet(userid, `${name} ${surname}`);
             	}else{
             		item.prev().html('<input type="email" name="new-user-email" class ="form-control" value = "' + email + '">');
-            		item.find('#invite-new-user').css("display", "block"); //('<a id = "invite-new-user" class="fas fa-user-check add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>&nbsp; &nbsp;');
+            		item.find('#invite-new-user').css("display", "block"); //('<a id = "invite-new-user" class="fas fa-user-check add-user" title = "Invite!" style = "color: #949494; cursor: pointer; text-decoration: none;"></a>&nbsp; &nbsp;');
             		item.prev().append("<div class = 'help-block'> " + response.response + "!</div>");
             	}
             	

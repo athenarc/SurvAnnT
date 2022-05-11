@@ -115,14 +115,14 @@ $this->title = 'My Yii Application';
 								<?php endforeach; ?>
 					        </div>
 				        <?php endif; ?>
-
-				        <?php if($survey->time): ?>
-
-					        <label id="seconds_active" style = "display: none;">0</label>
-			                <label id="seconds_inactive" style = "display: none;">0</label>
-			                <span class="notice-message"><i>Response times are recorded</i>&nbsp;</span><i class = "fas fa-info-circle notice-tooltip" title = "The response time is acquired in order to discover possible correlations with a text's reading time as measured by various metrics."></i>
-		            	<?php endif; ?>
 		        	</div>
+		        	<br>
+		        	<?php if($survey->time): ?>
+				        <label id="seconds_active" style = "display: none;">0</label>
+		                <label id="seconds_inactive" style = "display: none;">0</label>
+		                <span class="notice-message"><i>Response times are recorded</i>&nbsp;</span><i class = "fas fa-info-circle notice-tooltip" title = "The response time is acquired in order to discover possible correlations with a text's reading time as measured by various metrics."></i>
+		            <?php endif; ?>
+
 				</div>
 				<div class = "row button-row">
 					<div class = "col-md-10"></div>

@@ -14,13 +14,20 @@ $date = date('Y-m-d hh:mm', time());
     <div class ="outside-div">
 
         <div class = "row header-row dataset-header-row">
-            <?php foreach ($tabs as $tab => $url): ?>
-                <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
-                    <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$surveyid : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>"> <?= $tab ?></h5></a>
-                </div>
-            <?php endforeach; ?>
+            <?php include 'tabs.php'; ?>
         </div>
+
         <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>
+
+            <div class = "row button-row">
+                <div class = "col-md-10"></div>
+                <div class = "col-md-1">
+                    <!-- Html::a( 'Back', Yii::$app->request->referrer, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); -->
+                </div>
+                <div class = "col-md-1">
+                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
+                </div>
+            </div>
             <div class = "col-md-12 dataset-form">
             <table class="table table-striped table-bordered participants-table">     
                 <tr class = "dataset-table-header-row">
@@ -117,24 +124,20 @@ $date = date('Y-m-d hh:mm', time());
                 </tr>
                 <tr class = "dataset-table-header-row">
                     <td colspan = "2" class = "dataset-header-column"> Capture Response Times <a class = "fas fa-info-circle link-icon white" title = "Capture the time needed for a participant to provide an annotation for a resource. Participants are notified when this option is on." style = "color: white !important;"></a></td>
-                    <td colspan = "2" class = "dataset-header-column"> Randomize Resources Pool <a class = "fas fa-info-circle link-icon white" title = "Randomize the way resources are retrieved during annotation process." style = "color: white !important;"></a></td>
+                    <td colspan = "2" class = "dataset-header-column"> Resource Selection Methodology <a class = "fas fa-info-circle link-icon white" title = "Determine how the resources will be retrieved in annotation time. " style = "color: white !important;"></a></td>
                 </tr>
                 <tr>
-                    <td colspan = "2" ><?= $form->field($survey, 'time')->checkbox([], false)->label(false) ?></td>
-                    <td colspan = "2" ><?= $form->field($survey, 'randomness')->checkbox([], false)->label(false) ?></td>
+                    <td colspan = "2" >
+                        <?= $form->field($survey, 'time')->checkbox([], false)->label(false) ?>
+                    </td>
+                    <td colspan = "2" >
+                        <!-- $form->field($survey, 'randomness')->checkbox([], false)->label(false) -->
+                         <?= $form->field($survey, 'randomness')->dropDownList([ 0 => 'Relevance', 1 => 'Random'])->label(false) ?> 
+                    </td>
                 </tr>
             </table>
             </div>
-        
-            <div class = "row button-row">
-                <div class = "col-md-10"></div>
-                <div class = "col-md-1">
-                    <!-- Html::a( 'Back', Yii::$app->request->referrer, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); -->
-                </div>
-                <div class = "col-md-1">
-                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
-                </div>
-            </div>
+
         <?php ActiveForm::end(); ?>
     </div>
 

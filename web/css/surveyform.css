@@ -134,7 +134,7 @@ h5{
     max-height: 500px; 
     overflow: auto;
     padding: 3%;
-    border: 2px white solid;
+    /*border: 2px white solid;*/
     margin: 3%;
 }
 
@@ -186,24 +186,60 @@ h5{
 }
 
 .fa-edit{
-
+    color: #949494;
 }
 
 .fa-trash-alt{
-    color: #dd7777;
+    /*color: #dd7777;*/
+    color: #949494;
 }
 
 .fa-star{
    
-    color:gold;
+    /*color:gold;*/
+    color: #949494;
 }
 
 .fa-lock{
-    
+    /*color: #949494;*/
+    color: #949494;
 }
 
 .fa-unlock, .fa-check{
+    /*color: #77dd77;*/
+    color: #949494;
+}
+
+.fa-square-poll-horizontal{
+    color: #949494;
+}
+
+.fa-hourglass-half{
+    color: #949494;
+}
+
+.fa-envelope{
+    /*color: #77dd77; */
+    color: #949494;
+}
+
+.fa-circle-xmark{
+    color: red;
+    font-size: 15px;
+    /*background-color: white;
+    border-radius: 50%;
+    height: 0.8em;
+    width: 0.8em;*/
+}
+
+.fa-circle-check{
     color: #77dd77;
+    font-size: 15px;
+}
+
+.fa-circle-exclamation{
+    color: red;
+    font-size: 15px;
 }
 
 .url-disabled{
@@ -249,7 +285,8 @@ h5{
 }
 
 .fa-crown{
-    color: gold;
+    /*color: gold;*/
+    color: #949494;
 }
 
 .border-info{
@@ -262,3 +299,33 @@ h5{
     padding-bottom: 1%;
     border-bottom: 1px white solid;
 }
+
+.button-row-header{
+    padding-bottom: 0%;
+    margin: 0% 2% 0% 2%;
+}
+
+.control-label{
+    /*color: black !important;*/
+    text-decoration: none;
+    padding-bottom: 0.2em;
+    font-style: italic;
+    padding-left: 0.2em;
+
+}
+
+.header-label{
+    /*color: black;*/
+    /*font-weight: bold;*/
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid lightgrey;
+    font-style: italic;
+    font-size: 24px;
+}
+
+    .survey-form-box{
+        margin: 0em 2em 2em 2em !important;
+        padding: 1em 3em 3em 3em;
+        border-radius: 25px;
+    }

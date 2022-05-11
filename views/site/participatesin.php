@@ -16,15 +16,21 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
     <div class="outside-div">
 
         <div class = "row header-row dataset-header-row">
-            <?php foreach ($tabs as $tab => $url): ?>
-                <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
-                    <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$surveyid : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>"> <?= $tab ?></h5></a>
-                </div>
-            <?php endforeach; ?>
+            <?php include 'tabs.php'; ?>
         </div>
+
 
         <?php $form = ActiveForm::begin(['action' =>['site/participants-invite', 'surveyid' => $survey->id], 'options' => ['class' => 'survey-create']]); ?>
 
+        <div class = "row button-row">
+            <div class = "col-md-10"></div>
+            <div class = "col-md-1">
+                <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+            </div>
+            <div class = "col-md-1">
+                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'badges-create']) ?>
+            </div>
+        </div>
         <div class = "row d-flex align-items-center" > 
             <div class="col-md-8">
                 <h3 style = "margin-left: 2%; padding-left: 1%;"> Participants </h3>
@@ -67,7 +73,7 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
                                     <input type="email" name="new-user-email" class ="form-control">
                                 </td>
                                 <td>
-                                    <a id = "invite-new-user" class="fas fa-envelope add-user" title = "Invite!" style = "color: #77dd77; cursor: pointer; text-decoration: none;"></a>
+                                    <a id = "invite-new-user" class="fas fa-envelope add-user" title = "Invite!" style = "cursor: pointer; text-decoration: none;"></a>
                                 </td>
                             </tr>
                             <tr><td colspan="2"><a id = "add-invitations" class="btn btn-info btn-sm submit-button white" title = "Add more invitation inputs!" style = "cursor: pointer; text-decoration: none;">Add</a></td></tr>
@@ -151,15 +157,7 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <?= Html::hiddenInput('', json_encode( $users ), ['id' => 'users_array']) ?>
         <?= Html::hiddenInput('', $survey->id, ['id' => 'surveyid']) ?>
 
-        <div class = "row button-row">
-            <div class = "col-md-10"></div>
-            <div class = "col-md-1">
-                <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
-            </div>
-            <div class = "col-md-1">
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'badges-create']) ?>
-            </div>
-        </div>
+
 
     </div>
     <?php ActiveForm::end(); ?>

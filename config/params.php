@@ -49,37 +49,43 @@ return [
             6 => 'Agree', 
             7 => 'Strongly agree'
         ],
-    'tabs' => 
+    'tabs' =>  
         [
             'General Settings' => 
                 [
                     'link' => 'index.php?r=site%2Fsurvey-create&surveyid=',
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],
-            'Collection of Resources' =>
+            'Resources' =>
                  [
                     'link' => 'index.php?r=site%2Fresource-create&surveyid=',
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],
             'Questions' =>
                  [
                     'link' => 'index.php?r=site%2Fquestions-create&surveyid=',
-                    'enabled' => 0 
+                    'enabled' => 0,
+                    'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],
             'Participants' =>
                  [
                     'link' => 'index.php?r=site%2Fparticipants-invite&surveyid=',
-                    'enabled' => 0 
+                    'enabled' => 0,
+                    'set' => ''  //<i class="fas fa-circle-xmark"></i>
                 ],
             'Badges' =>
                  [
                     'link' => 'index.php?r=site%2Fbadges-create&surveyid=',
-                    'enabled' => 0 
+                    'enabled' => 0,
+                    'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],
             'Overview' => 
                 [
                     'link' => 'index.php?r=site%2Fsurveys-view&surveyid=',
-                    'enabled' => 0 
+                    'enabled' => 0,
+                    'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ]
         ],
     'about' =>
@@ -153,7 +159,7 @@ return [
             'Contact us' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'Send us your feedback at: <br> &nbsp;&nbsp;<i class = "fa fa-envelope"> </i> survannt.helpdesk@gmail.gr <br> &nbsp;&nbsp;<i class = "fa fa-map-marker"> </i> Athena RC, Artemidos 6 & Epidavrou, Maroussi 15125, Greece  ',
+                    'text' => 'Send us your feedback at: <br> &nbsp;&nbsp;<i class = "fa fa-envelope" style ="color:white;"> </i> survannt.helpdesk@gmail.gr <br> &nbsp;&nbsp;<i class = "fa fa-map-marker"> </i> Athena RC, Artemidos 6 & Epidavrou, Maroussi 15125, Greece <br>&nbsp;&nbsp;<a href="https://github.com/athenarc/SurvAnnT" target="_blank" class="fa-brands fa-github link-icon" style = "color:white;"> Github repository</a>',
                     'enabled' => 1,
                 ]
         ],

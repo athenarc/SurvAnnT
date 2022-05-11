@@ -14,11 +14,7 @@ $date = date('Y-m-d hh:mm', time());
     <div class ="outside-div">
 
         <div class = "row header-row dataset-header-row">
-            <?php foreach ($tabs as $tab => $url): ?>
-                <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
-                    <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$surveyid : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>"> <?= $tab ?></h5></a>
-                </div>
-            <?php endforeach; ?>
+            <?php include 'tabs.php'; ?>
         </div>
         <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>
             <div class = "survey-form-box">
@@ -68,14 +64,8 @@ $date = date('Y-m-d hh:mm', time());
                         ?>
                     </div>
                 </div>
-                <div class = "header-label">
-                    Additional Information
-                </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($survey, 'about')->textarea()->label() ?>
-                    </div>
-                    <div class="col-md-4">
                         <?= $form->field($survey, 'fields')->widget
                             (
                                 Select2::className(), 
@@ -91,10 +81,29 @@ $date = date('Y-m-d hh:mm', time());
                             )->label()  
                             ?>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <?= $form->field($survey, 'locked')->dropDownList([ 0 => 'Open', 1 => 'Locked'])->label() ?>
                     </div>
                 </div>
+                <div class = "header-label">
+                    Additional Information
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <?= $form->field($survey, 'about')->textarea()->label() ?>
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($survey, 'randomness')->dropDownList([ 0 => 'Relevance', 1 => 'Random'])->label() ?>
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($survey, 'time')->dropDownList([ 1 => 'Enabled', 0 => 'Disabled'])->label() ?>
+                    </div>
+                </div>
+
                 <div class = "header-label">
                     Campaign Goals
                 </div>

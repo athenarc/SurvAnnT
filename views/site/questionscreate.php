@@ -12,13 +12,23 @@ use yii\widgets\ActiveForm;
     <div class ="outside-div">
 
         <div class = "row header-row dataset-header-row">
-            <?php foreach ($tabs as $tab => $url): ?>
-                <div class = "tab col-md" style = "border-bottom: <?= ( $tab == $message ) ? 'none !important;' : '' ?>">
-                    <a class = "<?= ( ! $url['enabled'] ) ? 'url-disabled' : '' ?> " href = "<?= ($url['enabled']) ? $url['link'].$surveyid : null ?>" ><h5 title = "<?= $message ?>" style = "opacity: <?= ( $url['enabled'] ) ? '1' : '' ?>"> <?= $tab ?></h5></a>
-                </div>
-            <?php endforeach; ?>
+            <?php include 'tabs.php'; ?>
         </div>
         <?php $form = ActiveForm::begin(); ?>
+            <div class = "row button-row">
+                <div class = "col-md-10"></div>
+                <div class = "col-md-1">
+                    <?= Html::a( 'Previous', $tabs['Resources']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+                </div>
+                <div class = "col-md-1">
+                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
+                </div>
+            </div>
+            <div class="survey-form-box" style="margin-bottom: 0% !important; padding-bottom: 0% !important ;">
+                <div class = "header-label">    
+                    Your Questions
+                </div>
+            </div>
             <div class = "datasets-table"> 
                 <?php foreach ($questions as $key => $question): ?>
                     <div id = "dataset-tools-<?=$key?>" class = "dataset-tools">
@@ -35,8 +45,6 @@ use yii\widgets\ActiveForm;
                             </span> 
                         </div>
                     </div>
-
-
                     <div id = "dataset-form-<?=$key?>"  class = "col-md-12 dataset-form">
                         
                         <table class="table table-striped table-bordered participants-table table-<?=$key?>">     
@@ -178,15 +186,7 @@ use yii\widgets\ActiveForm;
                     </div>
                 </div>
             </div>
-            <div class = "row button-row">
-                <div class = "col-md-10"></div>
-                <div class = "col-md-1">
-                    <?= Html::a( 'Previous', $tabs['Collection of Resources']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
-                </div>
-                <div class = "col-md-1">
-                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
-                </div>
-            </div>
+
         <?php ActiveForm::end(); ?>
     </div>
 
