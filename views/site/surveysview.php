@@ -28,7 +28,7 @@ $date = date('Y-m-d hh:mm', time());
                 <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
                     <div class = "row button-row">
                         <div class = "col-md-12 text-right">
-                            <?= Html::a('Previous', 'index.php?r=site/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary', 'name' => 'next']) ?>
+                            <?= Html::a('Previous', 'index.php?r=badges/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary', 'name' => 'next']) ?>
                             <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 && sizeof($survey->getCollection()->one()->getResources()->all()) >= $survey->minResEv): ?>
                                 <!-- <div class = "col-md-1"> -->
                                     <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'name' => 'finalize']) ?>

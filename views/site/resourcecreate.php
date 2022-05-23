@@ -28,7 +28,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
             <div class = "col-md-2  d-flex align-items-baseline align-text-bottom">
                 <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
                 &nbsp;
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary', 'name' => 'next' ]) ?>
+                <?= Html::a( 'Next', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
             </div>
         </div>
             <div class="survey-form-box">

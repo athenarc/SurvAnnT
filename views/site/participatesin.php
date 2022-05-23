@@ -25,7 +25,7 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <div class = "row button-row">
             <div class = "col-md-12 text-right">
                 <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary', 'name' => 'badges-create']) ?>
+                <?= Html::a( 'Next', $tabs['Badges']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
             </div>
         </div>
         <div class = "row d-flex align-items-center" > 
