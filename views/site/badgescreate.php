@@ -29,7 +29,7 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
                 <div class = "row">
                     <div class = "col-md-12">
                         <div class = "header-label">
-                            Use Badges
+                            Selected Badges
                         </div>
                     </div>
                 </div>

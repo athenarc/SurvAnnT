@@ -36,28 +36,16 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                         </div>
                     </div>
                 </div>
-
-                <br>
-
                 <div class = "row">
                     <div class="col-md-12 text-right">
-                        <?= ($survey->getSurveytoquestions()->all()) ? Html::a( 'Delete All', ['questions/questions-delete-all', 'surveyid' => $survey->id], ['class' => 'btn btn-primary  db-question-select', 'name' => 'delete-all']) : '' ?>
+                        <?= ($survey->getSurveytoquestions()->all()) ? Html::a( 'Delete All Questions', ['questions/questions-delete-all', 'surveyid' => $survey->id], ['class' => 'btn btn-primary  db-question-select', 'name' => 'delete-all']) : '' ?>
                          <?= Html::button( 'Reuse Existing Questions', ['class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#db-questions"]) ?>
                          <?= Html::button( 'Create Questions', ['class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#user-questions"]) ?>
                          <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="">
                     </div>                
                 </div>
-                <div id = "questions-import" class="dataset-tools" style ="display: none;">
-                    
-                    
-
-                </div>
                 <br>
-                <div class = "header-label">    
-                    Your Questions
-                </div>
                 <?php $form = ActiveForm::begin(['options' => ['id'=> 'survey-questions-form',  'class' => 'resource-before-form']]); ?>
-                <br>
                 <table class="table table-striped table-bordered participants-table">     
                     <tr class = "dataset-table-header-row">
                         <td class = "dataset-header-column" colspan = "1"> Question </td>
