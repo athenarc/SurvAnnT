@@ -109,26 +109,26 @@ class ResorucesController extends Controller
 
     public function actionResourcesFetch($surveyid = null){
 
-        if ( $surveyid ){
-            $survey = Surveys::find($surveyid)->one();
+        // if ( $surveyid ){
+        //     $survey = Surveys::find($surveyid)->one();
 
-            if ($survey){
+        //     if ($survey){
 
-                $resources = $survey->getCollection()->one()->getResources();
-                if ( $resources ){
+        //         $resources = $survey->getCollection()->one()->getResources();
+        //         if ( $resources ){
 
-                    $paginationMyBadges = new Pagination(['totalCount' => $resources->count(), 'pageSize'=>10]);
-                    $resources = $resources->offset($paginationMyBadges->offset)->limit($paginationMyBadges->limit)->all();
+        //             $paginationMyBadges = new Pagination(['totalCount' => $resources->count(), 'pageSize'=>10]);
+        //             $resources = $resources->offset($paginationMyBadges->offset)->limit($paginationMyBadges->limit)->all();
 
-                    return $resources
-                }
+        //             return $resources
+        //         }
 
-            }else{
+        //     }else{
 
 
 
-            }
-        }
+        //     }
+        // }
 
     }
 
