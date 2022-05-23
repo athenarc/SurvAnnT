@@ -35,9 +35,9 @@ use kartik\select2\Select2;
 				[ 
 					'horizontalCssClasses' => 
 						[
-						 	'label' => 'col-md-2',
+						 	'label' => 'col-md-5',
 						 	'offset' => 'col-md-offset-2',
-						 	'wrapper' => 'col-md-12',
+						 	'wrapper' => '',
 						],
 				],
 			]); ?>

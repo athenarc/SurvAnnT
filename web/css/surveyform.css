@@ -296,7 +296,9 @@ h5{
 
 .control-label{
     /*color: black !important;*/
-    text-decoration: none;
+    text-decoration: none !important;
+    width: 100% !important;
+    word-wrap: unset !important;
     padding-bottom: 0.2em;
     font-style: italic;
     padding-left: 0.2em;
@@ -320,11 +322,11 @@ h5{
 }
 
 form div.required label.control-label:after {
-
-  content:" * ";
-
-  color:red;
-
+    text-decoration: none !important;
+    width: 100% !important;
+    word-break: keep-all !important;
+    content:" * ";
+    color:red;
 }
 
 .badge-image-preview{

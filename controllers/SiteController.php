@@ -1039,7 +1039,7 @@ class SiteController extends Controller
             $surveyid = $_GET['surveyid'];
             $survey = Surveys::findOne($surveyid);
             if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) )){
-                if ( ! Yii::$app->user->identity->isSuperadmin ){
+                if ( ! Yii::$app->user->isSuperadmin ){
                     return $this->goBack();
                 }
             }

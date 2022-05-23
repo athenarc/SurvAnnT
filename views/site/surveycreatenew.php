@@ -152,6 +152,11 @@ $date = date('Y-m-d hh:mm', time());
                         <?= $form->field($survey, 'maxResEv')->textInput()->label() ?>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <i>If Campaign Goals are not set, they will not be used as completion conditions</i>
+                    </div>
+                </div>
             </div>
 
         <?php ActiveForm::end(); ?>
