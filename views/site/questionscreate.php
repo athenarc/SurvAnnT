@@ -11,20 +11,24 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
 /* @var $model app\models\Questions */
 /* @var $form ActiveForm */
 ?>
-<div class="questionscreate survey-form">
+<div class="questionscreate">
 
     <div class ="outside-div">
-
+        <div class = 'error-div' style = "display: none;"></div>
         <div class = "row header-row dataset-header-row">
             <?php include 'tabs.php'; ?>
         </div>
-            <div class = "row button-row text-right">
-                <div class = "col-md-12">
-                    <?= Html::a( 'Previous', $tabs['Resources']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
-                    <?= Html::a( 'Next', $tabs['Participants']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
-                     <!-- Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?> -->
-                </div>
+        <div class = "row button-row">
+            <div class = "col-md-10 d-flex align-items-center">
+                <i class="fa fa-info-circle helper-message" ></i>&nbsp;
+                Create the Questions to be used for annotation/survey purposes
             </div>
+            <div class = "col-md-2  text-right">
+                <?= Html::a( 'Previous', $tabs['Resources']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
+                <?= Html::a( 'Next', $tabs['Participants']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
+                 <!-- Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?> -->
+            </div>
+        </div>
 
             
 

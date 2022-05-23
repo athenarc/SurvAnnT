@@ -16,12 +16,13 @@
 }
 
 .survey-create{
-    padding: 2%;
+    /*padding: 2%;*/
 }
 
 .button-row{
-    padding-bottom: 2%;
-    margin: 0% 2% 0% 2%;
+    /*padding-bottom: 2%;*/
+    /*margin: 2% 2% 2% 2%;*/
+    margin: 2em !important;
 }
 
 .button-row-2{
@@ -343,4 +344,8 @@ form div.required label.control-label:after {
     position: sticky !important; 
     top: 0 !important; 
     z-index: 1 !important; 
+}
+
+.dataset-header-row{
+    margin-bottom: 0% !important ;
 }

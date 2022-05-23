@@ -23,19 +23,31 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <?php $form = ActiveForm::begin(['action' =>['site/participants-invite', 'surveyid' => $survey->id], 'options' => ['class' => 'survey-create']]); ?>
 
         <div class = "row button-row">
-            <div class = "col-md-12 text-right">
+            <div class = "col-md-10 d-flex align-items-center">
+                <i class="fa fa-info-circle helper-message" ></i>&nbsp;
+                    Invite Users to participate in your Survey/Annotation project
+            </div>
+            <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
                 <?= Html::a( 'Next', $tabs['Badges']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
             </div>
         </div>
-        <div class = "row d-flex align-items-center" > 
+        <div class="survey-form-box" style="margin-bottom: 0% !important; padding-bottom: 0% !important ;">
+        <div class = "row">
+            <div class = "col-md-12">
+                <div class = "header-label">
+                   Participants 
+                </div>
+            </div>
+        </div>
+        <!-- <div class = "row d-flex align-items-center" > 
             <div class="col-md-8">
                 <h3 style = "margin-left: 2%; padding-left: 1%;"> Participants </h3>
                 
             </div>
             
             <hr style = "width:95%; background-color:white; margin-top: 1%;">
-        </div> 
+        </div>  -->
 
         <!-- <h3 style = "margin-left: 2%; padding-left: 1%;"> Registered Users</h3> -->
         <!-- <hr style = "width:95%; background-color:white;"> -->
@@ -44,11 +56,14 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
             
             
         </div>
-        
-        <br><br>
-        <h3 style = "margin-left: 2%; padding-left: 1%;"> Invite Participants</h3>
-        <hr style = "width:95%; background-color:white;">
         <br>
+        <div class = "row">
+            <div class = "col-md-12">
+                <div class = "header-label">
+                   Invite Participants 
+                </div>
+            </div>
+        </div>
         <div class = "" style = "margin-left: 2%; margin-right: 2%;">
             <div class ="row table-row-2" style = "padding-left:2%; padding-right: 2%;">
                 <div class = "col-md-6" style ="position: relative; max-height: 635px; overflow: auto;">
@@ -154,9 +169,10 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <?= Html::hiddenInput('', json_encode( $users ), ['id' => 'users_array']) ?>
         <?= Html::hiddenInput('', $survey->id, ['id' => 'surveyid']) ?>
 
-
-
+        </div>
+        <?php ActiveForm::end(); ?>
+    
     </div>
-    <?php ActiveForm::end(); ?>
+
 </div>
 

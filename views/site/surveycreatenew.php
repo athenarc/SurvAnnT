@@ -17,13 +17,18 @@ $date = date('Y-m-d hh:mm', time());
             <?php include 'tabs.php'; ?>
         </div>
         <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>
-            
-            <div class = "survey-form-box">
-                <div class = "row button-row">
-                    <div class = "col-md-12 text-right">
-                        <?= Html::submitButton('Next', ['class' => 'btn btn-primary']) ?>
-                    </div>
+            <div class = "row button-row">
+                <div class = "col-md-10 d-flex align-items-center">
+                    <i class="fa fa-info-circle helper-message" ></i>&nbsp;
+                    Create the collection of Resources to be used for annotation/survey purposes (users will answer
+                    questions related to each of these sources)
                 </div>
+                <div class = "col-md-2 text-right">
+                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary']) ?>
+                </div>
+            </div>
+            <div class = "survey-form-box">
+                
                 <div class = "header-label">
                     Basic Information
                 </div>

@@ -17,20 +17,20 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         <div class = "row header-row dataset-header-row">
             <?php include 'tabs.php'; ?>
         </div>
-        <br><br>
-        <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
-        <div class = "row button-row-header">
+        <div class = "row button-row ">
             <div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
                 Create the collection of Resources to be used for annotation/survey purposes (users will answer
                 questions related to each of these sources)
             </div>
-            <div class = "col-md-2  d-flex align-items-baseline align-text-bottom">
+            <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
                 &nbsp;
                 <?= Html::a( 'Next', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
             </div>
         </div>
+        <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
+        
             <div class="survey-form-box">
                 <?php if( $user_collection->isNewRecord ): ?>
                     <div class = "header-label">
@@ -425,10 +425,6 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 
     .row{
         margin-bottom: 2em;
-    }
-
-    .dataset-header-row{
-        margin-bottom: 0% !important;
     }
 
     .loaded-collections{
