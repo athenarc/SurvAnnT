@@ -18,31 +18,37 @@ $date = date('Y-m-d hh:mm', time());
                 <?php include 'tabs.php'; ?>
             </div>
         <?php endif; ?>
-        <div class ="about-text">
-            <?php if($message == ''): ?>
-                <div class = "row about-row">
-                    <h2>Campaign Overview</h2>
-                </div>
-            <?php endif; ?>
-            <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
-                <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
-                    <div class = "row button-row">
-                        <div class = "col-md-12 text-right">
-                            <?= Html::a('Previous', 'index.php?r=badges/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary', 'name' => 'next']) ?>
-                            <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 && sizeof($survey->getCollection()->one()->getResources()->all()) >= $survey->minResEv): ?>
-                                <!-- <div class = "col-md-1"> -->
-                                    <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'name' => 'finalize']) ?>
-                                <!-- </div> -->
-                            <?php else: ?>
-                                <!-- <div class = "col-md-1"> -->
-                                    <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'disabled' => true, 'name' => 'finalize']) ?>
-                                <!-- </div> -->
-                            <?php endif; ?>
-                        </div>
-                        
+        
+        <?php if($message == ''): ?>
+            <div class = "row about-row">
+                <h2>Campaign Overview</h2>
+            </div>
+        <?php endif; ?>
+        <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+            <?php $form = ActiveForm::begin(['options' => ['class' => '']]); ?>    
+                <div class = "row button-row">
+                    <div class = "col-md-10 d-flex align-items-center">
+                        <i class="fa fa-info-circle helper-message" ></i>&nbsp;
+                        Create the collection of Resources to be used for annotation/survey purposes (users will answer
+                        questions related to each of these sources)
                     </div>
-                <?php ActiveForm::end(); ?>
-            <?php endif; ?>
+                    <div class = "col-md-2 text-right">
+                        <?= Html::a('Previous', 'index.php?r=badges/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary', 'name' => 'next']) ?>
+                        <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 && sizeof($survey->getCollection()->one()->getResources()->all()) >= $survey->minResEv): ?>
+                            <!-- <div class = "col-md-1"> -->
+                                <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'name' => 'finalize']) ?>
+                            <!-- </div> -->
+                        <?php else: ?>
+                            <!-- <div class = "col-md-1"> -->
+                                <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'disabled' => true, 'name' => 'finalize']) ?>
+                            <!-- </div> -->
+                        <?php endif; ?>
+                    </div>
+                    
+                </div>
+            <?php ActiveForm::end(); ?>
+        <?php endif; ?>
+        <div class ="about-text">
             <div class = "header-label">
                 <h3 class = "surveys-view-header"> General Settings </h3>
                 <table class="table table-striped table-bordered participants-table">  

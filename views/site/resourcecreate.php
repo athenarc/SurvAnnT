@@ -25,7 +25,6 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
             </div>
             <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
-                &nbsp;
                 <?= Html::a( 'Next', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
             </div>
         </div>
