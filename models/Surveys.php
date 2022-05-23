@@ -3,6 +3,7 @@
 namespace app\models;
 use webvimark\modules\UserManagement\models\User;
 use Yii;
+use Yii\helpers\Html;
 
 /**
  * This is the model class for table "surveys".
@@ -72,20 +73,20 @@ class Surveys extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Campaign id',
+            'name' => 'Campaign Id',
             'created' => 'Created',
             'starts' => 'Start Date',
             'ends' => 'End Date',
             'locked' => 'Availability',
             'about' => 'Campaign Description',
-            'fields' => 'Research Topics',
-            'minRespPerRes' => 'Min Evaluations Per Resource',
-            'maxRespPerRes' => 'Max Evaluations Per Resource',
-            'minResEv' => 'Min Resources Evaluated',
-            'maxResEv' => 'Max Resources Evaluated',
+            'fields' => 'Research Fields',
+            'minRespPerRes' => 'Minimum Evaluations Per Resource',
+            'maxRespPerRes' => 'Maximum Evaluations Per Resource',
+            'minResEv' => 'Minimum Resources Evaluated',
+            'maxResEv' => 'Maximum Resources Evaluated',
             'active' => 'Active',
-            'time' => 'Time',
-            'randomness' => 'Randomness',
+            'time' => 'Capture Response Times',
+            'randomness' => 'Resource Selection Methodology',
         ];
     }
 

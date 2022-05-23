@@ -99,24 +99,7 @@ h5{
     width: 100% !important;
 }
 
-.dataset-header-column{
-    color: white !important;
-    font-weight: bold; 
-    /*background-color: dodgerblue; */
-    /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
-    vertical-align: middle; 
-    text-align: center;
-}
 
-.dataset-table-header-row{
-    /*background: linear-gradient(45deg, mediumpurple, dodgerblue) !important;*/
-    /*background: linear-gradient(45deg, dodgerblue, #0056aa) !important;*/
-    background: #7D88B7 !important; /*#327a81 !important;*/
-}
-
-.dataset-header-column > span > *{
-    color: white !important;
-}
 
 .dataset-tools{
     /*border: 1px solid white;*/
@@ -166,8 +149,8 @@ h5{
 .modal-header{
     /*background-color: dodgerblue !important;*/
     /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
-    background: #327a81;
-    color: white !important;
+    /*background: #327a81;*/
+    /*color: white !important;*/
 }
 .close > span:nth-child(1){
     color: white !important;
@@ -193,6 +176,12 @@ h5{
     /*color: #dd7777;*/
     color: #949494;
 }
+
+.fa-pencil{
+    /*color: #dd7777;*/
+    color: #949494;
+}
+
 
 .fa-star{
    
@@ -324,8 +313,32 @@ h5{
     font-size: 24px;
 }
 
-    .survey-form-box{
-        margin: 0em 2em 2em 2em !important;
-        padding: 1em 3em 3em 3em;
-        border-radius: 25px;
-    }
+.survey-form-box{
+    margin: 0em 2em 2em 2em !important;
+    padding: 1em 3em 3em 3em;
+    border-radius: 25px;
+}
+
+form div.required label.control-label:after {
+
+  content:" * ";
+
+  color:red;
+
+}
+
+.badge-image-preview{
+    max-height: 30px !important;
+    max-width: 30px !important;
+}
+
+.tableFixHead{ 
+    overflow: auto !important; 
+    height: 100px !important; 
+}
+
+.tableFixHead thead th{ 
+    position: sticky !important; 
+    top: 0 !important; 
+    z-index: 1 !important; 
+}

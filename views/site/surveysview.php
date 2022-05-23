@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use \kartik\datetime\DateTimePicker;
 use kartik\select2\Select2;
+use yii\bootstrap4\LinkPager;
 
 date_default_timezone_set("Europe/Athens"); 
 $date = date('Y-m-d hh:mm', time());
@@ -23,7 +24,25 @@ $date = date('Y-m-d hh:mm', time());
                     <h2>Campaign Overview</h2>
                 </div>
             <?php endif; ?>
-            <br>
+            <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
+                <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
+                    <div class = "row button-row">
+                        <div class = "col-md-12 text-right">
+                            <?= Html::a('Previous', 'index.php?r=site/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary', 'name' => 'next']) ?>
+                            <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 && sizeof($survey->getCollection()->one()->getResources()->all()) >= $survey->minResEv): ?>
+                                <!-- <div class = "col-md-1"> -->
+                                    <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'name' => 'finalize']) ?>
+                                <!-- </div> -->
+                            <?php else: ?>
+                                <!-- <div class = "col-md-1"> -->
+                                    <?= Html::submitButton('Finish', ['class' => 'btn btn-primary', 'disabled' => true, 'name' => 'finalize']) ?>
+                                <!-- </div> -->
+                            <?php endif; ?>
+                        </div>
+                        
+                    </div>
+                <?php ActiveForm::end(); ?>
+            <?php endif; ?>
             <div class = "header-label">
                 <h3 class = "surveys-view-header"> General Settings </h3>
                 <table class="table table-striped table-bordered participants-table">  
@@ -104,47 +123,52 @@ $date = date('Y-m-d hh:mm', time());
                         <i class="fa fa-circle-exclamation" title ="Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."> </i>
                     <?php endif; ?>
                 </h3>
-                <table class="table table-striped table-bordered participants-table">  
-                    <tr class = "dataset-table-header-row">
-                        <th class = "dataset-header-column">
-                            Resource Id
-                        </th>
-                        <th class = "dataset-header-column">
-                            Resource
-                        </th>
-                        <th class = "dataset-header-column">
-                            # of Annotations
-                        </th>
-                        <th class = "dataset-header-column">
-                            Users Evaluated
-                        </th>
-                    </tr>
-                <?php foreach ($resources as $resource): ?>
-                    <tr>
-                        <td> <?= $resource->id ?></td>
-                        <?php if($resource->type == 'image'): ?>    
-                            <td> 
-                                <img src="data:image/png;base64,<?=base64_encode($resource->image)?>" style = "max-height: 50px; max-width: 50px;"/>
+                    <?= LinkPager::widget(['pagination' => $paginations[0]]) ?>    
+                <div class="table-responsive">
+                    <table class="table table-fixed table-striped table-bordered participants-table">
+                        <thead>
+                            <tr class = "dataset-table-header-row">
+                                <th class = "dataset-header-column">
+                                    Resource Id
+                                </th>
+                                <th class = "dataset-header-column">
+                                    Resource
+                                </th>
+                                <th class = "dataset-header-column">
+                                    # of Annotations
+                                </th>
+                                <th class = "dataset-header-column">
+                                    Users Evaluated
+                                </th>
+                            </tr>
+                        </thead>  
+                    <?php foreach ($resources as $resource): ?>
+                        <tr>
+                            <td> <?= $resource->id ?></td>
+                            <?php if($resource->type == 'image'): ?>    
+                                <td> 
+                                    <img src="data:image/png;base64,<?=base64_encode($resource->image)?>" style = "max-height: 50px; max-width: 50px;"/>
+                                </td>
+                            <?php else: ?>
+                                <td> 
+                                    <?= $resource->title ?>
+                                </td>
+                            <?php endif; ?>
+                            <td>
+                                <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
                             </td>
-                        <?php else: ?>
-                            <td> 
-                                <?= $resource->title ?>
+                            <td>
+                                <?= implode("<br>", $rates['resources'][$resource->id]['users']) ?>
                             </td>
-                        <?php endif; ?>
-                        <td>
-                            <?= $resource->getRates()->groupBy(['resourceid', 'userid'])->count() ?>
-                        </td>
-                        <td>
-                            <?= implode("<br>", $rates['resources'][$resource->id]['users']) ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?> 
-                <?php if(!$resources): ?>
-                    <tr>
-                        <td colspan="100%"> No resources </td>
-                    </tr>
-                <?php endif; ?>
-                </table>
+                        </tr>
+                    <?php endforeach; ?> 
+                    <?php if(!$resources): ?>
+                        <tr>
+                            <td colspan="100%"> No resources </td>
+                        </tr>
+                    <?php endif; ?>
+                    </table>
+                </div>
                 <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
                     <?= Html::a('Edit', 'index.php?r=site/resource-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
                 <?php endif; ?>
@@ -154,7 +178,7 @@ $date = date('Y-m-d hh:mm', time());
             <div class="header-label">
                 <h3 class="surveys-view-header"> 
                     Questions 
-                    <?php if(!$resources): ?>
+                    <?php if(!$questions): ?>
                         <i class="fa fa-circle-xmark" title ="No questions set yet"> </i>
                     <?php endif; ?>
                 </h3>
@@ -241,7 +265,7 @@ $date = date('Y-m-d hh:mm', time());
             <br>
             <div class = "header-label">
                 <h3 class = "surveys-view-header">Badges</h3>
-
+                <?= LinkPager::widget(['pagination' => $paginations[1]]) ?>    
                 <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -254,10 +278,10 @@ $date = date('Y-m-d hh:mm', time());
                             Earn Condition
                         </th>
                     </tr>
-                    <?php foreach ($survey->getSurveytobadges()->all() as $badge): ?>
+                    <?php foreach ($badges as $badge): ?>
                         <tr>
                             <td>
-                                <?= '<img src="data:image/png;base64,'.base64_encode($badge->getBadge()->select('image')->one()['image'] ).'"/>'  ?>
+                                <?= '<img class = "badge-image-preview" src="data:image/png;base64,'.base64_encode($badge->getBadge()->select('image')->one()['image'] ).'"/>'  ?>
                             </td>
                             <td>
                                 <?= $badge->getBadge()->select('name')->one()['name']  ?>
@@ -278,28 +302,38 @@ $date = date('Y-m-d hh:mm', time());
                 <?php endif; ?>
                 <br>
             </div>
-            <br>
-            <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
-                <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>    
-                    <div class = "row button-row">
-                        <div class = "col-md-10"></div>
-                        <div class = "col-md-1">
-                            <?= Html::a('Previous', 'index.php?r=site/badges-create&surveyid='.$survey->id, ['class' => 'btn btn-primary submit-button', 'name' => 'next']) ?>
-                        </div>
-                        <?php if( $survey->getCollection()->one() && sizeof($survey->getCollection()->one()->getResources()->all()) > 0 && sizeof($survey->getQuestions()->all()) > 0 ): ?>
-                            <div class = "col-md-1">
-                                <?= Html::submitButton('Finish', ['class' => 'btn btn-primary submit-button', 'name' => 'finalize']) ?>
-                            </div>
-                        <?php else: ?>
-                            <div class = "col-md-1">
-                                <?= Html::submitButton('Finish', ['class' => 'btn btn-primary submit-button', 'disabled' => true, 'name' => 'finalize']) ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php ActiveForm::end(); ?>
-            <?php endif; ?>
+       
+            
         </div>
     </div>
 </div>
 
 
+<!-- <style type="text/css">
+.table-fixed tbody {
+    height: 300px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+    display: block;
+}
+
+.table-fixed tbody td,
+.table-fixed tbody th,
+.table-fixed thead > tr > th {
+    float: left;
+    position: relative;
+
+    &::after {
+        content: '';
+        clear: both;
+        display: block;
+    }
+}
+</style> -->

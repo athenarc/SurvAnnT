@@ -169,9 +169,15 @@ $(document).ready(function(){
     });
 
     $('button[name="discard-collection"]').click(function(e){
+        
         e.preventDefault();
+        alert("hi");
+        $(".resource-before-form")[0].reset();
         $('button[name="discard-collection"]').val("discard");
+        // console.log($(".resource-before-form")[0]);
         $(".resource-before-form").submit();
+        return false;
+
     });
 
     $('button[name="next"]').click(function(e){

@@ -32,6 +32,7 @@ use app\models\Rate;
 use app\models\Usertobadges;
 use app\models\Leaderboard;
 use yii\db\Expression;
+use yii\widgets\ActiveForm;
 
 date_default_timezone_set("Europe/Athens"); 
 
@@ -348,7 +349,9 @@ class SiteController extends Controller
 
         if ( isset( $_GET['surveyid'] ) ){
             $surveyid = $_GET['surveyid'];
+
             if ( isset( $_POST['finalize'] ) ){
+                // exit(0);
                 $survey = Surveys::findOne($surveyid);
                 if ( $survey ){
                     if ( $survey->getCollection()->one() ){
@@ -368,7 +371,16 @@ class SiteController extends Controller
                 // print_r($survey->getCompletionCriteria());
                 // exit(0);
                 $collection = $survey->getCollection()->one();
-                $resources = ( $collection !== null ) ? $collection->getResources()->all() : [] ;
+                
+                $resources = ( $collection !== null ) ? $collection->getResources() : [] ;
+                if( $resources ){
+                    $paginationResources = new Pagination(['totalCount' => $resources->count(), 'pageSize'=>10]);
+                    $resources = $resources->offset($paginationResources->offset)->limit($paginationResources->limit)->all();
+                }else{
+                    $paginationResources = new Pagination(['totalCount' => [], 'pageSize'=>10]);
+                }
+                
+
                 $participants = $survey->getParticipatesin()->all();
                 $questions = $survey->getQuestions()->all();
                 $rates = [];
@@ -407,8 +419,19 @@ class SiteController extends Controller
                     $message = 'Overview';
                     $tabs = $this->tabsManagement($message, $survey);
                 }
-                
-                return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates, 'tabs' => $tabs, 'message' => $message, 'surveyid' => $surveyid]);
+
+                $badges = $survey->getSurveytobadges() ;
+                if( $badges ){
+                    $paginationBadges = new Pagination(['totalCount' => $badges->count(), 'pageSize'=>10]);
+                    $badges = $badges->offset($paginationBadges->offset)->limit($paginationBadges->limit)->all();
+                }else{
+                    $paginationBadges = new Pagination(['totalCount' => [], 'pageSize'=>10]);
+                }
+
+                $paginations[0] = $paginationResources; 
+                $paginations[1] = $paginationBadges;
+
+                return $this->render('surveysview', ['survey' => $survey, 'resources' => $resources, 'questions' => $questions, 'rates' => $rates, 'badges' =>$badges, 'tabs' => $tabs, 'message' => $message, 'surveyid' => $surveyid, 'paginations' => $paginations]);
             }
         }
 
@@ -1016,7 +1039,9 @@ class SiteController extends Controller
             $surveyid = $_GET['surveyid'];
             $survey = Surveys::findOne($surveyid);
             if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) )){
-                return $this->goBack();
+                if ( ! Yii::$app->user->identity->isSuperadmin ){
+                    return $this->goBack();
+                }
             }
         }
 
@@ -1073,16 +1098,17 @@ class SiteController extends Controller
 
         // GETTING EXISTING COLLECTIONS + RESOURCES
 
-
-         if ( Yii::$app->request->post() ){
+        if ( Yii::$app->request->post() ){
+            
 
             if ( isset($_POST['resources-function'], $_POST['resources-type']) ){
                 $option = escapeshellcmd( $_POST['resources-function'] );
                 $resource_types_option = escapeshellcmd( $_POST['resources-type'] );
             }
-
+            // print_r($_POST);
+            // exit(0);
             if ( isset($_POST['discard-collection']) && $_POST['discard-collection'] == 'discard' ){
-
+                
                 $surveytocollections = Surveytocollections::find()->where(['surveyid' => $survey->id])->all();
                 foreach ($surveytocollections as $surveytocollection) {
                     $col_id = $surveytocollection->collectionid;
@@ -1207,28 +1233,30 @@ class SiteController extends Controller
 
             if ( $survey->getCollection()->all() ){
                 if ( $survey->getCollection()->one()->getResources()->all() ){
-                    
+                    $resources_count = ' ('.sizeof( $survey->getCollection()->one()->getResources()->all() ).')';
                     if ( sizeof( $survey->getCollection()->one()->getResources()->all() ) >= $survey->minResEv ){
-                        $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>';
+                        
+                        $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>'.$resources_count;
                     }else{
-                        $tabs['Resources']['set'] = '<i class="fas fa-circle-exclamation" title = "Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."></i>';
+                        $tabs['Resources']['set'] = '<i class="fas fa-circle-exclamation" title = "Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."></i>'.$resources_count;
                     }
                 }
             }
 
             if ( $survey->getQuestions()->all() ){
-                $tabs['Questions']['set'] = '<i class="fas fa-circle-check"></i>';
+                $questions_count = ' ('.sizeof( $survey->getQuestions()->all() ).')';
+                $tabs['Questions']['set'] = '<i class="fas fa-circle-check"></i>'.$questions_count;
             }
 
             if ( $survey->badgesused ){
                 if ( $survey->getSurveytobadges()->all() ){
-                    $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i>';
+                    $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i> ('.$survey->getSurveytobadges()->count().')';
                 }
             }else{
-                $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i>';
+                $tabs['Badges']['set'] = '<i class="fas fa-circle-check"></i> ('.$survey->getSurveytobadges()->count().')';
             }
 
-            $tabs['Participants']['set'] = '<i class="fas fa-circle-check"></i>';
+            $tabs['Participants']['set'] = '<i class="fas fa-circle-check"></i> ('.($survey->getParticipatesin()->count()-1).')';
 
             if ( $survey->active ){
                 $tabs['Overview']['set'] = '<i class="fas fa-circle-check"></i>';
@@ -1332,7 +1360,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionQuestionsCreate(){
+    public function actionQuestionsCreateOld(){
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
         
@@ -1429,11 +1457,15 @@ class SiteController extends Controller
         }
 
         $answertypes = ['textInput' => 'Text Input', 'radioList' => 'Radio List', 'Likert-5' => 'Likert-5', 'Likert-7' => 'Likert-7'];
+        
+        $questionsNew = [new Questions()];
 
         return $this->render('questionscreate', [
             'surveyid' => $surveyid,
+            'survey' => $survey,
             'fields' => $fields,
             'questions' => $questions,
+            'questionsNew' => $questionsNew,
             'action' => 'generate-participants',
             'message' => $message,
             'excluded' => $excluded,
@@ -1446,7 +1478,60 @@ class SiteController extends Controller
 
     }
 
-    
+    public function actionQuestionsCreate(){
+        $question = new Questions();
+        $userid = Yii::$app->user->identity->id;
+        
+        
+        if ( !isset( $_GET['surveyid'] ) ){
+            if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
+                return $this->goHome();
+            }
+        }else{
+            $surveyid = $_GET['surveyid'];
+            $survey = Surveys::findOne($surveyid);
+            if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
+                return $this->goBack();
+            }
+            
+        }
+        $message = 'Questions';
+        $tabs = $this->tabsManagement($message, $survey);
+
+        $questions = Questions::find()->joinWith('surveytoquestions')->where(['surveyid' => $surveyid])->all();
+        $survey_questions = sizeof($questions);
+        $fields = array_values ( array_keys ( Questions::attributeLabels() ) );
+        
+        $excluded = [ 'id', 'created', 'ownerid', 'surveyid', 'answervalues', 'question', 'answertype', 'destroy', 'answer'];
+        $colspan = sizeof($fields) - sizeof($excluded);
+        $likert_5 = Yii::$app->params['likert-5'];
+        $likert_7 = Yii::$app->params['likert-7'];
+        $answertypes = ['textInput' => 'Text Input', 'radioList' => 'Radio List', 'Likert-5' => 'Likert-5', 'Likert-7' => 'Likert-7'];
+        $options = ['db-load' => 'Load questions from database' , 'user-form' => 'Create your own questions'];
+        $option = '';
+        $questionsNew = [new Questions()];
+        $questionsNew[] = new Questions();
+
+        return $this->render('questionscreate', [
+            'survey' => $survey,
+            'fields' => $fields,
+            'questions' => $questions,
+            'questionsNew' => $questionsNew,
+            'method' => 'user-form',
+            'action' => 'generate-participants',
+            'message' => $message,
+            'excluded' => $excluded,
+            'tabs' => $tabs,
+            'answertypes' => $answertypes,
+            'options' => $options,
+            'option' => $option,
+            'colspan' => $colspan,
+            'likert_5' => $likert_5,
+            'likert_7' => $likert_7,
+        ]);
+
+    }
+
     public function actionParticipantsInvite()
     {
         date_default_timezone_set("Europe/Athens"); 
@@ -1534,7 +1619,7 @@ class SiteController extends Controller
         }
         if ( Yii::$app->request->post() ){
             if ( isset($_POST['finalize']) ){
-                return $this->redirect(['site/badges-create', 'surveyid' => $surveyid]);
+                return $this->redirect(['site/badges-create-new', 'surveyid' => $surveyid]);
             }
         }
         $users = array_values($users);
@@ -1550,7 +1635,7 @@ class SiteController extends Controller
                 ]);
     }
 
-    public function actionBadgesCreate(){
+    public function actionBadgesCreateNew(){
 
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
@@ -1756,6 +1841,9 @@ class SiteController extends Controller
                 ]);
 
     }
+
+    
+
 
     public function actionSurveyOverview()
     {

@@ -7,7 +7,7 @@ $(document).ready(function(){
 		$(this).text("");
 		if ( time == '(not set)' ){
 			$(this).text("No expiration date");
-			$(this).css("color", "#77dd77");
+			$(this).css("color", "#949494");
 			return;
 		}
 		var variable = $(this);
@@ -66,7 +66,7 @@ $(document).ready(function(){
 		$(this).text("");
 		if ( time == '(not set)' ){
 			$(this).text("No starting date");
-			$(this).css("color", "#77dd77");
+			$(this).css("color", "#949494");
 			return;
 		}
 		var variable = $(this);

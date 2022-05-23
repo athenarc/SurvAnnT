@@ -17,13 +17,19 @@ $date = date('Y-m-d hh:mm', time());
             <?php include 'tabs.php'; ?>
         </div>
         <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>
+            
             <div class = "survey-form-box">
+                <div class = "row button-row">
+                    <div class = "col-md-12 text-right">
+                        <?= Html::submitButton('Next', ['class' => 'btn btn-primary']) ?>
+                    </div>
+                </div>
                 <div class = "header-label">
                     Basic Information
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <?= $form->field($survey, 'name')->textInput()->label() ?>
+                        <?= $form->field($survey, 'name')->textInput(['required' => true])->label() ?>
                     </div>
                     <div class="col-md-4">
                         <?= $form->field($survey, 'starts')->widget
@@ -82,7 +88,15 @@ $date = date('Y-m-d hh:mm', time());
                             ?>
                     </div>
                     <div class="col-md-6">
-                        <?= $form->field($survey, 'locked')->dropDownList([ 0 => 'Open', 1 => 'Locked'])->label() ?>
+                        <?= $form->field($survey, 'locked', [
+                            'template' => 
+                                '<div class="form-group">
+                                    <label class = "control-label">
+                                        {label}
+                                        &nbsp;<i class="fa fa-info-circle" title ="Select Open to make this survey available to all platform users, or Locked to invite those that you want."></i>
+                                    </label>
+                                    {input}
+                                </div>'])->dropDownList([ 0 => 'Open', 1 => 'Locked'])->label() ?>
                     </div>
                 </div>
                 <div class = "header-label">
@@ -97,10 +111,26 @@ $date = date('Y-m-d hh:mm', time());
 
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($survey, 'randomness')->dropDownList([ 0 => 'Relevance', 1 => 'Random'])->label() ?>
+                        <?= $form->field($survey, 'randomness', [
+                            'template' => 
+                                '<div class="form-group">
+                                    <label class = "control-label">
+                                        {label}
+                                        &nbsp;<i class="fa fa-info-circle" title ="Determine how the resources will be retrieved during the annotation process."></i>
+                                    </label>
+                                    {input}
+                                </div>'])->dropDownList([ 0 => 'Relevance', 1 => 'Random'])->label() ?>
                     </div>
                     <div class="col-md-6">
-                        <?= $form->field($survey, 'time')->dropDownList([ 1 => 'Enabled', 0 => 'Disabled'])->label() ?>
+                        <?= $form->field($survey, 'time', [
+                            'template' => 
+                                '<div class="form-group">
+                                    <label class = "control-label">
+                                        {label}
+                                        &nbsp;<i class="fa fa-info-circle" title ="Capture the time needed for a participant to provide an annotation for a resource. Participants are notified when this option is on."></i>
+                                    </label>
+                                    {input}
+                                </div>'])->dropDownList([ 1 => 'Enabled', 0 => 'Disabled'])->label() ?>
                     </div>
                 </div>
 
@@ -123,15 +153,7 @@ $date = date('Y-m-d hh:mm', time());
                     </div>
                 </div>
             </div>
-            <div class = "row button-row">
-                <div class = "col-md-10"></div>
-                <div class = "col-md-1">
-                    <!-- Html::a( 'Back', Yii::$app->request->referrer, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); -->
-                </div>
-                <div class = "col-md-1">
-                    <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ']) ?>
-                </div>
-            </div>
+
         <?php ActiveForm::end(); ?>
     </div>
 

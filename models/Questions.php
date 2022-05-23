@@ -26,6 +26,7 @@ use webvimark\modules\UserManagement\models\User;
 class Questions extends \yii\db\ActiveRecord
 {
     public $destroy = 0;
+    public $surveyid = 0;
     // public $answertype = 'textInput';
     /**
      * {@inheritdoc}

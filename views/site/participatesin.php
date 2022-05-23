@@ -23,12 +23,9 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <?php $form = ActiveForm::begin(['action' =>['site/participants-invite', 'surveyid' => $survey->id], 'options' => ['class' => 'survey-create']]); ?>
 
         <div class = "row button-row">
-            <div class = "col-md-10"></div>
-            <div class = "col-md-1">
-                <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
-            </div>
-            <div class = "col-md-1">
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'badges-create']) ?>
+            <div class = "col-md-12 text-right">
+                <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
+                <?= Html::submitButton('Next', ['class' => 'btn btn-primary', 'name' => 'badges-create']) ?>
             </div>
         </div>
         <div class = "row d-flex align-items-center" > 

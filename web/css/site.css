@@ -120,38 +120,6 @@ a.desc:after {
     /*color: #16122d !important;*/
 }
 
-.table {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.table > tbody > tr > td {
-    vertical-align: middle !important;
-    text-align: center !important;
-}
-
-.table > thead {
-    /*background: linear-gradient(45deg, mediumpurple, dodgerblue);*/
-    /*background: linear-gradient(45deg, dodgerblue, #0056aa);*/
-    /*background: #327a81;*/
-    background: #7D88B7;
-    color: white; !important;
-}
-
-.table > thead > tr > th > a, .control-label{
-    color: white;
-    text-decoration: underline;
-}
-
-.table > thead:nth-child(1) > tr:nth-child(1) > th > a:nth-child(1):hover{
-    /*background: -webkit-linear-gradient(45deg, #C7CEEA, dodgerblue);*/
-    background: #007bff;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.table > tbody > tr:not(.dataset-header-row){
-    background: white;
-}
 
 .medium-form{
     width: 600px !important;

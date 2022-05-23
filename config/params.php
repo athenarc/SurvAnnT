@@ -30,7 +30,7 @@ return [
             'Systems',
             'Theory'
         ],
-    'resources_allowlist' => ['text' => 'Text', 'article' => 'Article', 'image' => 'Image', 'questionaire' => 'No resources (Single Questionaire)'],
+    'resources_allowlist' => ['text' => 'Text', 'article' => 'Article', 'image' => 'Image', 'questionaire' => 'No resources (Simple Questionaire)'],
     'likert-5' => 
         [ 
             1 => 'Strongly disagree', 
@@ -65,7 +65,7 @@ return [
                 ],
             'Questions' =>
                  [
-                    'link' => 'index.php?r=site%2Fquestions-create&surveyid=',
+                    'link' => 'index.php?r=questions%2Fquestions-create&surveyid=',
                     'enabled' => 0,
                     'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],
@@ -77,7 +77,7 @@ return [
                 ],
             'Badges' =>
                  [
-                    'link' => 'index.php?r=site%2Fbadges-create&surveyid=',
+                    'link' => 'index.php?r=badges%2Fbadges-create&surveyid=',
                     'enabled' => 0,
                     'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],

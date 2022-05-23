@@ -28,6 +28,7 @@ class AppAsset extends AssetBundle
         'css/about.css',
         'css/surveyform.css',
         'css/about.css',
+        'css/tables.css'
     ];
     public $js = [
         'js/surveycreate.js',

@@ -9,6 +9,7 @@ use \yii\jui\DatePicker;
 use yii\grid\GridView;
 use yii\widgets\LinkPager;
 use webvimark\extensions\GridPageSize\GridPageSize;
+use yii\helpers\ArrayHelper;
 
 date_default_timezone_set("Europe/Athens"); 
 $superadmin = isset( Yii::$app->user->identity->superadmin ) && Yii::$app->user->identity->superadmin == 1;
@@ -110,7 +111,7 @@ $this->title = 'My Yii Application';
 			                'label' => 'Configured',
 			                'attribute'=>'active',
 			                'value' => function($model) {
-			                    return ($model->active == '1') ? 'True' : 'False';
+			                    return ($model->active == '1') ? 'Yes' : 'No';
 			                },
 			            ],
 
@@ -239,7 +240,9 @@ $this->title = 'My Yii Application';
 							    'requests' => function ($url, $model, $key){
 							    	
 							    	if ( in_array( $model->id, array_column ($this->params['requests'], 'surveyid') ) ){
-							    		return Html::a('<i class="fas fa-inbox" style = "color: #dd7777"></i>', 'index.php?r=site%2Fuser-requests&surveyid='.$key, ['title' => 'Participation request for this campaign']);
+							    		// $request_num = sizeof( in_array( $model->id, array_column ($this->params['requests'], 'surveyid') ) );
+							    		$request_num = count( array_keys(ArrayHelper::getColumn($this->params['requests'], 'surveyid'), $model->id) );
+							    		return Html::a('<i class="fas fa-inbox" style = "color: #dd7777"></i><span class=sup>'.$request_num.'</span>', 'index.php?r=site%2Fuser-requests&surveyid='.$key, ['title' => 'Participation request for this campaign']);
 							    	}
 							    	
 							    },
@@ -270,3 +273,17 @@ $this->title = 'My Yii Application';
     
 
 </div>
+
+
+<style type="text/css">
+.sup {
+  position: relative;
+  bottom: 1ex; 
+  font-size: 80%;
+  color: red;
+  
+}
+a{
+	text-decoration: none !important;
+}
+</style>

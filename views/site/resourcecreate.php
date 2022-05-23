@@ -19,13 +19,16 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         </div>
         <br><br>
         <?php $form = ActiveForm::begin(['options' => ['class' => 'resource-before-form', 'enctype' => 'multipart/form-data']]); ?>
-                <div class = "row button-row-header">
-            <div class = "col-md-10"></div>
-            <div class = "col-md-1">
-                <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary submit-button ', 'name' => 'test-name']); ?>
+        <div class = "row button-row-header">
+            <div class = "col-md-10 d-flex align-items-center">
+                <i class="fa fa-info-circle helper-message" ></i>&nbsp;
+                Create the collection of Resources to be used for annotation/survey purposes (users will answer
+                questions related to each of these sources)
             </div>
-            <div class = "col-md-1">
-                <?= Html::submitButton('Next', ['class' => 'btn btn-primary submit-button ', 'name' => 'next' ]) ?>
+            <div class = "col-md-2  d-flex align-items-baseline align-text-bottom">
+                <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
+                &nbsp;
+                <?= Html::submitButton('Next', ['class' => 'btn btn-primary', 'name' => 'next' ]) ?>
             </div>
         </div>
             <div class="survey-form-box">
@@ -40,7 +43,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                         </div>
                         
                         <div class="col-md-6">
-                            <?= $form->field($user_collection, 'allowusers')->dropDownList([ 1 => 'True', 0 => 'False']) ?>
+                            <?= $form->field($user_collection, 'allowusers')->dropDownList([ 1 => 'Yes', 0 => 'No']) ?>
                         </div>
                     </div>
                     <div class="row">
@@ -203,11 +206,11 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                     <?php if ($user_collection->isNewRecord || ! $user_collection->getResources()->all() ): ?>
 
                     <div class = "header-label">
-                        Add Collection Resources
+                        Add Resources to Collection
                     </div>
                     <div class="row" >
                         <div class="col-lg-1 d-flex align-items-center">
-                            <span class="control-label"> Source </span>
+                            <span class="control-label"> Method </span>
                         </div>
                         <div class="col-md-3">
                             <?= Html::dropDownList('resources-function', $option, $options, ['class' => 'form-control user-resource-select', 'text' => 'Source','options' => ['value' => 'none', 'class' => 'prompt', 'label' => 'Select'] ]) ?>
@@ -431,5 +434,10 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
     .loaded-collections{
         max-height: 300px;
         overflow: auto;
+    }
+    .helper-message{
+        font-size: 17px !important;
+        /*font-style: italic !important;*/
+        /*font-weight: normal !important;*/
     }
 </style>

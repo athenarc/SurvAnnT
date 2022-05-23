@@ -13,6 +13,8 @@ use Yii;
  * @property string $created
  * @property int|null $allowusers
  * @property resource $image
+ * @property string $type
+ * @property int $size
  *
  * @property User $owner0
  * @property Surveytobadges[] $surveytobadges
@@ -23,6 +25,12 @@ class Badges extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    /*
+     * @var UploadedFile[]
+    */
+     
+    public $imageFiles;
+
     public static function tableName()
     {
         return 'badges';
@@ -34,11 +42,13 @@ class Badges extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name','type', 'size'], 'required'],
             [['ownerid', 'allowusers'], 'integer'],
             [['created'], 'safe'],
             [['name'], 'string', 'max' => 255],
+            [['type'], 'string', 'max' => 20],
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
         ];
     }
 
@@ -54,16 +64,31 @@ class Badges extends \yii\db\ActiveRecord
             'created' => 'Created',
             'allowusers' => 'Allowusers',
             'image' => 'Image',
+            'type' => 'Image Type',
+            'size' => 'Image Size'
         ];
     }
 
     public function upload()
     {
+        // print_r($this->image->baseName);
+        // echo "<br><br> validation: ";
+
+        // print_r($this->validate());
+        // echo "<br><br>";
 
         if ( $this->validate() && ! empty($this->image) ) {
             $this->image->saveAs( Yii::$app->params['dir-badges'] . $this->image->baseName . '.' . $this->image->extension);
             return true;
         } else {
+            echo "Errors: ";
+            print_r($this->getErrors());
+            echo "<br><br> Empty: ";
+            print_r(!empty($this->image));
+            echo "<br><br> Validate: ";
+            print_r($this->validate());
+            echo "<br><br>";
+            
             if ( $this->id == null ){
                 $this->addError('image' , 'Image can not be blank.');
                 return false;
@@ -79,7 +104,7 @@ class Badges extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getOwner0()
+    public function getOwner()
     {
         return $this->hasOne(User::className(), ['id' => 'ownerid']);
     }
