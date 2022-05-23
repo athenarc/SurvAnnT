@@ -89,7 +89,6 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '[id^="link-show"]', function(e){
-
         if ( $(this).hasClass("fa-caret-down") ){
             $(this).removeClass("fa-caret-down").addClass("fa-caret-up");
             $("#" + this.id.replace("link", "table")).css("display", "table-cell");

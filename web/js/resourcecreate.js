@@ -253,7 +253,7 @@ $(document).ready(function(){
         
         if ( $(".resource-before-form").length ){
             $(".resource-before-form").submit();
-        }
+        } 
         
 
     });
@@ -262,10 +262,20 @@ $(document).ready(function(){
     $('body').on('click', 'a.hide-dataset', function() {
 
         if ( $(this).hasClass('collections') ){
+
             var id = $(this).attr('id').replace("dataset", "collection-resources");
+            if ($(this).hasClass('fa-caret-up')){
+                
+                $(this).removeClass('fa-caret-up').addClass('fa-caret-down');
+            }
             $("#" + id ).toggle();
+            
         }else{
+
             var id = $(this).attr('id').replace("dataset", "table");
+            if ($(this).hasClass('fa-caret-down')){
+                $(this).removeClass('fa-caret-down').addClass('fa-caret-up');
+            }
             $("." + id ).toggle();
         }
         

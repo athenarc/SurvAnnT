@@ -298,7 +298,6 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                     </span>
                                     <span class = "float-right" style = ""> 
                                         <a id = "dataset-<?=$key?>" class="fas fa-caret-down link-icon white hide-dataset"></a> 
-                                        <a id = "dataset-<?=$key?>" class="fas fa-times link-icon white delete-question"></a> 
                                     </span> 
                                 </div>
                             </div>
