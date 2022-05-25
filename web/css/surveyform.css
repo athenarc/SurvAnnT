@@ -298,7 +298,7 @@ h5{
 .control-label{
     /*color: black !important;*/
     text-decoration: none !important;
-    width: 100% !important;
+    /*width: 100% !important;*/
     word-wrap: unset !important;
     padding-bottom: 0.2em;
     font-style: italic;

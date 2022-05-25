@@ -20,8 +20,8 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         <div class = "row button-row ">
             <div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                Create the collection of Resources to be used for annotation/survey purposes (users will answer
-                questions related to each of these sources)
+                Create the collection of Resources to be used for Survey/Annotation purposes (users will answer
+                questions related to each of these resources)
             </div>
             <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['General Settings']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>

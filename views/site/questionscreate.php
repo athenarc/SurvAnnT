@@ -21,7 +21,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
         <div class = "row button-row">
             <div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                Create the Questions to be used for annotation/survey purposes
+                Create the Questions to be used for Survey/Annotation purposes (users will answer these questions)
             </div>
             <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['Resources']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>

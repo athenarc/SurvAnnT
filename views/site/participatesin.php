@@ -25,7 +25,7 @@ $this->registerJsFile('@web/js/veto.js', ['position' => View::POS_END, 'depends'
         <div class = "row button-row">
             <div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                    Invite Users to participate in your Survey/Annotation project
+                    Invite Users to participate in your Survey/Annotation Campaign
             </div>
             <div class = "col-md-2  text-right">
                 <?= Html::a( 'Previous', $tabs['Questions']['link'].$surveyid, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>

@@ -20,8 +20,7 @@ $date = date('Y-m-d hh:mm', time());
             <div class = "row button-row">
                 <div class = "col-md-10 d-flex align-items-center">
                     <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                    Create the collection of Resources to be used for annotation/survey purposes (users will answer
-                    questions related to each of these sources)
+                    Provide the basic configuration parameters for your Survey/Annotation Campaign
                 </div>
                 <div class = "col-md-2 text-right">
                     <?= Html::submitButton('Next', ['class' => 'btn btn-primary']) ?>

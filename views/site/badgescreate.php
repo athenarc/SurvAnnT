@@ -21,7 +21,7 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
         <div class = "row button-row ">
             <div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                Create the collection of Badges to be used for annotation/survey purposes (users will be awarded depending on the conditions you will set)
+                Create the collection of Badges to be used for Survey/Annotation purposes (users will be awarded these badges depending on the conditions you will set)
             </div>
             <div class = "col-md-2 text-right">
                 <?= Html::a( 'Previous', $tabs['Participants']['link'].$survey->id, ['class' => 'btn btn-primary', 'name' => 'test-name']); ?>
