@@ -309,7 +309,11 @@ class QuestionsController extends Controller
                 }                
             }
         }
-        $SurveyQuestions = Questions::find()->joinWith('surveytoquestions')->where(['surveyid' => $surveyid])->all();
+        $SurveyQuestions = Questions::find()->joinWith('surveytoquestions')->where(['surveyid' => $surveyid]);
+
+        $paginationSurveyQuestions = new Pagination(['totalCount' => $SurveyQuestions->count(), 'pageSize'=>10]);
+        $SurveyQuestions = $SurveyQuestions->offset($paginationSurveyQuestions->offset)->limit($paginationSurveyQuestions->limit)->all();
+
         $dbQuestions = Questions::find()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->all();
         $questions = [new Questions()];
         
@@ -332,6 +336,7 @@ class QuestionsController extends Controller
             'fields' => $fields,
             'questions' => $questions,
             'SurveyQuestions' => $SurveyQuestions,
+            'paginationSurveyQuestions' => $paginationSurveyQuestions,
             'dbQuestions' => $dbQuestions,
             'questionsNew' => $questionsNew,
             'method' => 'user-form',

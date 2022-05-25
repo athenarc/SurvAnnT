@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\web\View;
-use yii\widgets\Pjax;
+use yii\bootstrap4\LinkPager;
 
 $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END, 'depends' => [\yii\web\JqueryAsset::className()]]);
 
@@ -49,6 +49,13 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                     </div>                
                 </div>
                 <br>
+                <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <?= LinkPager::widget([
+                                'pagination' => $paginationSurveyQuestions,
+                            ]) ?>
+                        </div>
+                    </div>
                 <?php $form = ActiveForm::begin(['options' => ['id'=> 'survey-questions-form',  'class' => 'resource-before-form']]); ?>
                 <table class="table table-striped table-bordered participants-table">     
                     <tr class = "dataset-table-header-row">
