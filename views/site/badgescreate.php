@@ -64,10 +64,10 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
                                 Name
                             </th>
                             <th class = "dataset-header-column">
-                                Annotations Required to Earn
+                                Badge Preview
                             </th>
                             <th class = "dataset-header-column">
-                                Badge Preview
+                                Annotations Required to Earn
                             </th>
                             <th class = "dataset-header-column">
                                 Public
@@ -87,6 +87,9 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
                                     </span>
                                 </td>
                                 <td>
+                                    <?= isset($badge->image) ? '<img id = "image-preview-'.$key.'" class = "badge-image-preview" src="data:image/png;base64,'.base64_encode($badge->image ).'"/>' : '' ?>
+                                </td>
+                                <td>
                                     <span class="edit-badge-ratecondition-<?=$badge->id?>" style ="display: none;">
                                         <?= $form->field($surveytobadges_arr[$key], "[$key]ratecondition")->textInput(['name' => 'rate-condition-'.$badge->id, 'id' => 'badge-ratecondition-'.$badge->id])->label(false) ?>
                                     </span>
@@ -94,9 +97,6 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
                                         <?= $surveytobadges_arr[$key]->ratecondition ?>
                                     </span>
                                     
-                                </td>
-                                <td>
-                                    <?= isset($badge->image) ? '<img id = "image-preview-'.$key.'" class = "badge-image-preview" src="data:image/png;base64,'.base64_encode($badge->image ).'"/>' : '' ?>
                                 </td>
                                 <td>
                                     <span class="edit-badge-allowusers-<?=$badge->id?>" style ="display: none;">

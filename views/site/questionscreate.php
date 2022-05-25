@@ -264,7 +264,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                 <?php ActiveForm::end(); ?>
                 <br>
             </div>
-                
+            <br>
         </div>
 
     </div>
@@ -305,19 +305,19 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                 <table class="table table-striped table-bordered participants-table table-<?=$key?>">     
                                 
                                     <tr class = "dataset-table-header-row">
-                                        <td class = "dataset-header-column" colspan = "1"> Question </td>
-                                        <td class = "dataset-header-column" colspan = "2"> Tooltip </td>
-                                        
+                                        <td class = "dataset-header-column"> Question </td>
+                                        <td class = "dataset-header-column"> Tooltip </td>
+                                        <td class = "dataset-header-column"> Public </td>
                                     </tr>
                                     <tr>
                                         
-                                        <td colspan = "1"> <?= $form->field($question, "[$key]question")->textarea()->label(false) ?> </td>    
-                                        <td colspan = "2"> <?= $form->field($question, "[$key]tooltip")->label(false) ?> </td>
-                                        
+                                        <td> <?= $form->field($question, "[$key]question")->textarea()->label(false) ?> </td>    
+                                        <td> <?= $form->field($question, "[$key]tooltip")->label(false) ?> </td>
+                                        <td> <?= $form->field($question, "[$key]allowusers")->dropDownList([ 0 => 'No', 1 => 'Yes'])->label(false) ?> </td>
                                     </tr>
                                     <tr class = "dataset-table-header-row">
-                                        <td class = "dataset-header-column" colspan = "1" style = "width:50%;"> Answer Format </td>
-                                        <td id =  "answer-header-text-input-<?=$key?>" class = "dataset-header-column" style = ""> Answer </td>                                
+                                        <td class = "dataset-header-column" style = "width:50%;"> Answer Format </td>
+                                        <td colspan = "2" id =  "answer-header-text-input-<?=$key?>" class = "dataset-header-column" style = ""> Answer </td>                                
                                     </tr>
                                     <tr>
                                         <td colspan = "1" style = "width: 45%;"> 

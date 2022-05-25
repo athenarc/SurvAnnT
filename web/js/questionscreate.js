@@ -21,11 +21,12 @@ $(document).ready(function(){
         $(".datasets-table > #questions-form >  .button-row-2").before(dataset_destroy);
         $(".dataset-form").last().addClass("col-md-12");
         $(".dataset-form").last().find(".form-group").each(function( ) {
-          $(this).find("textarea").text("");
-          $(this).find("input").text("");
-          $(this).removeClass("has-error");
-          $(this).find(".help-block").text("");
+            $(this).find("textarea").text("");
+            $(this).find("input").text("");
+            $(this).removeClass("has-error");
+            $(this).find(".help-block").text("");
         });
+        return;
 
         $('#questions-form').yiiActiveForm('add', {
             id: 'questions-'+numItems+'-question',
@@ -184,10 +185,10 @@ $(document).ready(function(){
                     $(".question-tooltip-" + questionId + "-text").text(questionTooltip);
                     $(".question-answertype-" + questionId + "-text").text(questionAnswerType);
                     // $(".question-answervalues-" + questionId + "-text").text(questionAnswervalues);
-                    if(response.questionAllowUsers){
-                        $("#question-allowusers-" + questionId).text('Yes');
+                    if(response.questionAllowUsers == 1){
+                        $(".edit-question-allowusers-" + questionId).text('Yes');
                     }else{
-                        $("#question-allowusers-" + questionId).text('No');
+                        $(".edit-question-allowusers-" + questionId).text('No');
                     }
                     $(".edit-question-question-" + questionId).toggle();
                     $(".edit-question-tooltip-" + questionId).toggle();

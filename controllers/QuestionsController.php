@@ -195,6 +195,7 @@ class QuestionsController extends Controller
                         $question->tooltip = $questionTooltip;
                         $question->save();
                     }
+
                     if ( isset( $_POST['questionAnswerType'] ) ){
                         $questionAnswerType = $_POST['questionAnswerType'];
                         $question->answertype = $questionAnswerType;
@@ -218,7 +219,7 @@ class QuestionsController extends Controller
                     }                    
                 }
 
-                $response->data = ['response' => $action.' successfull', 'action' => $action, 'questionId' => $questionId, 'surveyId' => $surveyId, 'question_id' => $question->id, 'survey_id' => $survey->id, 'questionAllowUsers' => $_POST['questionAllowUsers'], 'questionQuestion' => $_POST['questionQuestion'], 'message' => $message];
+                $response->data = ['response' => $action.' successfull', 'action' => $action, 'questionId' => $questionId, 'surveyId' => $surveyId, 'question_id' => $question->id, 'survey_id' => $survey->id, 'questionAllowUsers' => $questionAllowUsers, 'questionQuestion' => $_POST['questionQuestion'], 'message' => $message];
                 $response->statusCode = 200;
             }
                 
