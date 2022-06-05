@@ -557,7 +557,7 @@ class ResourcesController extends Controller
                         
                         $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>'.$resources_count;
                     }else{
-                        $tabs['Resources']['set'] = '<i class="fas fa-circle-exclamation" title = "Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."></i>'.$resources_count;
+                        $tabs['Resources']['set'] = '<i class="fas fa-circle-exclamation" title = "Number of minimum resources evaluated goal is set to be greater than the number of actual resources imported. Either change the goal or import more resources."></i>'.$resources_count;
                     }
                 }
             }
