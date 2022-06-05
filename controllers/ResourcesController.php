@@ -234,9 +234,12 @@ class ResourcesController extends Controller
                 return $this->goHome();
             }
         }else{
+
             $surveyid = $_GET['surveyid'];
             $survey = Surveys::findOne($surveyid);
             if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
+                print_r($survey->getOwner());
+                exit(0);
                 return $this->goBack();
             }
             

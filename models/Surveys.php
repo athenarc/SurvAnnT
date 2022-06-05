@@ -141,10 +141,8 @@ class Surveys extends \yii\db\ActiveRecord
 
     public function getOwner()
     {
-    //     return $this->hasMany(Participatesin::className(), ['id' => 'userid'])->select(['id', 'owner'])->viaTable('participatesin', ['surveyid' => 'id'], function($query){
-    //     $query->where(['owner' => 1]);
-    // })->createCommand()->getRawSql();
-        $owner = $this->find()->joinWith(['participatesin'])->select(['surveys.id', 'userid'])->where(['surveys.id' => $this->id, 'owner' => 1 ])->asArray()->all();
+
+        $owner = $this->find()->joinWith(['participatesin'])->select(['userid'])->where(['surveys.id' => $this->id, 'owner' => 1 ])->asArray()->all();
         return array_column($owner, 'userid');
     }
 
