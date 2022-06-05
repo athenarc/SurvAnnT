@@ -94,7 +94,7 @@ class Surveys extends \yii\db\ActiveRecord
     public function createCsv($survey, $userid)
     {
 
-        $rates = Rate::find()->select(['rates.id AS ResourceTitle', 'resourceid AS ResourceId', 'questions.id AS QuestionId', 'questions.question as Question', 'rate.answer AS Answer', 'questions.answertype as AnswerType', 'userid as User']);
+        $rates = Rate::find()->select(['rate.id AS ResourceTitle', 'resourceid AS ResourceId', 'questions.id AS QuestionId', 'questions.question as Question', 'rate.answer AS Answer', 'questions.answertype as AnswerType', 'userid as User']);
         $rates->where(['surveyid' => $survey->id])->join('LEFT JOIN', 'questions', 'rate.questionid = questions.id');
         $rates = $rates->asArray()->all();
         $date = date('Y_m_d_H_i_s', time());
