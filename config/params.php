@@ -95,21 +95,30 @@ return [
             'What is SurvAnnT?' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'SurvAnnT offers functionalities to create, manage, and analyse survey and annotation campaingns. This tool supports ..',
+                    'text' => 'SurvAnnT is an open source  Web-based platform for the creation and management of both surveys and annotation projects. The platform provides the core functionalities of creating, editing and infering annotation campaigns and surveys.',
                     'enabled' => 1,
 
                 ],
             'Architecture' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'SurvAnnT architecture <br> <img src ="images/survannt.png">',
+                    'text' => 'SurvAnnT’s overall architecture, and the communication between its components is presented in the Figure below. 
+                                Its core components are the campaign editor, which enables the creation and configuration of campaigns, the user manager,
+                                which is responsible for the creation of new users and the management of their
+                                roles and permissions, the expert finder, which offers recommendations for new
+                                participants for campaigns according to their expertise, the campaign conductor,
+                                that implements the required data entry procedures and the gamification features
+                                for the campaigns, and the analyser, which is responsible for performing basic
+                                analytics on the campaign results. All these components leverage SurvAnnT’s
+                                DB, the underlying relational database to store and retrieve data. Finally, the
+                                users interact with the platform through a Web-based Graphical User Interface.<br> <div class = "text-center"><img src ="images/survannt.png"></div>',
                     'enabled' => 1,
                 ],
             'Citations' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
                     'text' => 'SurvAnnT citations',
-                    'enabled' => 1,
+                    'enabled' => 0,
                 ],
 
             'Team' => 

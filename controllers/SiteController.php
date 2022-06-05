@@ -1305,9 +1305,9 @@ class SiteController extends Controller
     {   
         
         $tabs = Yii::$app->params['about'];
+
         $message =  isset ( $_GET['tab'] ) ? $_GET['tab'] : 'What is SurvAnnT?';
         $about = Yii::$app->params['about'];
-
         return $this->render('about', [ 'about' => $about, 'tabs' => $tabs, 'message' => $message ]);
     }
 }
