@@ -4,6 +4,7 @@ namespace app\models;
 use webvimark\modules\UserManagement\models\User;
 use Yii;
 use Yii\helpers\Html;
+use app\models\CsvExport;
 
 /**
  * This is the model class for table "surveys".
@@ -88,6 +89,34 @@ class Surveys extends \yii\db\ActiveRecord
             'time' => 'Capture Response Times',
             'randomness' => 'Resource Selection Methodology',
         ];
+    }
+
+    public function createCsv($survey, $userid)
+    {
+
+        $rates = Rate::find()->select(['resourceid AS ResourceId', 'questions.id AS QuestionId', 'questions.question as Question', 'rate.answer AS Answer', 'questions.answertype as AnswerType', 'userid as User']);
+        $rates->where(['surveyid' => $survey->id])->join('LEFT JOIN', 'questions', 'rate.questionid = questions.id');
+        $rates = $rates->asArray()->all();
+        $date = date('Y_m_d_H_i_s', time());
+        $fname = Yii::$app->basePath. DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . 'downloads/statistics_'.$survey->name.'_'.$date.'.csv';
+
+        $f = fopen( $fname, 'w');
+        fputcsv($f, array($survey->name));
+        fputcsv($f, array_values ( array_keys( $rates[0] ) ));
+        $users = [];
+        foreach ($rates as $key => $item) {
+            $resource = Resources::findOne($item['ResourceId']);
+            $item['ResourceTitle'] = $resource->title;
+            if ( ! in_array( $item['User'], $users ) ){
+                array_push($users, $item['User']);
+                $userid = 'User_' . ( array_search($item['User'], $users) + 1 );
+            }
+            $item['User'] = $userid;
+            fputcsv($f, $item);
+        }        
+        fclose($f);
+
+        return \Yii::$app->response->sendFile($fname);
     }
 
     /**

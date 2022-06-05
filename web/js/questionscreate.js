@@ -26,7 +26,6 @@ $(document).ready(function(){
             $(this).removeClass("has-error");
             $(this).find(".help-block").text("");
         });
-        return;
 
         $('#questions-form').yiiActiveForm('add', {
             id: 'questions-'+numItems+'-question',
@@ -128,8 +127,7 @@ $(document).ready(function(){
             var action = "modify";
             questionQuestion = $("#question-question-" + questionId).val();
             questionTooltip = $("#question-tooltip-" + questionId).val();
-            questionAllowUsers = $("#question-allowusers-" + questionId).prop("checked");
-            
+            questionAllowUsers = $("#question-allowusers-" + questionId).val();
             questionAnswerType = $("#questions-" + questionId + "-answertype").val();
             
             if (questionAnswerType == 'textInput'){
@@ -197,8 +195,13 @@ $(document).ready(function(){
                     $(".edit-question-answer-" + questionId).toggle();
                     element.removeClass('fa-check save-question').addClass('fa-pencil edit-question');
                     element.css("color", "#949494");
+
                 }else if( response.action == 'delete' ){
                     element.parent().parent().remove();
+                    if($('.questions-table-row').length == 0){
+
+                        $(".questions-delete-all").remove();
+                    }
                 }
             },
             error: function (error) {

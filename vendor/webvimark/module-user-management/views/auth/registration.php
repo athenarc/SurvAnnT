@@ -43,13 +43,11 @@ use kartik\select2\Select2;
 			]); ?>
 
 		<div class = "row d-flex align-items-end">
-			<div class = "col-md-8">
+			<div class = "col-md-12">
 				<?= $form->field($model, 'username')->textInput(['maxlength' => 50, 'autocomplete'=>'off', 'autofocus'=>true]) ?>
 			</div>
-			<div class = "col-md-4">
-				<?= $form->field($model, 'availability')->checkbox(['value' => true]) ?>
-			</div>
 		</div>
+
 
 		<div class = "row">
 			<div class = "col-md-12">
@@ -103,6 +101,26 @@ use kartik\select2\Select2;
                             )
                         ) 
                         ?>
+			</div>
+		</div>
+
+		<div class = "row">
+			<div class = "col-md-12">
+				<?= $form->field($model, 'availability')->dropDownList([0 => 'No', 1 => 'Yes'], ['value' => 1, 'label' => 'Availability']) ?>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class = "col-md-12 text-center">
+				<p class="label">I consent to my username, badges and scores being displayed SurvAnnT's leaderboards</p>
+				<?= $form->field($model, 'consent_leaderboard')->checkbox(['label' => 'I consent to my username, scores and campaign participations being displayed in public'])->label(false) ?>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class = "col-md-12 text-center">
+				<p class="label">I consent to my research interests, campaing participations and annotation statistics being displayed in public</p>
+				<?= $form->field($model, 'consent_details')->checkbox(['label' => 'I consent to my username, scores and campaign participations being displayed in public'])->label(false) ?>
 			</div>
 		</div>
 		

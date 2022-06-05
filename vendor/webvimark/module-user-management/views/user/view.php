@@ -79,6 +79,7 @@ use yii\widgets\DetailView;
 					[
 						'attribute'=>'fields',
 						'format' => 'ntext',
+						'visible' => $model->consent_details || $model->id == Yii::$app->user->identity->id,
 						'value' => function ($model) {
 							$str = '';
 							foreach (explode("&&", $model->fields) as $key => $value) {
@@ -90,6 +91,7 @@ use yii\widgets\DetailView;
 					[
 						'attribute'=>'participates in',
 						'format' => 'raw',
+						'visible' => $model->consent_details || $model->id == Yii::$app->user->identity->id,
 						'value' => function ($model) {
 							$str = '';
 							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 0])->all() as $key => $value) {
@@ -105,6 +107,7 @@ use yii\widgets\DetailView;
 					[
 						'attribute'=>'Runs',
 						'format' => 'raw',
+						'visible' => $model->consent_details || $model->id == Yii::$app->user->identity->id,
 						'value' => function ($model) {
 							$str = '';
 							foreach ($model->getParticipatesin()->joinWith(['survey'])->where(['owner' => 1])->all() as $key => $value) {
@@ -118,6 +121,7 @@ use yii\widgets\DetailView;
 					[
 						'attribute'=>'Total Annotations Provided',
 						'format' => 'raw',
+						'visible' => $model->consent_details || $model->id == Yii::$app->user->identity->id,
 						'value' => $model->getRates()->groupBy('resourceid')->count()
 					],
 					[

@@ -33,9 +33,9 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/surveycreate.js',
         'js/surveyview.js',
-        'js/resourcecreate.js',
+        // 'js/resourcecreate.js',
         'js/acceptusers.js',
-        'js/questionscreate.js',
+        // 'js/questionscreate.js',
         'js/badgescreate.js',
         'js/surveyoverview.js',
     ];

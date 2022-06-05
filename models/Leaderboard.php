@@ -88,7 +88,7 @@ class Leaderboard extends \yii\db\ActiveRecord
 
         foreach ($surveys as $survey) {
             $survey_leaderboards[str_replace(" ", "_", $survey->name)] = [];
-            $leaderboard = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username'])->where(['surveyid' => $survey->id])->orderBy(['points' => SORT_DESC])->all();
+            $leaderboard = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username'])->where(['surveyid' => $survey->id, 'consent_leaderboard' => 1])->orderBy(['points' => SORT_DESC])->all();
             foreach ($leaderboard as $key => $value) {
 
                 $survey_leaderboards[str_replace(" ", "_", $survey->name)][$key]['username'] = $value->user->username;
@@ -113,7 +113,7 @@ class Leaderboard extends \yii\db\ActiveRecord
 
     public function getTotalLeaderboard()
     {
-        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username', 'SUM(points) AS points'])->orderBy(['points' => SORT_DESC])->groupBy(['userid'])->all();
+        $total_leaderboard_q = Leaderboard::find()->joinWith(['user'])->select(['leaderboard.*', 'user.username', 'SUM(points) AS points'])->where(['consent_leaderboard' => 1])->orderBy(['points' => SORT_DESC])->groupBy(['userid'])->all();
         
         $total_leaderboard = [];
         foreach ($total_leaderboard_q as $key => $value) {

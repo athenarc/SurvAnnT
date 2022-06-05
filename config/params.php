@@ -7,7 +7,9 @@ return [
     'bsVersion' => '4.x',
     'resources' => '../data/resources',
     'dataset' => '../data/dataset.json',
+    'dir-files' => '../data/files/',
     'questions' => '../data/questions/questions.json',
+    'dir-python' => '../python/',
     'dir-articles' => '../data/resources/article/articles.json',
     'dir-texts' => '../data/resources/text/texts.json',
     'dir-images' => '../data/resources/image/',
@@ -59,7 +61,7 @@ return [
                 ],
             'Resources' =>
                  [
-                    'link' => 'index.php?r=site%2Fresource-create&surveyid=',
+                    'link' => 'index.php?r=resources%2Fresource-create&surveyid=',
                     'enabled' => 0,
                     'set' => '' //<i class="fas fa-circle-xmark"></i>
                 ],

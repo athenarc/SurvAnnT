@@ -27,7 +27,7 @@
                 <img class="badge-image-preview" id="newBadge-preview-<?=$key?>" src="#" alt="" />
             </td>
             <td id = "newBadge-<?=$key?>">
-                <?= $form->field($newBadge, "allowusers[$key]")->checkbox(['label' => 'Public']) ?>
+                <?= $form->field($newBadge, "allowusers[$key]")->dropDownList([ 1 => 'Yes', 0 => 'No'])->label(false) ?>
             </td>
         </tr>
     <?php endforeach; ?>

@@ -42,6 +42,8 @@ use app\models\Leaderboard;
  * @property string $fields
  * @property string $orcidid
  * @property integer $availability
+ * @property int $consent_leaderboard
+ * @property int $consent_details
  *
  * @property Leaderboard[] $leaderboards
  * @property Badges[] $badges
@@ -280,7 +282,7 @@ class User extends UserIdentity
 			['username', 'unique'],
 			['username', 'trim'],
 
-			[['status', 'email_confirmed', 'availability'], 'integer'],
+			[['status', 'email_confirmed', 'availability', 'consent_leaderboard', 'consent_details'], 'integer'],
 
 			['email', 'email'],
 			['email', 'validateEmailConfirmedUnique'],
@@ -372,11 +374,13 @@ class User extends UserIdentity
 			'repeat_password'    => UserManagementModule::t('back', 'Repeat password'),
 			'email_confirmed'    => UserManagementModule::t('back', 'E-mail confirmed'),
 			'email'              => UserManagementModule::t('back', 'E-mail'),
-			'orcidid'            => UserManagementModule::t('back', 'Orcid ID'),
+			'orcidid'            => UserManagementModule::t('back', 'Orcid'),
 			'name'				 => UserManagementModule::t('back', 'Name'),
 			'surname'			 => UserManagementModule::t('back', 'Surname'),
 			'availability'			 => UserManagementModule::t('back', 'Availability'),
 			'fields'			 => UserManagementModule::t('back', 'Research Interests'),
+			'consent_leaderboard' => UserManagementModule::t('back', 'I consent to the use of my username in leaderboards'),
+            'consent_details' => UserManagementModule::t('back', 'I consent to the use of my details '),
 		];
 	}
 

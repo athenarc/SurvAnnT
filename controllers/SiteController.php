@@ -305,7 +305,7 @@ class SiteController extends Controller
             $rates = [];
             foreach ($r as $d_k => $d_v) {
                 $rates[] = $d_v;
-            }
+            } 
 
             $series[$survey->id]['user_res_fields']['data'][] = $d[0];
             $series[$survey->id]['questions']['data'] = $rates;
@@ -1013,7 +1013,7 @@ class SiteController extends Controller
                     $participant->owner = 1;
                     $participant->surveyid = $survey->id;
                     $participant->save();
-                    Yii::$app->response->redirect( array( 'site/resource-create', 'surveyid' => $survey->id ));
+                    Yii::$app->response->redirect( array( '//resources/resource-create', 'surveyid' => $survey->id ));
                 }                
                 
             }
@@ -1230,11 +1230,14 @@ class SiteController extends Controller
             $tabs['Badges']['enabled'] = 1;
             $tabs['Participants']['enabled'] = 1;
             $tabs['Overview']['enabled'] = 1;
+            $collection = $survey->getCollection()->one();
 
-            if ( $survey->getCollection()->all() ){
-                if ( $survey->getCollection()->one()->getResources()->all() ){
-                    $resources_count = ' ('.sizeof( $survey->getCollection()->one()->getResources()->all() ).')';
-                    if ( sizeof( $survey->getCollection()->one()->getResources()->all() ) >= $survey->minResEv ){
+            if ( $collection ){
+                $resources = $collection->getResources()->asArray()->all();
+               
+                if ( $resources ){
+                    $resources_count = ' ('.sizeof( $resources ).')';
+                    if ( sizeof( $resources ) >= $survey->minResEv ){
                         
                         $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>'.$resources_count;
                     }else{
@@ -1265,7 +1268,7 @@ class SiteController extends Controller
         }
         return $tabs;
 
-    }    
+    }   
 
     public function actionSurveyCreateOld()
     {

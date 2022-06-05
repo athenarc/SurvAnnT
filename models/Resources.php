@@ -17,6 +17,7 @@ date_default_timezone_set("Europe/Athens");
  * @property string|null $title
  * @property string|null $abstract
  * @property resource|null $image
+ * @property resource|null $zipFile
  * @property string|null $pmc
  * @property string|null $doi
  * @property int|null $pubmed_id
@@ -35,6 +36,7 @@ class Resources extends \yii\db\ActiveRecord
 {
 
     public $agree = true;
+    public $zipFile;
 
     /**
      * {@inheritdoc}
@@ -61,10 +63,22 @@ class Resources extends \yii\db\ActiveRecord
             [['journal'], 'string', 'max' => 100],
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
             [['collectionid'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collectionid' => 'id']],
-            // [['image'], 'file', 'skipOnEmpty' => false ],
-            [['type', 'text', 'title', 'abstract'], 'validateType'],
-            
-
+            [['image'], 'file', 'extensions' => 'png, jpg, jpeg', 'skipOnEmpty' => true ],
+            [['zipFile'], 'file', 'extensions' => 'rar, zip, tar', 'skipOnEmpty' => true ],
+            ['title', 'required', 'when' => function ($model) {
+                    return $model->type == 'article' || $model->type == 'questionaire' || $model->type == 'text' ;
+                }, 'whenClient' => "function (attribute, value) {
+                    var counter = attribute.id.match(/\d+/);
+                    return $('#resource-type-' + counter).val() == 'article' || $('#resource-type-' + counter).val() == 'questionaire' || $('#resource-type-' + counter).val() == 'text';
+                }"
+            ],
+            ['image', 'required', 'when' => function ($model) {
+                    return $model->type == 'image' ;
+                }, 'whenClient' => "function (attribute, value) {
+                    var counter = attribute.id.match(/\d+/);
+                    return $('#resource-type-' + counter).val() == 'image';
+                }"
+            ]
         ];
     }
 
@@ -72,34 +86,13 @@ class Resources extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
-    public function validateType($attribute, $params)
-    {
-
-        if ( $this->type == 'text'  ){
-            if ( empty( $this->text ) || $this->text == ' ' ){
-                $this->addError('text', "Text can not be empty."); 
-            } 
-        }else if( $this->type == 'article' ){
-
-            if ( empty( $this->title ) || $this->title == ' ' ){
-                $this->addError('title', "Title can not be empty.");
-            } 
-
-            if ( empty( $this->abstract ) || $this->abstract == ' ' ){
-                $this->addError('abstract', "Abstract can not be empty.");
-            } 
-
-        }else{
-            return true;
-        }
-
-    }
 
      public function upload()
     {
-
+        
         if ( $this->validate() && ! empty($this->image) ) {
-            $this->image->saveAs( Yii::$app->params['images'] . $this->image->baseName . '.' . $this->image->extension);
+            $this->image->saveAs( Yii::$app->params['dir-images'] . $this->image->baseName . '.' . $this->image->extension);
+            // echo "Image path: ".Yii::$app->params['dir-images'] . $this->image->baseName . '.' . $this->image->extension. "<br><br>";
             return true;
         } else {
             if ( $this->id == null ){
@@ -110,6 +103,46 @@ class Resources extends \yii\db\ActiveRecord
                 return true;
             }
         }
+    }
+
+    public function uploadZip($userid, $collectionid, $type)
+    {
+
+        $file_path = Yii::$app->params['dir-files'] . $this->zipFile->baseName . '.' . $this->zipFile->extension;
+        $this->zipFile->saveAs($file_path);
+
+        if ( in_array( $this->zipFile->extension, ['zip', 'tar', 'rar']  ) && file_exists( $file_path ) ){
+            $zip = new \ZipArchive();
+            $zip->open( $file_path );
+            $includedFiles = [];
+            for( $i = 0; $i < $zip->numFiles; $i++ ){ 
+                $stat = $zip->statIndex( $i ); 
+                array_push( $includedFiles, Yii::$app->params['dir-files'].basename( $stat['name'] ) );
+            }
+            $zip->extractTo(Yii::$app->params['dir-files']);
+            $zip->close();
+        }else{
+            array_push( $includedFiles, $file_path);
+        }
+
+        $host_db = explode(";", Yii::$app->db->dsn);
+        $host = explode("=", $host_db[0])[1];
+        $db = explode("=", $host_db[1])[1];
+        $user = Yii::$app->db->username;
+        $password = Yii::$app->db->password;
+        $script_loc = Yii::$app->params['dir-python'].'json_resource_parser.py';
+        $status = [];
+
+        foreach ($includedFiles as $file) {
+           
+            exec("python3 $script_loc $host $db $user $password $file $userid $collectionid $type", $output, $retval);
+            if ( in_array( 'Import successfull', $output ) ){
+                $status[$file] = 200;
+            }else{
+                $status[$file] = 500;
+            }
+        }
+        return $status;
     }
 
     public function attributeLabels()
@@ -123,14 +156,15 @@ class Resources extends \yii\db\ActiveRecord
             'title' => 'Title',
             'abstract' => 'Abstract',
             'image' => 'Image',
-            'pmc' => 'Pmc',
-            'doi' => 'Doi',
-            'pubmed_id' => 'Pubmed ID',
+            'pmc' => 'PMC ID',
+            'doi' => 'DOI ID',
+            'pubmed_id' => 'PUBMED ID',
             'authors' => 'Authors',
             'journal' => 'Journal',
             'year' => 'Year',
-            'allowusers' => 'Allowusers',
+            'allowusers' => 'Public',
             'collection' => 'Collection Name',
+            'zipFile' => 'Compressed File'
         ];
     }
 

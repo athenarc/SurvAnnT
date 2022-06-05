@@ -48,7 +48,7 @@ class Badges extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['type'], 'string', 'max' => 20],
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
-            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxFiles' => 10],
+            [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxFiles' => 10],
         ];
     }
 

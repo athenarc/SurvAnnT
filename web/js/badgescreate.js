@@ -55,7 +55,8 @@ $(document).ready(function(){
     		var action = "modify";
     		badgeName = $("#badge-name-" + badgeId).val();
 			badgeRateCondition = $("#badge-ratecondition-" + badgeId).val();
-			badgeAllowUsers = $("#badge-allowusers-" + badgeId).prop("checked");
+			// badgeAllowUsers = $("#badge-allowusers-" + badgeId).prop("checked");
+            badgeAllowUsers = $("#badge-allowusers-" + badgeId).val();
 			// alert(badgeAllowUsers);
     	}
 

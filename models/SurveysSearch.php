@@ -126,7 +126,7 @@ class SurveysSearch extends Surveys
             'asc' => ['rates_count' => SORT_ASC],
             'desc' => ['rates_count' => SORT_DESC],
         ];
-
+ 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

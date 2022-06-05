@@ -20,6 +20,8 @@ class RegistrationForm extends Model
 	public $fields;
 	public $orcidid;
 	public $availability = true;
+	public $consent_leaderboard = false;
+	public $consent_details = false;
 
 	/**
 	 * @inheritdoc
@@ -37,7 +39,7 @@ class RegistrationForm extends Model
 				'targetAttribute' => 'username',
 			],
 
-			[['fields', 'orcidid', 'availability'], 'safe'],
+			[['fields', 'orcidid', 'availability', 'consent_leaderboard', 'consent_details'], 'safe'],
 			['availability', 'boolean'],
 			['username', 'purgeXSS'],
 
@@ -105,10 +107,12 @@ class RegistrationForm extends Model
 		$user->password = $this->password;
 		$user->name = $this->name;
 		$user->surname = $this->surname;
+		$user->consent_leaderboard = $this->consent_leaderboard;
+		$user->consent_details = $this->consent_details;
 		$user->status = User::STATUS_ACTIVE;
 		$user->email_confirmed = 1;
 		$fields = [];
-		print_r($this->fields);
+
 		if ( is_array($this->fields) ){
 			$fields = [];
 			foreach ($this->fields as $key => $value) {

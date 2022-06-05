@@ -40,12 +40,6 @@ use app\models\Fields;
 		<?php endif; ?>
 	</div>
 
-	<div class = "row">
-		<div class = "col-md-12">
-			<?= $form->field($model, 'availability')->checkbox(['label' => 'Availability'])->label(true) ?>
-		</div>
-	</div>
-
 	<?php if ( $model->isNewRecord ): ?>
 		<div class = "row">
 			<div class = "col-md-12">
@@ -114,6 +108,26 @@ use app\models\Fields;
             	?>
         </div>
     </div>
+
+    <div class = "row">
+		<div class = "col-md-12">
+			<?= $form->field($model, 'availability')->dropDownList([0 => 'No', 1 => 'Yes'], ['value' => 1, 'label' => 'Availability']) ?>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class = "col-md-12 text-center">
+			<p class="label">I consent to my username, badges and scores being displayed SurvAnnT's leaderboards</p>
+			<?= $form->field($model, 'consent_leaderboard')->checkbox(['label' => 'I consent to my username, scores and campaign participations being displayed in public'])->label(false) ?>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class = "col-md-12 text-center">
+			<p class="label">I consent to my research interests, campaing participations and annotation statistics being displayed in public</p>
+			<?= $form->field($model, 'consent_details')->checkbox(['label' => 'I consent to my username, scores and campaign participations being displayed in public'])->label(false) ?>
+		</div>
+	</div>
 			
 
 	<div class="form-group">

@@ -349,3 +349,10 @@ form div.required label.control-label:after {
 .dataset-header-row{
     margin-bottom: 0% !important ;
 }
+
+.text-overflow-ellipsis{
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    max-width: 7vw; 
+    overflow: hidden;
+}

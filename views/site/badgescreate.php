@@ -100,8 +100,7 @@ $this->registerJsFile('@web/js/badgescreate.js', ['position' => View::POS_END, '
                                 </td>
                                 <td>
                                     <span class="edit-badge-allowusers-<?=$badge->id?>" style ="display: none;">
-                                        <?=  $form->field($badge, "[$key]allowusers")->checkbox(['name' => 'allowusers-'.$badge->id, 'id' => 'allowusers-'.$badge->id, 'label' => false, 'id' => 'badge-allowusers-'.$badge->id])
-                                        ?>
+                                        <?= $form->field($badge, "[$key]allowusers")->dropDownList([ 1 => 'Yes', 0 => 'No'], ['name' => 'allowusers-'.$badge->id, 'id' => 'allowusers-'.$badge->id, 'label' => false, 'id' => 'badge-allowusers-'.$badge->id])->label(false) ?>
                                     </span>
                                     <span class="edit-badge-allowusers-<?=$badge->id?>">
                                         <?php if($badge->allowusers): ?>

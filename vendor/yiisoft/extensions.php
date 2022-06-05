@@ -12,15 +12,6 @@ return array (
       '@yii/bootstrap4' => $vendorDir . '/yiisoft/yii2-bootstrap4/src',
     ),
   ),
-  'yiisoft/yii2-debug' => 
-  array (
-    'name' => 'yiisoft/yii2-debug',
-    'version' => '2.1.18.0',
-    'alias' => 
-    array (
-      '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug/src',
-    ),
-  ),
   'yiisoft/yii2-faker' => 
   array (
     'name' => 'yiisoft/yii2-faker',
@@ -66,22 +57,31 @@ return array (
       '@yii/jui' => $vendorDir . '/yiisoft/yii2-jui',
     ),
   ),
-  'kartik-v/yii2-krajee-base' => 
+  'onmotion/yii2-widget-apexcharts' => 
   array (
-    'name' => 'kartik-v/yii2-krajee-base',
-    'version' => '3.0.2.0',
+    'name' => 'onmotion/yii2-widget-apexcharts',
+    'version' => '1.0.7.0',
     'alias' => 
     array (
-      '@kartik/base' => $vendorDir . '/kartik-v/yii2-krajee-base/src',
+      '@onmotion/apexcharts' => $vendorDir . '/onmotion/yii2-widget-apexcharts',
     ),
   ),
-  'kartik-v/yii2-widget-datetimepicker' => 
+  'kartik-v/yii2-dialog' => 
   array (
-    'name' => 'kartik-v/yii2-widget-datetimepicker',
-    'version' => '1.5.0.0',
+    'name' => 'kartik-v/yii2-dialog',
+    'version' => '1.0.6.0',
     'alias' => 
     array (
-      '@kartik/datetime' => $vendorDir . '/kartik-v/yii2-widget-datetimepicker/src',
+      '@kartik/dialog' => $vendorDir . '/kartik-v/yii2-dialog/src',
+    ),
+  ),
+  'kartik-v/yii2-grid' => 
+  array (
+    'name' => 'kartik-v/yii2-grid',
+    'version' => 'dev-master',
+    'alias' => 
+    array (
+      '@kartik/grid' => $vendorDir . '/kartik-v/yii2-grid/src',
     ),
   ),
   'kartik-v/yii2-widget-select2' => 
@@ -93,13 +93,31 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
-  'onmotion/yii2-widget-apexcharts' => 
+  'kartik-v/yii2-krajee-base' => 
   array (
-    'name' => 'onmotion/yii2-widget-apexcharts',
-    'version' => '1.0.7.0',
+    'name' => 'kartik-v/yii2-krajee-base',
+    'version' => '3.0.4.0',
     'alias' => 
     array (
-      '@onmotion/apexcharts' => $vendorDir . '/onmotion/yii2-widget-apexcharts',
+      '@kartik/base' => $vendorDir . '/kartik-v/yii2-krajee-base/src',
+    ),
+  ),
+  'kartik-v/yii2-widget-datetimepicker' => 
+  array (
+    'name' => 'kartik-v/yii2-widget-datetimepicker',
+    'version' => '1.5.1.0',
+    'alias' => 
+    array (
+      '@kartik/datetime' => $vendorDir . '/kartik-v/yii2-widget-datetimepicker/src',
+    ),
+  ),
+  'yiisoft/yii2-debug' => 
+  array (
+    'name' => 'yiisoft/yii2-debug',
+    'version' => '2.1.19.0',
+    'alias' => 
+    array (
+      '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug/src',
     ),
   ),
 );

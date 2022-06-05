@@ -28,7 +28,7 @@ $this->title = 'My Yii Application';
         </div>
        <div class = "row survey-fields">
        		<div class = "col-md-12">
-       			
+       			<br>
 				<?= GridView::widget([
 				    'dataProvider' => $surveys,
 				    'layout'=>"{pager}\n{items}",

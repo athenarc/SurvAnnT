@@ -7,3 +7,11 @@
         </a>
     </div>
 <?php endforeach; ?>
+
+<?php if( isset($status_message) && $status_message != '' ): ?>
+    <div class="status-display row" style ="background-color: <?= ( $status < 300 ) ? 'lightgreen' : 'orange' ?>;" > 
+        <div class="col-md-12 p-0">
+            <?= $status_message ?> <b><a class="link-icon white fa fa-times close-status-message"></a></b>
+        </div>
+    </div>
+<?php endif; ?>

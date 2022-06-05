@@ -374,7 +374,7 @@ class BadgesController extends Controller
 
     }
 
-        public function tabsManagement($tab = null, $survey = null)
+    public function tabsManagement($tab = null, $survey = null)
     {
         $tabs = Yii::$app->params['tabs'];
 
@@ -390,11 +390,13 @@ class BadgesController extends Controller
             $tabs['Badges']['enabled'] = 1;
             $tabs['Participants']['enabled'] = 1;
             $tabs['Overview']['enabled'] = 1;
+            $collection = $survey->getCollection()->one();
 
-            if ( $survey->getCollection()->all() ){
-                if ( $survey->getCollection()->one()->getResources()->all() ){
-                    $resources_count = ' ('.sizeof( $survey->getCollection()->one()->getResources()->all() ).')';
-                    if ( sizeof( $survey->getCollection()->one()->getResources()->all() ) >= $survey->minResEv ){
+            if ( $collection ){
+                $resources = $collection->getResources()->asArray()->all();
+                if ( $resources ){
+                    $resources_count = ' ('.sizeof( $resources ).')';
+                    if ( sizeof( $resources ) >= $survey->minResEv ){
                         
                         $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>'.$resources_count;
                     }else{

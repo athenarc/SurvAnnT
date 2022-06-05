@@ -42,7 +42,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                 </div>
                 <div class = "row">
                     <div class="col-md-12 text-right">
-                        <?= ($survey->getSurveytoquestions()->all()) ? Html::a( 'Delete All Questions', ['questions/questions-delete-all', 'surveyid' => $survey->id], ['class' => 'btn btn-primary  db-question-select', 'name' => 'delete-all']) : '' ?>
+                        <?= ($survey->getSurveytoquestions()->all()) ? Html::a( 'Delete All Questions', ['questions/questions-delete-all', 'surveyid' => $survey->id], ['class' => 'btn btn-primary  questions-delete-all', 'name' => 'delete-all']) : '' ?>
                          <?= Html::button( 'Reuse Existing Questions', ['class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#db-questions"]) ?>
                          <?= Html::button( 'Create Questions', ['class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#user-questions"]) ?>
                          <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="">
@@ -57,7 +57,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                         </div>
                     </div>
                 <?php $form = ActiveForm::begin(['options' => ['id'=> 'survey-questions-form',  'class' => 'resource-before-form']]); ?>
-                <table class="table table-striped table-bordered participants-table">     
+                <table class="table table-striped table-bordered participants-table survey-questions-table">     
                     <tr class = "dataset-table-header-row">
                         <td class = "dataset-header-column" colspan = "1"> Question </td>
                         <td class = "dataset-header-column" colspan = "1"> Tooltip </td>
@@ -67,7 +67,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                         <td class = "dataset-header-column" colspan = "1"> Actions </td>
                     </tr>
                     <?php foreach ($SurveyQuestions as $k => $SurveyQuestion): ?>
-                        <tr>
+                        <tr class="questions-table-row">
                             <td>
                                 <span class="edit-question-question-<?=$SurveyQuestion->id?>" style ="display: none;">
                                     <?= $form->field($SurveyQuestion, "question")->textArea(['name' => 'question-question-'.$SurveyQuestion->id, 'id' => 'question-question-'.$SurveyQuestion->id])->label(false) ?>
@@ -239,12 +239,12 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                         </tr>
                                         <?php $counter ++; ?>
                                     <?php endforeach; ?>
-                                </table>
+                                </table> 
                             </td>
                             <td>
                                 <span class="edit-question-allowusers-<?=$SurveyQuestion->id?>" style ="display: none;">
-                                    <?=  $form->field($SurveyQuestion, "[$k]allowusers")->checkbox(['name' => 'allowusers-'.$SurveyQuestion->id, 'id' => 'allowusers-'.$SurveyQuestion->id, 'label' => false, 'id' => 'question-allowusers-'.$SurveyQuestion->id])
-                                    ?>
+                                    
+                                    <?= $form->field($SurveyQuestion, '[$k]allowusers')->dropDownList([ 1 => 'Yes', 0 => 'No'], ['name' => 'allowusers-'.$SurveyQuestion->id, 'id' => 'allowusers-'.$SurveyQuestion->id, 'label' => false, 'id' => 'question-allowusers-'.$SurveyQuestion->id])->label(false) ?>
                                 </span>
                                 <span class="edit-question-allowusers-<?=$SurveyQuestion->id?>">
                                     <?php if($SurveyQuestion->allowusers): ?>
@@ -462,8 +462,6 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
 <div class="modal fade bd-example-modal-lg" id="db-questions" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div  class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-        
-      
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Upload Questions Form</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

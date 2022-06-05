@@ -35,13 +35,18 @@ tests/_support/_generated
 schema/*
 !schema/survannt.sql
 
+web/downloads/*
 data/badges/*
+data/files/*
 data/resources/image/*
 data/resources/article/*
 data/resources/text/*
 data/resources/questionaire/*
 
+
+!web/downloads/.gitkeep
 !data/badges/.gitkeep
+!data/files/.gitkeep
 !data/resources/image/.gitkeep
 !data/resources/article/.gitkeep
 !data/resources/text/.gitkeep

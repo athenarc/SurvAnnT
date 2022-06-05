@@ -18,10 +18,11 @@ $date = date('Y-m-d hh:mm', time());
                 <?php include 'tabs.php'; ?>
             </div>
         <?php endif; ?>
-        
         <?php if($message == ''): ?>
-            <div class = "row about-row">
+            <div class = " about-row">
+                <div class="col-md-8">
                 <h2>Campaign Overview</h2>
+            </div>
             </div>
         <?php endif; ?>
         <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) && ! $survey->active ): ?>
@@ -82,7 +83,7 @@ $date = date('Y-m-d hh:mm', time());
                     </tr>
                     <tr>
                         <td> <?= $survey->name ?></td>
-                        <td> <?= str_replace("&&", ", ", $survey->fields) ?> </td>
+                        <td> <?= strlen( str_replace("&&", ", ", $survey->fields) > 0 ) ? str_replace("&&", ", ", $survey->fields) : '<i>Not set</i>' ?> </td>
                         <td> <?= isset( $survey->starts ) ? $survey->starts : '<i>Not determined yet</i>' ?> </td>
                         <td> <?= isset( $survey->ends ) ? $survey->ends : '<i>Not determined yet</i>' ?> </td>
                         <td> <?= ( $survey->locked ) ? 'Restricted' : 'Available' ?> </td>
@@ -101,6 +102,9 @@ $date = date('Y-m-d hh:mm', time());
                             # of Questions
                         </th>
                         <th class = "dataset-header-column">
+                            # of Participants
+                        </th>
+                        <th class = "dataset-header-column">
                             Resources Type
                         </th>
                     </tr>
@@ -108,6 +112,7 @@ $date = date('Y-m-d hh:mm', time());
                         <td> <?= ( ! is_null ( $survey->getCollection()->one() ) ) ? sizeof( $survey->getCollection()->one()->getResources()->all() ) : '<i> No resources selected yet </i>' ?>
                         </td>
                         <td> <?= sizeof( $survey->getQuestions()->all() ) > 0 ? sizeof( $survey->getQuestions()->all() ) : '<i>No questions selected yet</i>' ?> </td>
+                        <td> <?= $survey->getParticipatesin()->count() ?> </td>
                         <td> <?= ( ! is_null ( $survey->getCollection()->one() ) && isset( $survey->getCollection()->one()->getResources()->one()['type'] ) ) ? ucwords( $survey->getCollection()->one()->getResources()->one()['type']) : '<i> Not determined yet </i>' ?>
                         </td>
                     </tr>
@@ -118,6 +123,7 @@ $date = date('Y-m-d hh:mm', time());
                 <br>
             </div>
             <br>
+            <?php if( in_array(Yii::$app->user->identity->id, $survey->getOwner() ) ): ?>
             <div class="header-label">
                 <h3 class="surveys-view-header"> 
                     Resources 
@@ -179,6 +185,7 @@ $date = date('Y-m-d hh:mm', time());
                 <?php endif; ?>
                 <br>
             </div>
+            
             <br>
             <div class="header-label">
                 <h3 class="surveys-view-header"> 
@@ -267,6 +274,7 @@ $date = date('Y-m-d hh:mm', time());
                 <?php endif; ?>
                 <br>
             </div>
+            <?php endif; ?>
             <br>
             <div class = "header-label">
                 <h3 class = "surveys-view-header">Badges</h3>

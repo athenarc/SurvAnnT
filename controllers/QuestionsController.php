@@ -120,7 +120,8 @@ class QuestionsController extends Controller
                 $surveyId = intval($_POST['surveyId']);
                 $survey = Surveys::find()->where(['id' => $surveyId])->one();
                 $userid = Yii::$app->user->identity->id;
-                
+                $questionAllowUsers = '';
+                 
                 if( !$survey ){
 
                     $response->data = ['response' => 'Survey not found', 'action' => $action, 'questionId' => $questionId, 'surveyId' => $surveyId];
@@ -402,11 +403,13 @@ class QuestionsController extends Controller
             $tabs['Badges']['enabled'] = 1;
             $tabs['Participants']['enabled'] = 1;
             $tabs['Overview']['enabled'] = 1;
+            $collection = $survey->getCollection()->one();
 
-            if ( $survey->getCollection()->all() ){
-                if ( $survey->getCollection()->one()->getResources()->all() ){
-                    $resources_count = ' ('.sizeof( $survey->getCollection()->one()->getResources()->all() ).')';
-                    if ( sizeof( $survey->getCollection()->one()->getResources()->all() ) >= $survey->minResEv ){
+            if ( $collection ){
+                $resources = $collection->getResources()->asArray()->all();
+                if ( $resources ){
+                    $resources_count = ' ('.sizeof( $resources ).')';
+                    if ( sizeof( $resources ) >= $survey->minResEv ){
                         
                         $tabs['Resources']['set'] = '<i class="fas fa-circle-check"></i>'.$resources_count;
                     }else{

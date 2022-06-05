@@ -285,7 +285,12 @@ $this->registerCssFile(
               <table class="w-100">
                 <tr class = "text-right">
                   <td>
-                    <?=  Html::a( 'Export <i class="fa-solid fa-download"></i>', '#', ['class' => 'btn submit-button', 'style' => 'float: unset !important;']) ?>
+                    <?php if( $survey->getRates()->count() > 0 ): ?>
+                      <?= Html::a( 'Export Campaign Results <i class="fa-solid fa-download"></i>',  ['statistics/campaign-statistics', 'surveyid' => $survey->id], [ 'class' => 'btn btn-primary', 'style' => 'float: unset !important;']) ?>
+                    <?php else: ?>
+                      <?= Html::button( 'Export Campaign Results <i class="fa-solid fa-download"></i>', [ 'disabled' => true, 'class' => 'btn btn-primary', 'style' => 'float: unset !important;']) ?>
+                    <?php endif; ?>
+                    
                   </td>
                 </tr>
               </table>

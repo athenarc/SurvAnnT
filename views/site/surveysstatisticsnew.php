@@ -331,7 +331,7 @@ $this->registerCssFile(
               <table class="w-100">
                 <tr class = "text-right">
                   <td>
-                    <?=  Html::a( 'Export <i class="fa-solid fa-download"></i>', '#', ['class' => 'btn submit-button', 'style' => 'float: unset !important;']) ?>
+                    <?=  Html::a( 'Export Campaign Results <i class="fa-solid fa-download"></i>', ['statistics/campaign-statistics', 'surveyid' => $survey->id], ['class' => 'btn submit-button', 'style' => 'float: unset !important;']) ?>
                   </td>
                 </tr>
               </table>
