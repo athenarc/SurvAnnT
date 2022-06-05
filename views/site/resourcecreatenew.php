@@ -91,122 +91,126 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                 </div>
 
 	            <br>
-	        	<table class="table table-striped table-bordered participants-table"> 
-	        		<tr class = "dataset-table-header-row">
-	        			<tr class = "dataset-table-header-row">
-	        			<th class = "dataset-header-column">Title</th>
-	        			<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Abstract</th>
-	        			<th class = "dataset-header-column" style = "display: <?=$type == 'text' ? 'table-cell' : 'none'?>;">Text</th>
-	        			<th class = "dataset-header-column" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">Image</th>
-	        			<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">PMC</th>
-						<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">DOI</th>
-						<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">PUBMED</th>
-						<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Authors</th>
-						<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Journal</th>
-						<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Year</th>
-						<th class = "dataset-header-column">Public</th>
-						<th class = "dataset-header-column">Actions</th>
-	        		</tr>
-	        		<?php foreach ($SurveyResources as $resource): ?>
-	        			<tr class="resource-table-row">
-	        				<td class ="text-overflow-ellipsis"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-									<input type="text" value="<?=$resource->title?>" name="resource-title-<?=$resource['id']?>" class = "form-control">
-								</span>
-                                <span class="edit-resource-<?=$resource->id?> resource-title-<?=$resource->id?>" title = "<?=$resource->title?>">
-                                	<?= $resource->title ?>
-                                </span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-									<textarea class="form-control" name="resource-abstract-<?=$resource['id']?>" rows="4" cols="50"><?= $resource->abstract?></textarea>
-								</span>
-								<span class="edit-resource-<?=$resource->id?> resource-abstract-<?=$resource->id?>" title = "<?=$resource->abstract?>">
-	        						<?= $resource->abstract ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'text' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-									<textarea class="form-control" name="resource-text-<?=$resource['id']?>" rows="4" cols="50"><?=$resource['text']?></textarea>
-								</span>
-								<span class="edit-resource-<?=$resource->id?> resource-text-<?=$resource->id?>" title = "<?=$resource->text?>">
-	        						<?= $resource->text ?> 
-	        					</span>
-	        				</td>
-	        				<td style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<img src="data:image/png;base64,<?= base64_encode($resource->image) ?>" style = "max-height: 35px; max-width: 35px;"/>
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?>">
-	        						<img src="data:image/png;base64,<?= base64_encode($resource->image) ?>" style = "max-height: 35px; max-width: 35px;"/>
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['pmc']?>" name="resource-pmc-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-pmc-<?=$resource->id?>">
-	        						<?= $resource['pmc'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['doi']?>" name="resource-doi-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-doi-<?=$resource->id?>">
-	        						<?= $resource['doi'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['pubmed_id']?>" name="resource-pubmed_id-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-pubmed_id-<?=$resource->id?>">
-	        						<?= $resource['pubmed_id'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['authors']?>" name="resource-authors-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-authors-<?=$resource->id?>">
-	        						<?= $resource['authors'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['journal']?>" name="resource-journal-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?>  resource-journal-<?=$resource->id?>">
-	        						<?= $resource['journal'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<input type="text" value="<?=$resource['year']?>" name="resource-year-<?=$resource['id']?>" class = "form-control">
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-year-<?=$resource->id?>">
-	        						<?= $resource['year'] ?> 
-	        					</span>
-	        				</td>
-	        				<td class ="text-overflow-ellipsis" > 
-	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
-	        						<select class="form-control" selected="0" value = "0" name="resource-allowusers-<?=$resource['id']?>">
-										<option <?= $resource->allowusers ? 'selected' : '' ?> value="1">Yes</option>
-										<option <?= ! $resource->allowusers ? 'selected' : '' ?> value="0">No</option>
-									</select>
-	        					</span>
-	        					<span class="edit-resource-<?=$resource->id?> resource-public-<?=$resource->id?>">
-	        						<?= $resource['allowusers'] == 1 ? 'Yes' : 'No' ?> 
-	        					</span>
-	        				</td>
-	        				<td>
-	        					<a id="resources-actions-<?=$resource->id?>" class="fas fa-pencil edit-resource link-icon"></a>
-                                <a id="resources-actions-<?=$resource->id?>" class="fas fa-trash-alt delete-resource link-icon"></a>
-	        				</td>
-	        			</tr>
-	        		<?php endforeach; ?>
-	        	</table>
+	            <div class="row">
+	            	<div class="col-md-12">
+			        	<table class="table table-striped table-bordered participants-table"> 
+			        		<tr class = "dataset-table-header-row">
+			        			<tr class = "dataset-table-header-row">
+			        			<th class = "dataset-header-column">Title</th>
+			        			<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Abstract</th>
+			        			<th class = "dataset-header-column" style = "display: <?=$type == 'text' ? 'table-cell' : 'none'?>;">Text</th>
+			        			<th class = "dataset-header-column" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">Image</th>
+			        			<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">PMC</th>
+								<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">DOI</th>
+								<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">PUBMED</th>
+								<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Authors</th>
+								<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Journal</th>
+								<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Year</th>
+								<th class = "dataset-header-column">Public</th>
+								<th class = "dataset-header-column">Actions</th>
+			        		</tr>
+			        		<?php foreach ($SurveyResources as $resource): ?>
+			        			<tr class="resource-table-row">
+			        				<td class ="text-overflow-ellipsis"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+											<input type="text" value="<?=$resource->title?>" name="resource-title-<?=$resource['id']?>" class = "form-control">
+										</span>
+		                                <span class="edit-resource-<?=$resource->id?> resource-title-<?=$resource->id?>" title = "<?=$resource->title?>">
+		                                	<?= $resource->title ?>
+		                                </span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+											<textarea class="form-control" name="resource-abstract-<?=$resource['id']?>" rows="4" cols="50"><?= $resource->abstract?></textarea>
+										</span>
+										<span class="edit-resource-<?=$resource->id?> resource-abstract-<?=$resource->id?>" title = "<?=$resource->abstract?>">
+			        						<?= $resource->abstract ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'text' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+											<textarea class="form-control" name="resource-text-<?=$resource['id']?>" rows="4" cols="50"><?=$resource['text']?></textarea>
+										</span>
+										<span class="edit-resource-<?=$resource->id?> resource-text-<?=$resource->id?>" title = "<?=$resource->text?>">
+			        						<?= $resource->text ?> 
+			        					</span>
+			        				</td>
+			        				<td style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<img src="data:image/png;base64,<?= base64_encode($resource->image) ?>" style = "max-height: 35px; max-width: 35px;"/>
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?>">
+			        						<img src="data:image/png;base64,<?= base64_encode($resource->image) ?>" style = "max-height: 35px; max-width: 35px;"/>
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['pmc']?>" name="resource-pmc-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-pmc-<?=$resource->id?>">
+			        						<?= $resource['pmc'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['doi']?>" name="resource-doi-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-doi-<?=$resource->id?>">
+			        						<?= $resource['doi'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['pubmed_id']?>" name="resource-pubmed_id-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-pubmed_id-<?=$resource->id?>">
+			        						<?= $resource['pubmed_id'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['authors']?>" name="resource-authors-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-authors-<?=$resource->id?>">
+			        						<?= $resource['authors'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['journal']?>" name="resource-journal-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?>  resource-journal-<?=$resource->id?>">
+			        						<?= $resource['journal'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;"> 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<input type="text" value="<?=$resource['year']?>" name="resource-year-<?=$resource['id']?>" class = "form-control">
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-year-<?=$resource->id?>">
+			        						<?= $resource['year'] ?> 
+			        					</span>
+			        				</td>
+			        				<td class ="text-overflow-ellipsis" > 
+			        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
+			        						<select class="form-control" selected="0" value = "0" name="resource-allowusers-<?=$resource['id']?>">
+												<option <?= $resource->allowusers ? 'selected' : '' ?> value="1">Yes</option>
+												<option <?= ! $resource->allowusers ? 'selected' : '' ?> value="0">No</option>
+											</select>
+			        					</span>
+			        					<span class="edit-resource-<?=$resource->id?> resource-public-<?=$resource->id?>">
+			        						<?= $resource['allowusers'] == 1 ? 'Yes' : 'No' ?> 
+			        					</span>
+			        				</td>
+			        				<td>
+			        					<a id="resources-actions-<?=$resource->id?>" class="fas fa-pencil edit-resource link-icon"></a>
+		                                <a id="resources-actions-<?=$resource->id?>" class="fas fa-trash-alt delete-resource link-icon"></a>
+			        				</td>
+			        			</tr>
+			        		<?php endforeach; ?>
+			        	</table>
+			        </div>
+		        </div>
 	        	<br>
 
         	<?php else: ?>
@@ -482,23 +486,44 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         </button>
       </div>
       <div class="modal-body resource-modal-body">
-        
-        <table class="table table-striped table-bordered participants-table">
-            <tr class = "dataset-table-header-row">
-                <th class = "dataset-header-column">
-                    File Upload (Currently supported for articles only!)
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <div class="text-center">
-                        <?= $form->field($resourceZip, "zipFile")->fileInput(['multiple' => false, 'id' => 'resource-file-input'])->label(false) ?>
-                        <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="surveyId">
-                        <input type="hidden" id="collectionId" value="<?= ($survey->getCollection()->one()) ? $survey->getCollection()->one()['id'] : '' ?>" name="collectionId">
-                    </div>
-                </td>
-            </tr>
-        </table>     
+        <?php foreach ($resourceZip as $kk => $zip): ?>
+	        <table class="table table-striped table-bordered participants-table">
+	            <tr class = "dataset-table-header-row">
+	                <th colspan = "2" class = "dataset-header-column">
+	                    File Upload (Currently supported for articles only!)
+	                </th>
+	            </tr>
+	            <tr>
+	                <td  colspan = "2" >
+	                    <div class="text-center">
+	                        <?= $form->field($zip, "[$kk]zipFile")->fileInput(['multiple' => false, 'id' => 'resource-file-input'])->label(false) ?>
+	                        <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="surveyId">
+	                        <?= $form->field($zip, "[$kk]method")->hiddenInput(['id' => 'resource-method-0'])->label(false) ?>
+	                        <input type="hidden" id="collectionId" value="<?= ($survey->getCollection()->one()) ? $survey->getCollection()->one()['id'] : '' ?>" name="collectionId">
+	                    </div>
+	                </td>
+	            </tr>
+	            <tr class = "dataset-table-header-row">
+	                <th class = "dataset-header-column">
+	                    Number of Abstracts <a class="link-icon fa fa-info-circle white" title ="If left blank, all the abstracts found will be used"></a>
+	                </th>
+	                <th class = "dataset-header-column">
+	                    Selection Method <a class="link-icon fa fa-info-circle white" title ="If random is selected as the selection method, then abstracts will be selected randomly if a number is set in the Number of Abstracts field"></a>
+	                </th>
+	            </tr>
+	            <tr>
+	            	<td>
+	            		<input type="text" name="numAbstracts" class="form-control">
+	            	</td>
+	            	<td>
+	            		<select name="selectionOption" class="form-control">
+	            			<option value="relevance">Relevance</option>
+	            			<option value="random">Random</option>
+	            		</select>
+	            	</td>
+	            </tr>
+	        </table>  
+        <?php endforeach; ?>   
 			<div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
                 Import a compressed (rar, zip, tar) file containing a csv file with the articles.

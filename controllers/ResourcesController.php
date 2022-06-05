@@ -238,8 +238,6 @@ class ResourcesController extends Controller
             $surveyid = $_GET['surveyid'];
             $survey = Surveys::findOne($surveyid);
             if ($survey->active || ! in_array( $userid, array_values( $survey->getOwner() ) ) ){
-                print_r($survey->getOwner());
-                exit(0);
                 return $this->goBack();
             }
             
@@ -332,11 +330,12 @@ class ResourcesController extends Controller
         $dbResources = $resourcesSearch->search(Yii::$app->request->queryParams, $type);
 
         $columns = $dbResources[1];
-        // print_r($columns);
-        // exit(0);
         $type = $dbResources[2];
         $dbResources = $dbResources[0];
-        $resourceZip = new Resources();
+        $zip = new Resources();
+        $zip->method = 'import';
+        $resourceZip = [$zip];
+        // $resourceZip[0]->method = 'import';
 
         $tabs = $this->tabsManagement($message, $survey);
 
@@ -505,6 +504,8 @@ class ResourcesController extends Controller
         $userid = Yii::$app->user->identity->id;
         if ( isset($_POST['surveyId']) ) {
             $surveyId = $_POST['surveyId'];
+            $numAbstracts = isset($_POST['numAbstracts']) && $_POST['numAbstracts'] != '' && $_POST['numAbstracts'] != ' ' ? $_POST['numAbstracts'] : -1;
+            $selectionOption = isset($_POST['selectionOption']) ? $_POST['selectionOption'] : 'relevance';
             if (Surveys::findOne($surveyId)) {
                 $survey = Surveys::findOne($surveyId);
                 $collection = $survey->getCollection()->one();
@@ -517,8 +518,8 @@ class ResourcesController extends Controller
 
         if (Yii::$app->request->isPost) {
 
-            $resource->zipFile = UploadedFile::getInstance($resource, 'zipFile');
-            $status = $resource->uploadZip($userid, $collection->id, 'article');
+            $resource->zipFile = UploadedFile::getInstanceByName("Resources[0][zipFile]");
+            $status = $resource->uploadZip($userid, $collection->id, 'article', $numAbstracts, $selectionOption);
             if (! in_array(500, $status) ) {
                 return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 200, 'status_message' => 'Imported '.sizeof($status).' files.'  ] ?: Yii::$app->homeUrl);
             }else{

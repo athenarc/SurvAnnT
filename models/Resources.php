@@ -37,6 +37,7 @@ class Resources extends \yii\db\ActiveRecord
 
     public $agree = true;
     public $zipFile;
+    public $method = '';
 
     /**
      * {@inheritdoc}
@@ -53,7 +54,7 @@ class Resources extends \yii\db\ActiveRecord
     {
         return [
             [['ownerid', 'pubmed_id', 'allowusers'], 'integer'],
-            [['created', 'year', 'id', 'relationalid', 'agree'], 'safe'],
+            [['created', 'year', 'id', 'relationalid', 'agree', 'method'], 'safe'],
             [['created'], 'default', 'value' => date('Y-m-d H:i:s', time())],
             [['type'], 'required'],
             [['text', 'abstract', 'authors'], 'string'],
@@ -64,7 +65,14 @@ class Resources extends \yii\db\ActiveRecord
             [['ownerid'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['ownerid' => 'id']],
             [['collectionid'], 'exist', 'skipOnError' => true, 'targetClass' => Collection::className(), 'targetAttribute' => ['collectionid' => 'id']],
             [['image'], 'file', 'extensions' => 'png, jpg, jpeg', 'skipOnEmpty' => true ],
-            [['zipFile'], 'file', 'extensions' => 'rar, zip, tar', 'skipOnEmpty' => true ],
+            [['zipFile'], 'file', 'extensions' => 'rar, zip, tar'],
+            ['zipFile', 'required', 'when' => function ($model) {
+                    return $model->method == 'import';
+                }, 'whenClient' => "function (attribute, value) {
+                    var counter = attribute.id.match(/\d+/);
+                    return $('#resource-method-' + counter).val() == 'import';
+                }"
+            ],
             ['title', 'required', 'when' => function ($model) {
                     return $model->type == 'article' || $model->type == 'questionaire' || $model->type == 'text' ;
                 }, 'whenClient' => "function (attribute, value) {
@@ -105,7 +113,7 @@ class Resources extends \yii\db\ActiveRecord
         }
     }
 
-    public function uploadZip($userid, $collectionid, $type)
+    public function uploadZip($userid, $collectionid, $type, $numAbstracts = -1, $selectionOption = 'relevance')
     {
 
         $file_path = Yii::$app->params['dir-files'] . $this->zipFile->baseName . '.' . $this->zipFile->extension;
@@ -135,7 +143,7 @@ class Resources extends \yii\db\ActiveRecord
 
         foreach ($includedFiles as $file) {
            
-            exec("python3 $script_loc $host $db $user $password $file $userid $collectionid $type", $output, $retval);
+            exec("python3 $script_loc $host $db $user $password $file $userid $collectionid $type $selectionOption $numAbstracts", $output, $retval);
             if ( in_array( 'Import successfull', $output ) ){
                 $status[$file] = 200;
             }else{
