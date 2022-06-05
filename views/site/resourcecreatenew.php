@@ -94,7 +94,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	        	<table class="table table-striped table-bordered participants-table"> 
 	        		<tr class = "dataset-table-header-row">
 	        			<tr class = "dataset-table-header-row">
-	        			<th class = "dataset-header-column" style = "display: <?=$type != 'image'  ? 'table-cell' : 'none'?>;">Title</th>
+	        			<th class = "dataset-header-column">Title</th>
 	        			<th class = "dataset-header-column" style = "display: <?=$type == 'article' ? 'table-cell' : 'none'?>;">Abstract</th>
 	        			<th class = "dataset-header-column" style = "display: <?=$type == 'text' ? 'table-cell' : 'none'?>;">Text</th>
 	        			<th class = "dataset-header-column" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">Image</th>
@@ -109,7 +109,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	        		</tr>
 	        		<?php foreach ($SurveyResources as $resource): ?>
 	        			<tr class="resource-table-row">
-	        				<td class ="text-overflow-ellipsis" style = "display: <?=$type != 'image' ? 'table-cell' : 'none'?>;"> 
+	        				<td class ="text-overflow-ellipsis"> 
 	        					<span class="edit-resource-<?=$resource->id?>" style ="display: none;">
 									<input type="text" value="<?=$resource->title?>" name="resource-title-<?=$resource['id']?>" class = "form-control">
 								</span>
@@ -386,19 +386,20 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	            	<?php foreach ($resources as $key => $resource): ?>
 	            		<table class="table table-striped table-bordered participants-table resource-form-table-<?=$key?> dataset-tools">
 		            		<tr class = "dataset-table-header-row">
-			        			<th colspan = "2" class = "dataset-header-column user-form-field user-article user-text user-questionaire" style = "display: <?=$type != 'image'  ? 'table-cell' : 'none'?>;">Title</th>
+			        			<th colspan = "2" class = "dataset-header-column user-form-field user-article user-text user-questionaire user-image ">Title</th>
 			        			<th class = "dataset-header-column user-form-field user-image" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">Image</th>
 			        			<th class = "dataset-header-column">Public</th>		
 			        			<th class = "dataset-header-column" style = "display: none;" >Type</th>			
 			        			<th class = "dataset-header-column" style = "display: none;" > Survey ID</th>		
 		            		</tr>
 		            		<tr>
-		            			<td class="user-form-field user-image" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">
+		            			<td colspan = "2" class="user-form-field user-image  user-article user-text user-questionaire">
+		            				<?= $form->field($resource, "[$key]title")->textInput()->label(false)?>
+		            			</td>	
+		            			<td class="user-form-field user-image user-image" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">
 		            				<?= $form->field($resource, "[$key]image")->fileInput(['multiple' => false])->label(false) ?>
 		            			</td>
-		            			<td colspan = "2" class="user-form-field user-article user-text user-questionaire" style = "display: <?=$type != 'image'  ? 'table-cell' : 'none'?>;">
-		            				<?= $form->field($resource, "[$key]title")->textInput()->label(false)?>
-		            			</td>
+		            			
 		            			<td>
 		            				<?= $form->field($resource, "[$key]allowusers")->dropDownList([1 => 'Yes', 0 => 'No'])->label(false)?>
 		            			</td>
@@ -457,7 +458,6 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	            	<?php endforeach; ?>
 	            	<div class = "row button-row-2">
                         <div class = "col-md-12">
-                        	<button class="console-log-form">Console</button>
                         	<?= Html::a('Add', 'javascript:void(0)', ['class' => 'btn btn-primary submit-button user-question-select add-resource', 'value'=>'create_add', 'name' => 'add-resource', 'id' => 'add-resource']) ?>
                         </div>
                     </div>
@@ -486,7 +486,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         <table class="table table-striped table-bordered participants-table">
             <tr class = "dataset-table-header-row">
                 <th class = "dataset-header-column">
-                    File Upload
+                    File Upload (Currently supported for articles only!)
                 </th>
             </tr>
             <tr>
@@ -501,7 +501,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
         </table>     
 			<div class = "col-md-10 d-flex align-items-center">
                 <i class="fa fa-info-circle helper-message" ></i>&nbsp;
-                Import a compressed (rar, zip, tar) file containing a csv file with the resources
+                Import a compressed (rar, zip, tar) file containing a csv file with the articles.
             </div>
       </div>
       <div class="modal-footer">
@@ -519,5 +519,4 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	    width: 90%;
 	    max-width:1400px;
 	}
-
 </style>

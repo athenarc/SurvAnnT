@@ -166,12 +166,17 @@ $this->registerCssFile(
                                     ],
                                 ],
                                 'xaxis' => [
-                                    // 'type' => 'category'
-                                  'categories' => $series[$survey->id]['questions']['categories']
+                                    'type' => 'category',
+                                    'categories' => $series[$survey->id]['questions']['categories'],
+                                    'labels' => 
+                                      [
+                                        'trim' => true,
+                                        'rotate' => -45,
+                                      ]
                                 ],
                                 'plotOptions' => [
                                     'bar' => [
-                                        'horizontal' => false,
+                                        'horizontal' => true,
                                     ],
                                 ],
                                 'dataLabels' => [

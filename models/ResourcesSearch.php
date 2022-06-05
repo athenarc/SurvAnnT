@@ -109,7 +109,7 @@ class ResourcesSearch extends Surveys
             }else if( $type == 'text') {
                 $columns = ['id', 'type', 'title', 'text'];
             }else if( $type == 'image'){
-                $columns = ['id', 'type', 'image'];
+                $columns = ['id', 'type', 'title', 'image'];
             }else{
                 $columns = ['id', 'type', 'title'];
             }

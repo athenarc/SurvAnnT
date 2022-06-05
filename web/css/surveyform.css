@@ -103,9 +103,7 @@ h5{
 
 
 .dataset-tools{
-    /*border: 1px solid white;*/
-    margin-right: 15px;
-    margin-left: 15px;
+    margin: auto !important;
 }
 
 .dataset-header-column > .float-right{
@@ -355,4 +353,8 @@ form div.required label.control-label:after {
     white-space: nowrap; 
     max-width: 7vw; 
     overflow: hidden;
+}
+
+input[type=file]{
+    max-width: 200px !important;
 }

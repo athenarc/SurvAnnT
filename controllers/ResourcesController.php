@@ -329,6 +329,8 @@ class ResourcesController extends Controller
         $dbResources = $resourcesSearch->search(Yii::$app->request->queryParams, $type);
 
         $columns = $dbResources[1];
+        // print_r($columns);
+        // exit(0);
         $type = $dbResources[2];
         $dbResources = $dbResources[0];
         $resourceZip = new Resources();
