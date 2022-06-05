@@ -44,7 +44,7 @@ class UserVisitLog extends \webvimark\components\BaseActiveRecord
 		$model->os         = $browser->getPlatform();
 		$model->user_agent = $browser->getUserAgent();
 		$model->visit_time = time();
-		$model->save(false);
+		// $model->save(false);
 
 		Yii::$app->session->set(self::SESSION_TOKEN, $model->token);
 	}
