@@ -101,7 +101,13 @@ class ResourcesSearch extends Surveys
         $query = Resources::find();
         $type = isset($params['ResourcesSearch']['type']) ? $params['ResourcesSearch']['type'] : $type;
         $title = isset($params['ResourcesSearch']['title']) ? $params['ResourcesSearch']['title'] : '';
+        $abstract = isset($params['ResourcesSearch']['abstract']) ? $params['ResourcesSearch']['abstract'] : '';
+        $pmc = isset($params['ResourcesSearch']['pmc']) ? $params['ResourcesSearch']['pmc'] : '';
+        $pubmed_id = isset($params['ResourcesSearch']['pubmed_id']) ? $params['ResourcesSearch']['pubmed_id'] : '';
+        $doi = isset($params['ResourcesSearch']['doi']) ? $params['ResourcesSearch']['doi'] : '';
+        $journal = isset($params['ResourcesSearch']['journal']) ? $params['ResourcesSearch']['journal'] : '';
         $authors = isset($params['ResourcesSearch']['authors']) ? $params['ResourcesSearch']['authors'] : '';
+        $year = isset($params['ResourcesSearch']['year']) ? $params['ResourcesSearch']['year'] : '';
 
         if(  $type != '' ){
             if( $type == 'article' ){
@@ -119,6 +125,22 @@ class ResourcesSearch extends Surveys
         if ( $title != '' ){
             $query->andWhere(['like', 'title', '%' . $title . '%', false]);;
         }
+        if ( $abstract != '' ){
+            $query->andWhere(['like', 'abstract', '%' . $abstract . '%', false]);;
+        }
+        if ( $pmc != '' ){
+            $query->andWhere(['like', 'pmc', '%' . $pmc . '%', false]);;
+        }
+        if ( $pubmed_id != '' ){
+            $query->andWhere(['like', 'pubmed_id', '%' . $pubmed_id . '%', false]);;
+        }
+        if ( $doi != '' ){
+            $query->andWhere(['like', 'doi', '%' . $doi . '%', false]);;
+        }
+        if ( $journal != '' ){
+            $query->andWhere(['like', 'journal', '%' . $journal . '%', false]);;
+        }
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => isset($columns) ? $query->select($columns) : $query,

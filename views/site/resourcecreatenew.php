@@ -266,70 +266,95 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 				        		],
 				        		
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Title',
 					                'format' => 'raw',
 					                'attribute'=>'title',
 					                'visible' =>  in_array('title', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->title.'">'.$model->title.'</span>';
+					                },
 				        		],
 
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Abstract',
 					                'format' => 'raw',
 					                'attribute'=>'abstract',
 					                'visible' =>  in_array('abstract', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->abstract.'">'.$model->abstract.'</span>';
+					                },
 				        		],
 
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Text',
 					                'format' => 'raw',
 					                'attribute'=>'text',
 					                'visible' =>  in_array('text', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->text.'">'.$model->text.'</span>';
+					                },
 				        		],
 
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'PMC',
 					                'format' => 'raw',
 					                'attribute'=>'pmc',
 					                'visible' =>  in_array('pmc', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->pmc.'">'.$model->pmc.'</span>';
+					                },
 				        		],
 
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'DOI',
 					                'format' => 'raw',
 					                'attribute'=>'doi',
 					                'visible' => in_array('doi', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->doi.'">'.$model->doi.'</span>';
+					                },
 				        		],
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Pubmed',
 					                'format' => 'raw',
 					                'attribute'=>'pubmed_id',
 					                'visible' =>  in_array('pubmed_id', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->pubmed_id.'">'.$model->pubmed_id.'</span>';
+					                },
 				        		],
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Authors',
 					                'format' => 'raw',
 					                'attribute'=>'authors',
 					                'visible' =>  in_array('authors', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->authors.'">'.$model->authors.'</span>';
+					                },
 				        		],
 				        		[
-				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 7vw; overflow: hidden;'],
+				        			'contentOptions' => ['style' => 'text-overflow: ellipsis; white-space: nowrap; max-width: 3vw; overflow: hidden;'],
 					                'label' => 'Journal',
 					                'format' => 'raw',
 					                'attribute'=>'journal',
 					                'visible' =>  in_array('authors', $columns),
+					                'value' => function($model) {
+					                    return '<span title = "'.$model->journal.'">'.$model->journal.'</span>';
+					                },
 				        		],
 				        		[
 					                'label' => 'Year',
 					                'format' => 'raw',
 					                'attribute'=>'year',
 					                'visible' =>  in_array('year', $columns),
+
 				        		],
 				        		[
 					                'label' => 'Use',
