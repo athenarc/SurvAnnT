@@ -798,7 +798,7 @@ class SiteController extends Controller
                 }
 
                 
-                if ( $survey->badgesused == 1 ){
+                if ( $survey->badgesused == 1 || $survey->getSurveytobadges()->all() ){
 
                     $surveytobadges = Surveytobadges::find()->where(['surveyid' => $surveyid])->all();
 
