@@ -494,7 +494,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
                     <div class="text-center">
                         <?= $form->field($resourceZip, "zipFile")->fileInput(['multiple' => false, 'id' => 'resource-file-input'])->label(false) ?>
                         <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="surveyId">
-                        <input type="hidden" id="collectionId" value="<?=$survey->getCollection()->one()['id']?>" name="collectionId">
+                        <input type="hidden" id="collectionId" value="<?= ($survey->getCollection()->one()) ? $survey->getCollection()->one()['id'] : '' ?>" name="collectionId">
                     </div>
                 </td>
             </tr>
