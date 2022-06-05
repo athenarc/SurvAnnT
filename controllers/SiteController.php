@@ -272,7 +272,7 @@ class SiteController extends Controller
             foreach ($survey->getQuestions()->all() as $question_key => $question_value) {
                 
                 if ( $question_value->answertype != 'textInput' ){
-                    $r["Question: ".$question_key]['name'] = "Question: ".($question_key + 1);
+                    $r["Question: ".$question_key]['name'] = $question_value->question. ' (id: '. $question_value->id .')';//"Question: ".($question_key + 1);
                     $r["Question: ".$question_key]['data'] = [];
                     $rates = $question_value->getRates()->groupBy(['resourceid'])->all();
                     foreach ($rates as $rate) {
@@ -280,7 +280,8 @@ class SiteController extends Controller
                         $avg = $question_value->getRates()->select(['AVG(answer) AS avg_ans'])->where(['!=', 'answertype', 'textInput'])->andWhere(['resourceid' => $rate->resourceid, 'questionid' => $question_value->id])->groupBy(['resourceid'])->asArray()->one();
                         $username = $rate->getUser()->select(['username'])->one()['username'];
                         $resourceid = $rate->resourceid;
-                        array_push( $r["Question: ".$question_key]['data'], ['x' => "Resource id: ".$resourceid, 'y' => number_format($avg['avg_ans'], 3)]);
+                        $resource = Resources::findOne($resourceid);
+                        array_push( $r["Question: ".$question_key]['data'], ['x' => $resource->title. " ( Resource id: ".$resourceid.")", 'y' => number_format($avg['avg_ans'], 3)]);
                         
                     }
                 }else{

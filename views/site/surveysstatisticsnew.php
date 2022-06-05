@@ -218,8 +218,9 @@ $this->registerCssFile(
                                     // 'colors' => ['transparent']
                                 ],
                                 'legend' => [
-                                    'position' => 'bottom',
+                                    'position' => 'top',
                                     'horizontalAlign' => 'center',
+                                    'customLegendItems' => ['test1', 'test2'],
                                     'onItemHover' => [
                                       'highlightDataSeries' => true
                                     ],

@@ -157,7 +157,7 @@ $this->registerCssFile(
                         <?= 
                           \onmotion\apexcharts\ApexchartsWidget::widget([
                             'type' => 'line', 
-                            'height' => '200', 
+                            'height' => '400', 
                             'chartOptions' => [
                                 'chart' => [
                                     'toolbar' => [
@@ -183,7 +183,7 @@ $this->registerCssFile(
                                     // 'colors' => ['transparent']
                                 ],
                                 'legend' => [
-                                    'position' => 'bottom',
+                                    'position' => 'top',
                                     'horizontalAlign' => 'center',
                                     'onItemHover' => [
                                       'highlightDataSeries' => true
@@ -220,7 +220,7 @@ $this->registerCssFile(
                   <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
-                            Text Labels ( Question: <?=$question->id?> <a class="fas fa-info-circle link-icon white" title = "<?= $question->question ?>"> </a> )
+                            <?= $question->question . ' (id: '. $question->id . ')'?> <a class="fas fa-info-circle link-icon white"></a> 
                         </th>
                     </tr>
                     <tr>
