@@ -13,7 +13,7 @@ use kartik\select2\Select2;
     <div class="outside-div">
         <div class = "row header-row dataset-header-row">
         </div>
-        <div class = "col-md-12 dataset-form">
+        <div class = "col-md-12 p-5">
             <?php $form = ActiveForm::begin(['options' => ['class' => 'survey-create']]); ?>
 
 

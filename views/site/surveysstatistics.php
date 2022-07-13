@@ -144,6 +144,66 @@ $this->registerCssFile(
                   </td>
                 </tr>
               </table>
+
+              <!-- <table class="table table-striped table-bordered participants-table">  
+                <tr class = "dataset-table-header-row">
+                    <th class = "dataset-header-column">
+                        Radar Chart
+                    </th>
+                </tr>
+                <tr>
+                  <td>
+                    <div class = "chart">
+                      
+                        \onmotion\apexcharts\ApexchartsWidget::widget([
+                        'series'=> [
+                          [
+                            'name'=> 'Series 1',
+                            'data'=> [1, 2, 4, 1, 2],
+                            ], 
+                            [
+                            'name'=> 'Series 2',
+                            'data'=> [1, 5, 4, 4, 2],
+                            ], 
+                            [
+                            'name'=> 'Series 3',
+                            'data'=> [5, 1, 4, 3, 1],
+                            ]
+                          ],
+                          'type'=> 'radar',
+                          'chartOptions' => 
+                            [
+                            'chart'=> [
+                              'height'=> 350,
+                              'type'=> 'radar',
+                              'dropShadow'=> [
+                                'enabled'=> true,
+                                'blur'=> 1,
+                                'left'=> 1,
+                                'top'=> 1
+                              ]
+                          ],
+                          
+                          'stroke'=> [
+                            'width'=> 2
+                          ],
+                          'fill'=> [
+                            'opacity'=> 0.1
+                          ],
+                          'markers'=> [
+                            'size'=> 0
+                          ],
+                          'xaxis'=> [
+                          'categories'=> ['Strongly Disagree', 'Disagree', 'Neither Agree Nor Disagree', 'Agree', 'Strongly Agree']
+                          ]
+                        ],
+                        
+                      ]);
+                      ?>
+                    </div>
+                  </td>
+                </tr>
+              </table> -->
               <?php if ( sizeof( array_filter( array_column( $series[$survey->id]['questions']['data'], 'data' ) ) ) > 0 ): ?>
                 <table class="table table-striped table-bordered participants-table">  
                   <tr class = "dataset-table-header-row">
@@ -221,7 +281,7 @@ $this->registerCssFile(
                 </table>
               <?php endif; ?>
               <?php foreach ($survey->getQuestions()->where(['answertype' => 'textInput'])->all() as $question): ?>
-                <?php if ( sizeof( $series[$survey->id]['questions_text_input']['data'][$question->id] ) > 0 ): ?>
+                <?php if ( isset($series[$survey->id]['questions_text_input']['data'][$question->id]) && sizeof( $series[$survey->id]['questions_text_input']['data'][$question->id] ) > 0 ): ?>
                   <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
@@ -273,7 +333,7 @@ $this->registerCssFile(
                     </tr>
                   </table>
                 <?php else: ?>
-                  <table class="table table-striped table-bordered participants-table">  
+                  <!-- <table class="table table-striped table-bordered participants-table">  
                     <tr class = "dataset-table-header-row">
                         <th class = "dataset-header-column">
                             Text Labels ( Question: <?=$question->id?> <a class="fas fa-info-circle link-icon white" title = "<?= $question->question ?>"> </a> )
@@ -284,7 +344,7 @@ $this->registerCssFile(
                         No data available yet!
                       </td>
                     </tr>
-                  </table>
+                  </table> -->
                 <?php endif; ?>
               <?php endforeach; ?>
               <table class="w-100">

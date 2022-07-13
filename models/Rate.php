@@ -26,6 +26,7 @@ use Yii;
 class Rate extends \yii\db\ActiveRecord
 {
     public $tooltip;
+    public $avg_ans;
     /**
      * {@inheritdoc}
      */

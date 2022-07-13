@@ -42,7 +42,7 @@ class Badges extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name','type', 'size'], 'required'],
+            [['name', 'type', 'size'], 'required'],
             [['ownerid', 'allowusers'], 'integer'],
             [['created'], 'safe'],
             [['name'], 'string', 'max' => 255],

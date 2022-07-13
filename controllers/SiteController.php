@@ -231,89 +231,10 @@ class SiteController extends Controller
             
         }
 
-        
-
-        
         $series = [];
-        $categories = [];
         foreach ($surveys as $key => $survey) {
-            $series[$survey->id]['user_res_fields']['data'] = [];
-            $series[$survey->id]['user_res_fields']['categories'] = [];
-            $data = [];
-            
-            $participants = $survey->getParticipatesin()->all(); // ->where(['owner' => 0 ])
-
-            foreach ($participants as $participant) {
-
-                if ( isset($participant->getUser()->select(['fields'])->one()['fields']) ){
-                    $fields = explode("&&", $participant->getUser()->select(['fields'])->one()['fields']);
-                    $username = $participant->getUser()->select(['username'])->one()['username'];
-                    
-                    foreach ($fields as $field) {
-                        if ( $field == '' ){
-                            $field = 'No Field';
-                        }
-                        if ( isset($data[$field]) ){
-                            $data[$field] += 1;
-                        }else{
-                            $data[$field] = 1;
-                        }
-                    }
-                }
-            }
-            $d[0]['name'] = 'Research Fields count';
-            $d[0]['data'] = [];
-            foreach ( $data as $d_k => $d_v ){
-                array_push( $d[0]['data'], ['x' => $d_k, 'y' => $d_v]);
-            }
-            $r = [];
-            $r_textInput = [];
-            // CALCULATION OF AVERAGE VALUE PER QUESTION ANSWER PER RESOURCE (FOR NUMERIC ANSWERS ONLY)
-            foreach ($survey->getQuestions()->all() as $question_key => $question_value) {
-                
-                if ( $question_value->answertype != 'textInput' ){
-                    $r["Question: ".$question_key]['name'] = $question_value->question. ' (id: '. $question_value->id .')';//"Question: ".($question_key + 1);
-                    $r["Question: ".$question_key]['data'] = [];
-                    $rates = $question_value->getRates()->groupBy(['resourceid'])->all();
-                    foreach ($rates as $rate) {
-                        // echo "Non Text Input Question: ".$question_value->id." user: ".$rate->userid." answer: ".$rate->answer." <br><br>";
-                        $avg = $question_value->getRates()->select(['AVG(answer) AS avg_ans'])->where(['!=', 'answertype', 'textInput'])->andWhere(['resourceid' => $rate->resourceid, 'questionid' => $question_value->id])->groupBy(['resourceid'])->asArray()->one();
-                        $username = $rate->getUser()->select(['username'])->one()['username'];
-                        $resourceid = $rate->resourceid;
-                        $resource = Resources::findOne($resourceid);
-                        array_push( $r["Question: ".$question_key]['data'], ['x' => $resource->title. " ( Resource id: ".$resourceid.")", 'y' => number_format($avg['avg_ans'], 3)]);
-                        
-                    }
-                }else{
-                    $rates = $question_value->getRates()->select(['DISTINCT(answer)', 'COUNT(*) AS cnt'])->groupBy(['resourceid'])->asArray()->all();
-                    $text_input_labels = array_values( array_column( $rates, 'answer' ) );
-                    $labels = [];
-                    foreach ($text_input_labels as $label) {
-                        foreach ( explode(",", $label) as $expl_label ){
-                            if ( isset($labels[$expl_label]) ){
-                                $labels[$expl_label] += 1;
-                            }else{
-                                $labels[$expl_label] = 1;
-                            }
-                        }
-                    }
-                    $series[$survey->id]['questions_text_input']['data'][$question_value->id] = array_values( $labels );
-                    $series[$survey->id]['questions_text_input']['categories'][$question_value->id] = array_keys( $labels );
-                    $text_input_count = array_values( array_column( $rates, 'cnt' ) );
-                }
-
-            }
-            $rates = [];
-            foreach ($r as $d_k => $d_v) {
-                $rates[] = $d_v;
-            } 
-
-            $series[$survey->id]['user_res_fields']['data'][] = $d[0];
-            $series[$survey->id]['questions']['data'] = $rates;
-            $series[$survey->id]['questions']['categories'] = array_column( $survey->getRates()->groupBy(['resourceid'])->all(), 'resourceid') ;
-           
+            $series[$survey->id] = $survey->createStatistics();           
         }
-        // exit(0);
         return $this->render('surveysstatistics', ['survey_names' => $survey_names, 'surveyid' => $surveyid, 'surveys' => $surveys, 'series' => $series]);
     }
 

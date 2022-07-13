@@ -91,6 +91,78 @@ class Surveys extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createStatistics(){
+
+        $series = [];
+        $categories = [];
+        $series[$this->id]['user_res_fields']['data'] = [];
+        $series[$this->id]['user_res_fields']['categories'] = [];
+        $series[$this->id]['resources']['data'] = [];
+        $series[$this->id]['resources']['categories'] = [];
+        $series[$this->id]['questions']['data'] = [];
+        $series[$this->id]['questions']['categories'] = [];
+        $data = [];
+        $participants = $this->getParticipatesin()->joinWith('user')->select(['username', 'fields'])->where(['owner' => 0])->asArray()->all();
+        $fields = [];
+        foreach (array_column( $participants, 'fields' ) as $f) {
+            $field_expl = explode("&&", $f);
+            foreach ($field_expl as $field) {
+                if ( isset($data[$field]) ){
+                    $data[$field] += 1;
+                }else{
+                    $data[$field] = 1;
+                }
+            }
+            
+        }
+        // print_r($data);
+
+        $d[0]['name'] = 'Research Fields count';
+        $d[0]['data'] = [];
+        foreach ( $data as $d_k => $d_v ){
+            array_push( $d[0]['data'], ['x' => $d_k, 'y' => $d_v]);
+        }
+        
+        $labels = [];
+        foreach ($this->getRates()->joinWith('question')->where(['questions.answertype' => 'textInput'])->all() as $rate) {
+            
+            if ( $rate->answertype == 'textInput' ){
+                $words = preg_split('/[,;\s]+/', $rate['answer'], -1, PREG_SPLIT_NO_EMPTY);
+
+                foreach ($words as $word) {
+                    if ( isset($labels[$word]) ){
+                        $labels[$rate->questionid][$word] += 1;
+                    }else{
+                        $labels[$rate->questionid][$word] = 1;
+                    }
+                }
+                // $series[$this->id]['questions_text_input']['data'][$rate->questionid] = array_values( $labels[$rate->questionid] );
+                // $series[$this->id]['questions_text_input']['categories'][$rate->questionid] = array_keys( $labels[$rate->questionid] );
+            }
+            
+        }
+        $r = [];
+        foreach ($this->getRates()->joinWith(['question'])->select(['avg(rate.answer) as avg_ans', 'questionid', 'resourceid'])->where(['!=', 'rate.answertype', 'textInput'])->groupBy(['resourceid', 'questionid'])->all() as $question) {
+            $resource = Resources::findOne($question['resourceid']);
+            $r["Question: ".$question->question->id]['name'] = $question->question->question. ' (id: '. $question->question->id .')';
+            if ( ! isset( $r["Question: ".$question->question->id]['data'] ) ){
+                $r["Question: ".$question->question->id]['data'] = [];
+            }
+            array_push( $r["Question: ".$question->question->id]['data'], ['x' => $resource->id. " ( Resource id: ".$resource->id.")", 'y' => number_format($question['avg_ans'], 3)]);
+        }
+        $rates = [];
+        foreach ($r as $d_k => $d_v) {
+            $rates[] = $d_v;
+        } 
+
+        $series[$this->id]['questions']['data'] = $rates;
+        $series[$this->id]['questions']['categories'] = array_column( $this->getRates()->groupBy(['resourceid'])->all(), 'resourceid') ;
+        $series[$this->id]['user_res_fields']['data'][] = $d[0];
+
+        return $series[$this->id];
+
+    }
+
     public function createCsv($survey, $userid)
     {
 
