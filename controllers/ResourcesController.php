@@ -335,8 +335,9 @@ class ResourcesController extends Controller
         $zip = new Resources();
         $zip->method = 'import';
         $resourceZip = [$zip];
-        // $resourceZip[0]->method = 'import';
-
+        if ( ! $survey->getCollection()->one()->getResources()->all() ){
+            $resourceTypeOptions = ['article' => 'Article', 'image' => 'Image', 'text' => 'Text', 'questionnaire' => 'Questionnaire'];
+        }
         $tabs = $this->tabsManagement($message, $survey);
 
         return $this->render('//site/resourcecreatenew', 

@@ -77,9 +77,9 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	                	<?php if( !$SurveyCollection->isNewRecord && $survey->getCollection()->one()->getResources()->all()): ?>
 	                		<?= Html::a( 'Delete All Resources',['resources/resources-delete-all', 'surveyid' => $survey->id],  ['class' => 'btn btn-primary resources-delete-all']) ?>
 	                	<?php endif; ?>
-	                	<?= Html::button( 'Import Resources', ['id' => 'import-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#import-resources"]) ?>
-	                   	<?= Html::button( 'Reuse Existing Resources', ['id' => 'db-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#db-resources"]) ?>
-	                    <?= Html::button( 'Create Resources', ['id' => 'user-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#user-resources"]) ?>
+	                	<?= Html::button( 'Import Resources (articles only)', ['id' => 'import-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#import-resources"]) ?>
+	                   	<?= Html::button( 'Reuse Existing Resources', ['id' => 'db-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#db-resources"]) ?>
+	                    <?= Html::button( 'Create Resources', ['id' => 'user-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#user-resources"]) ?>
 	                     <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="">
 	                </div>                
 	            </div>
@@ -415,14 +415,14 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	            	<?php foreach ($resources as $key => $resource): ?>
 	            		<table class="table table-striped table-bordered participants-table resource-form-table-<?=$key?> dataset-tools">
 		            		<tr class = "dataset-table-header-row">
-			        			<th colspan = "2" class = "dataset-header-column user-form-field user-article user-text user-questionaire user-image ">Title</th>
+			        			<th colspan = "2" class = "dataset-header-column user-form-field user-article user-text user-questionnaire user-image ">Title</th>
 			        			<th class = "dataset-header-column user-form-field user-image" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">Image</th>
 			        			<th class = "dataset-header-column">Public</th>		
 			        			<th class = "dataset-header-column" style = "display: none;" >Type</th>			
 			        			<th class = "dataset-header-column" style = "display: none;" > Survey ID</th>		
 		            		</tr>
 		            		<tr>
-		            			<td colspan = "2" class="user-form-field user-image  user-article user-text user-questionaire">
+		            			<td colspan = "2" class="user-form-field user-image  user-article user-text user-questionnaire">
 		            				<?= $form->field($resource, "[$key]title")->textInput()->label(false)?>
 		            			</td>	
 		            			<td class="user-form-field user-image user-image" style = "display: <?=$type == 'image' ? 'table-cell' : 'none'?>;">

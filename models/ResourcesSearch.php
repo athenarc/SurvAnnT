@@ -146,7 +146,7 @@ class ResourcesSearch extends Surveys
             'query' => isset($columns) ? $query->select($columns) : $query,
             'sort' => ['attributes' => ['id', 'owner', 'type', 'title', 'title', 'doi', 'pmc', 'pubmed_id', 'journal', 'authors', 'year']]
         ]);
-
+        
         if (!($this->load($params) && $this->validate())) {
             return [$dataProvider, $columns, $type];
         }

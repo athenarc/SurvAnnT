@@ -71,23 +71,10 @@ class Badges extends \yii\db\ActiveRecord
 
     public function upload()
     {
-        // print_r($this->image->baseName);
-        // echo "<br><br> validation: ";
-
-        // print_r($this->validate());
-        // echo "<br><br>";
-
         if ( $this->validate() && ! empty($this->image) ) {
             $this->image->saveAs( Yii::$app->params['dir-badges'] . $this->image->baseName . '.' . $this->image->extension);
             return true;
         } else {
-            echo "Errors: ";
-            print_r($this->getErrors());
-            echo "<br><br> Empty: ";
-            print_r(!empty($this->image));
-            echo "<br><br> Validate: ";
-            print_r($this->validate());
-            echo "<br><br>";
             
             if ( $this->id == null ){
                 $this->addError('image' , 'Image can not be blank.');

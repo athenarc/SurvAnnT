@@ -74,10 +74,10 @@ class Resources extends \yii\db\ActiveRecord
                 }"
             ],
             ['title', 'required', 'when' => function ($model) {
-                    return $model->type == 'article' || $model->type == 'questionaire' || $model->type == 'text' ;
+                    return $model->type == 'article' || $model->type == 'questionnaire' || $model->type == 'text' ;
                 }, 'whenClient' => "function (attribute, value) {
                     var counter = attribute.id.match(/\d+/);
-                    return $('#resource-type-' + counter).val() == 'article' || $('#resource-type-' + counter).val() == 'questionaire' || $('#resource-type-' + counter).val() == 'text';
+                    return $('#resource-type-' + counter).val() == 'article' || $('#resource-type-' + counter).val() == 'questionnaire' || $('#resource-type-' + counter).val() == 'text';
                 }"
             ],
             ['image', 'required', 'when' => function ($model) {
