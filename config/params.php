@@ -15,8 +15,8 @@ return [
     'dir-images' => '../data/resources/image/',
     'dir-questionaires' => '../data/resources/questionaire/questionaire.json',
     'dir-badges' => '../data/badges/',
-    'helpdesk-address' => 'survannt.helpdesk@gmail.com',
-    'invitation-url' => 'http://localhost/SurveiFy/web/index.php?r=user-management%2Fauth%2Fregistration&email=',
+    'helpdesk-address' => 'survannt@athenarc.gr',
+    'invitation-url' => 'https://survannt.athenarc.gr/index.php?r=user-management%2Fauth%2Fregistration&email=',
     'title' => 'SurvAnnT',
     'fields' =>  
         [

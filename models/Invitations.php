@@ -69,7 +69,7 @@ class Invitations extends \yii\db\ActiveRecord
         Yii::$app->mailer->compose()
         ->setFrom(Yii::$app->params['helpdesk-address'])
         ->setTo($this->email)
-        ->setSubject('SurveiFy invitation')
+        ->setSubject('SurvAnnT Invitation')
         ->setTextBody('Welcome to '.Yii::$app->params['title'].'!!')
         ->setHtmlBody($message)
         ->send();
