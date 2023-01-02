@@ -525,7 +525,7 @@ class ResourcesController extends Controller
 
             $resource->zipFile = UploadedFile::getInstanceByName("Resources[0][zipFile]");
             $status = $resource->uploadZip($userid, $collection->id, 'article', $numAbstracts, $selectionOption);
-            if (! in_array(500, $status) ) {
+            if (! in_array(500, $status[0]) ) {
                 return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 200, 'status_message' => $status[1]  ] ?: Yii::$app->homeUrl);
             }else{
                 $resource->getErrors();
