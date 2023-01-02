@@ -227,7 +227,7 @@ class ResourcesController extends Controller
 
     public function actionResourceCreate(){
         $command = escapeshellcmd("python3 ../python/json_resource_parser.py localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40"); //localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40 
-        $command = "which python3";
+        // $command = "which python3";
         echo escapeshellarg($command)."<br><br>";
         // $command = "ls -l ../python";
         exec(escapeshellcmd($command), $out, $ret);
