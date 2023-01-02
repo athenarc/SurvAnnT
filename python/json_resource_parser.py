@@ -1,11 +1,23 @@
 import json, os, sys, pandas as pd, pymysql
 from sqlalchemy import create_engine
 from urllib import parse
+from datetime import datetime, timedelta
+
+
+greece_time =  '{:%Y-%m-%d--%H:%M:%S}'.format(datetime.now() + timedelta(hours=3))
 
 if len(sys.argv) < 9 :
 	print("Not enough arguments given")
 	exit("Not enough arguments given")
- 
+
+log_filename = 'json_resource_parser.txt'
+
+if(os.path.exists(log_filename)):
+    f = open(log_filename,'a+')
+else:
+    f = open(log_filename, 'w')
+
+f.write("Timestamp: " + str(greece_time) + " jsoun_resource_parser.py called\n")
 
 hostname = sys.argv[1].lower() # DB HOST
 dbname = sys.argv[2].lower() # DATABASE
@@ -37,6 +49,7 @@ elif csv_file_path.endswith('.json'):
 		dataframe = pd.read_json(csv_file_path)
 	except IOError as e:
 		print(str(e))
+		f.write("Timestamp: " + str(greece_time) + " " + str(e) + "\n")
 		exit("Error in reading csv into dataframe")
 
 dataframe['ownerid'] = ownerid
@@ -51,15 +64,21 @@ if num_of_articles != -1:
 
 engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=parse.quote(pwd)))
 
+
 try:
 	# bug when zipped file contains articles in json format
 	dataframe.to_sql(con=engine, index=False, name='resources', if_exists='append')
 except ValueError:
 	print("Value error")
+	f.write("Timestamp: " + str(greece_time) + " Value error\n")
 	exit("Value error")
 
 except:
 	print("Error")
+	f.write("Timestamp: " + str(greece_time) + " Connection error\n")
+	f.write("Timestamp: " + str(greece_time) + " " + "mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=parse.quote(pwd)) + "\n")
 	exit("Error")
+
+f.close()
 
 print("Import successfull")
