@@ -50,6 +50,8 @@ if num_of_articles != -1:
 
 engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=pwd))
 
+print(dataframe)
+
 try:
 	# bug when zipped file contains articles in json format
 	dataframe.to_sql(con=engine, index=False, name='resources', if_exists='append')
