@@ -127,10 +127,10 @@ $date = date('Y-m-d hh:mm', time());
             <div class="header-label">
                 <h3 class="surveys-view-header"> 
                     Resources 
-                    <?php if(!$resources): ?>
+                    <?php if(!$resources): ?> 
                         <i class="fa fa-circle-xmark" title ="No resources set yet"> </i>
                     <?php endif; ?>
-                    <?php if(sizeof($resources) < $survey->minResEv): ?>
+                    <?php if(sizeof($survey->getCollection()->one()->getResources()->all()) < $survey->minResEv): ?>
                         <i class="fa fa-circle-exclamation" title ="Number of minimum resources evaluated set goal set is greater than the number of actual resources imported. Either lower the goal or import more resources."> </i>
                     <?php endif; ?>
                 </h3>
