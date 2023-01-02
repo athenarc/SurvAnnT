@@ -1,6 +1,6 @@
 import json, os, sys, pandas as pd, pymysql
 from sqlalchemy import create_engine
-from urllib.parse import quote_plus
+from urllib import parse
 
 if len(sys.argv) < 9 :
 	print("Not enough arguments given")
@@ -49,7 +49,7 @@ if num_of_articles != -1:
 	else:
 		dataframe = dataframe[:num_of_articles]
 
-engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=quote_plus(pwd)))
+engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=parse.quote(pwd)))
 
 try:
 	# bug when zipped file contains articles in json format
