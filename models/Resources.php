@@ -140,7 +140,7 @@ class Resources extends \yii\db\ActiveRecord
         $password = Yii::$app->db->password;
         $script_loc = Yii::$app->params['dir-python'].'json_resource_parser.py';
         $status = [];
-
+        $messages = [];
         foreach ($includedFiles as $file) {
            
             exec("python3 $script_loc $host $db $user $password $file $userid $collectionid $type $selectionOption $numAbstracts", $output, $retval);
@@ -148,9 +148,10 @@ class Resources extends \yii\db\ActiveRecord
                 $status[$file] = 200;
             }else{
                 $status[$file] = 500;
+                $messages[$file] = "python3 $script_loc $host $db $user $password $file $userid $collectionid $type $selectionOption $numAbstracts";
             }
         }
-        return $status;
+        return [$status, $messages];
     }
 
     public function attributeLabels()

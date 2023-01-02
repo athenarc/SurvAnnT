@@ -20,7 +20,7 @@ let appended_fields = [];
             var checkbox = $("#" + $(this).attr('id')).clone().css("display", "none");
             $("#db-resources-form").append(checkbox);
         });
-    })
+    }) 
     $(document).on('click', '.close-status-message', function(){
         $(this).parent().parent().parent().css("display", "none");
     });
