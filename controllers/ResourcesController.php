@@ -236,6 +236,9 @@ class ResourcesController extends Controller
         echo "<br><br>ret: ";
         print_r($ret);
         echo "<br><br>";
+
+        $output = shell_exec($command);
+        var_dump($output);
         exit(0);
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
