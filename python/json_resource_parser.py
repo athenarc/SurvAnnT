@@ -79,6 +79,7 @@ except:
 	f.write("Timestamp: " + str(greece_time) + " " + "mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=parse.quote(pwd)) + "\n")
 	exit("Error")
 
+f.write("Timestamp: " + str(greece_time) + " Import successfull! \n")
 f.close()
 
 print("Import successfull")
