@@ -228,6 +228,14 @@ class ResourcesController extends Controller
     public function actionResourceCreate(){
         $command = "python3 ../python/json_resource_parser.py localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40 ";
         echo $command."<br><br>";
+
+        exec($command, $out, $ret);
+
+        echo "out: ";
+        print_r($out);
+        echo "<br><br>ret: ";
+        print_r($ret);
+        echo "<br><br>";
         exit(0);
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
