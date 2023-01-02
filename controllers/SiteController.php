@@ -452,7 +452,12 @@ class SiteController extends Controller
                                     $invitation->hash = hash("sha256", $email);
                                     $invitation->surveyid = $surveyid; 
                                     $invitation->save();
-                                    $invitation->email_send();
+                                    // INVTITATION FEATURE //
+                                    $owner = $survey->isOwner($userid)->asArray()->one();
+                                    $ownerNameSurname = $owner->name.' '$owner->surname;
+                                    $surveyDescription = $survey->description;
+                                    $surveyName = $survey->name;
+                                    $invitation->email_send($ownerNameSurname, $surveyName, $surveyDescription);
                                     $response->data = ['response' => 'User Invited', 'invitation' => $invitation];
                                 }  
                             }

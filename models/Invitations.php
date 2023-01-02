@@ -64,8 +64,19 @@ class Invitations extends \yii\db\ActiveRecord
         return $this->hasOne(Surveys::className(), ['id' => 'surveyid']);
     }
 
-    public function email_send(){
-        $message = 'Hello! <br>You have been invited to participate in a survey in  <b>'.Yii::$app->params['title'].'</b>.<br> Please follow this <a href = "'.Yii::$app->params['invitation-url'].$this->hash.' ">link</a> to register!.<br><br> Kind regards,<br>'.Yii::$app->params['title'].' team.';
+    public function email_send(surveyManager = null, surveyName = null, surveyDescription = null){
+        if ( $surveyName != null ){
+            $message = 'Hello! <br>You have been invited to participate in '.$surveyManager.'\'s survey <b>'.$surveyName.'</b> in <b>'.Yii::$app->params['title'].'</b>.<br>';
+        }else{
+            $message = 'Hello! <br>You have been invited to participate in '.$surveyManager.'\'s survey in <b>'.Yii::$app->params['title'].'</b>.<br>';
+        }
+
+        if ($surveyDescription != null){
+            $message += 'Here is a brief summary of the survey: <br>'.$surveyDescription.'<br>';
+        }
+
+        $message += 'Please follow this <a href = "'.Yii::$app->params['invitation-url'].$this->hash.' ">link</a> to register!<br><br> Kind regards,<br>'.Yii::$app->params['title'].' team.';
+
         Yii::$app->mailer->compose()
         ->setFrom(Yii::$app->params['helpdesk-address'])
         ->setTo($this->email)
