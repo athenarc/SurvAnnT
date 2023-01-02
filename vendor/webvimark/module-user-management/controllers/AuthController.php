@@ -144,6 +144,8 @@ class AuthController extends BaseController
 			if ( Invitations::find()->where(['hash' => $email])->one() ){
 				$invitation = Invitations::find()->where(['hash' => $email])->one();
 				$model->email = $invitation->email;
+			}else{
+				$model->email = "null";
 			}
 		}
 
