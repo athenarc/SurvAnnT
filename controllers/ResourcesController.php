@@ -226,22 +226,6 @@ class ResourcesController extends Controller
     }
 
     public function actionResourceCreate(){
-        $command = escapeshellcmd("python3 ../python/json_resource_parser.py localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40"); //localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40 
-        // $command = "which python3";
-        echo escapeshellarg($command)."<br><br>";
-        // $command = "ls -l ../python";
-        exec(escapeshellcmd($command), $out, $ret);
-
-        // $command = "pip3 freeze";
-        echo "out: ";
-        print_r($out);
-        echo "<br><br>ret: ";
-        print_r($ret);
-        echo "<br><br>";
-
-        $output = shell_exec("pip3 install pandas, pymysql, sqlalchemy 2>&1");
-        var_dump($output);
-        exit(0);
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
         
