@@ -72,10 +72,10 @@ class Invitations extends \yii\db\ActiveRecord
         }
 
         if ($surveyDescription != null){
-            $message += 'Here is a brief summary of the survey: <br>'.$surveyDescription.'<br>';
+            $message .= 'Here is a brief summary of the survey: <br>'.$surveyDescription.'<br>';
         }
 
-        $message += 'Please follow this <a href = "'.Yii::$app->params['invitation-url'].$this->hash.' ">link</a> to register!<br><br> Kind regards,<br>'.Yii::$app->params['title'].' team.';
+        $message .= 'Please follow this <a href = "'.Yii::$app->params['invitation-url'].$this->hash.' ">link</a> to register!<br><br> Kind regards,<br>'.Yii::$app->params['title'].' team.';
 
         Yii::$app->mailer->compose()
         ->setFrom(Yii::$app->params['helpdesk-address'])
