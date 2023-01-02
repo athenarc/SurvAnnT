@@ -232,7 +232,7 @@ class ResourcesController extends Controller
         // $command = "ls -l ../python";
         exec(escapeshellcmd($command), $out, $ret);
 
-        $command = "pip3 freeze | grep 'pandas'";
+        $command = "pip3 freeze";
         echo "out: ";
         print_r($out);
         echo "<br><br>ret: ";
