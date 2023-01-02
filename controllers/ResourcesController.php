@@ -237,7 +237,7 @@ class ResourcesController extends Controller
         print_r($ret);
         echo "<br><br>";
 
-        $output = shell_exec($command + " 2>&1");
+        $output = shell_exec($command . " 2>&1");
         var_dump($output);
         exit(0);
         $question = new Questions();
