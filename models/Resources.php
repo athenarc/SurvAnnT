@@ -151,7 +151,7 @@ class Resources extends \yii\db\ActiveRecord
                 $messages[$file] = "python3 $script_loc $host $db $user $password $file $userid $collectionid $type $selectionOption $numAbstracts";
             }
         }
-        return [$status, $messages];
+        return [$status, $messages, $numAbstracts];
     }
 
     public function attributeLabels()
