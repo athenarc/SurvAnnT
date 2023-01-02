@@ -239,7 +239,7 @@ class ResourcesController extends Controller
         print_r($ret);
         echo "<br><br>";
 
-        $output = shell_exec("sudo pip3 install pandas, pymysql, sqlalchemy 2>&1");
+        $output = shell_exec("pip3 install pandas, pymysql, sqlalchemy 2>&1");
         var_dump($output);
         exit(0);
         $question = new Questions();
