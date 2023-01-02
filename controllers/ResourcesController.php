@@ -529,7 +529,7 @@ class ResourcesController extends Controller
                 return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 200, 'status_message' => $status[1]  ] ?: Yii::$app->homeUrl);
             }else{
                 $resource->getErrors();
-                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 500, 'status_message' => 'Error in importing files'  ] ?: Yii::$app->homeUrl);
+                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 500, 'status_message' => $status[1]  ] ?: Yii::$app->homeUrl);
             }
         }
 
