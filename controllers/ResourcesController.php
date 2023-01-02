@@ -226,7 +226,7 @@ class ResourcesController extends Controller
     }
 
     public function actionResourceCreate(){
-        $command = "python3 test_2.py"; //../python/json_resource_parser.py 'localhost' 'survannt_test' 'survannt_test_user' 'test' '../data/files/pmc_paper.csv' '2' '5' 'article' 'random' '40' > python_logs.txt 
+        $command = "python3 json_resource_parser.py 'localhost' 'survannt_test' 'survannt_test_user' 'test' '../data/files/pmc_paper.csv' '2' '5' 'article' 'random' '40' > python_logs.txt"; //localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40 
         echo $command."<br><br>";
         // $command = "ls -l ../python";
         exec(escapeshellcmd($command), $out, $ret);
