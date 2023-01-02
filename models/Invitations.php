@@ -64,7 +64,7 @@ class Invitations extends \yii\db\ActiveRecord
         return $this->hasOne(Surveys::className(), ['id' => 'surveyid']);
     }
 
-    public function email_send(surveyManager = null, surveyName = null, surveyDescription = null){
+    public function email_send($surveyManager, $surveyName, $surveyDescription){
         if ( $surveyName != null ){
             $message = 'Hello! <br>You have been invited to participate in '.$surveyManager.'\'s survey <b>'.$surveyName.'</b> in <b>'.Yii::$app->params['title'].'</b>.<br>';
         }else{

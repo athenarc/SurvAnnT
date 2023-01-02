@@ -451,11 +451,12 @@ class SiteController extends Controller
                                     $invitation->email = $email;
                                     $invitation->hash = hash("sha256", $email);
                                     $invitation->surveyid = $surveyid; 
-                                    $invitation->save();
+
                                     // INVTITATION FEATURE //
-                                    $owner = $survey->isOwner($userid)->asArray()->one();
-                                    $ownerNameSurname = $owner->name.' '$owner->surname;
-                                    $surveyDescription = $survey->description;
+                                    $survey = Surveys::findOne($surveyid);
+                                    $owner = User::findOne($survey->getOwner());
+                                    $ownerNameSurname = $owner->name.' '.$owner->surname;
+                                    $surveyDescription = $survey->about;
                                     $surveyName = $survey->name;
                                     $invitation->email_send($ownerNameSurname, $surveyName, $surveyDescription);
                                     $response->data = ['response' => 'User Invited', 'invitation' => $invitation];
