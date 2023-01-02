@@ -451,7 +451,8 @@ class SiteController extends Controller
                                     $invitation->email = $email;
                                     $invitation->hash = hash("sha256", $email);
                                     $invitation->surveyid = $surveyid; 
-
+                                    $invitation->save();
+                                    
                                     // INVTITATION FEATURE //
                                     $survey = Surveys::findOne($surveyid);
                                     $owner = User::findOne($survey->getOwner());
