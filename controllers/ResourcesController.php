@@ -229,7 +229,7 @@ class ResourcesController extends Controller
         $command = "python3 ../python/json_resource_parser.py localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40"; //localhost survannt_test survannt_test_user test ../data/files/pmc_paper.csv 2 5 article random 40 
         echo $command."<br><br>";
         // $command = "ls -l ../python";
-        exec($command, $out, $ret);
+        exec(escapeshellcmd($command), $out, $ret);
 
         echo "out: ";
         print_r($out);
