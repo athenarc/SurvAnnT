@@ -339,7 +339,7 @@ class BadgesController extends Controller
         $myBadges = [];
         $myBadges = $clone = Badges::find()->joinWith('surveytobadges')->where(['surveyid' => $survey->id]);
         $cloneMyBadges = clone $myBadges;
-
+ 
         $badges = Badges::find()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->andWhere(['not in','badges.id',array_column( $cloneMyBadges->asArray()->all(), 'id')]); // 
 
         $paginationMyBadges = new Pagination(['totalCount' => $myBadges->count(), 'pageSize'=>10]);

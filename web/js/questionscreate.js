@@ -80,7 +80,7 @@ $(document).ready(function(){
                     if ( $(this).attr('id') != ans ){
                         $(this).css("display", "none");
                     }else{
-                        $(this).css("display", "table-cell");
+                        $(this).css("display", "table");
                         $(this).html(table);
                     }
                 }
@@ -91,7 +91,7 @@ $(document).ready(function(){
     $(document).on('click', '[id^="link-show"]', function(e){
         if ( $(this).hasClass("fa-caret-down") ){
             $(this).removeClass("fa-caret-down").addClass("fa-caret-up");
-            $("#" + this.id.replace("link", "table")).css("display", "table-cell");
+            $("#" + this.id.replace("link", "table")).css("display", "table");
         }else if ( $(this).hasClass("fa-caret-up") ){
             $(this).removeClass("fa-caret-up").addClass("fa-caret-down");
             $("#" + this.id.replace("link", "table")).css("display", "none");

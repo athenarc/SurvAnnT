@@ -115,7 +115,7 @@ class Resources extends \yii\db\ActiveRecord
 
     public function uploadZip($userid, $collectionid, $type, $numAbstracts = -1, $selectionOption = 'relevance')
     {
-
+ 
         $file_path = Yii::$app->params['dir-files'] . $this->zipFile->baseName . '.' . $this->zipFile->extension;
         $this->zipFile->saveAs($file_path);
 

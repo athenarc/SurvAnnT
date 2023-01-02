@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 if len(sys.argv) < 9 :
 	print("Not enough arguments given")
 	exit("Not enough arguments given")
-
+ 
 
 hostname = sys.argv[1].lower() # DB HOST
 dbname = sys.argv[2].lower() # DATABASE
@@ -25,19 +25,23 @@ num_of_articles = -1
 if len(sys.argv) > 10:
 	num_of_articles = int(sys.argv[10]) # THE NUMBER OF ARTICLES TO SELECT
 
+if csv_file_path.endswith('.csv'):
+	try:
+		dataframe = pd.read_csv( csv_file_path, index_col=False )
+	except IOError as e:
+		print(str(e))
+		exit("Error in reading csv into dataframe")
+elif csv_file_path.endswith('.json'):
+	try:
+		dataframe = pd.read_json(csv_file_path)
+	except IOError as e:
+		print(str(e))
+		exit("Error in reading csv into dataframe")
 
-
-try:
-	dataframe = pd.read_csv( csv_file_path, index_col=False )
-except IOError as e:
-	print(e)
-	exit()
 dataframe['ownerid'] = ownerid
 dataframe['collectionid'] = collectionid
 dataframe['type'] = resource_type
 
-# dataframe['percentage'] = dataframe['journal'].value_counts() 
-# print(dataframe['journal'].value_counts() / len(dataframe))
 if num_of_articles != -1: 
 	if selection_option == 'random':
 		dataframe = dataframe.sample(n = num_of_articles)
@@ -45,7 +49,9 @@ if num_of_articles != -1:
 		dataframe = dataframe[:num_of_articles]
 
 engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=pwd))
+
 try:
+	# bug when zipped file contains articles in json format
 	dataframe.to_sql(con=engine, index=False, name='resources', if_exists='append')
 except ValueError:
 	print("Value error")

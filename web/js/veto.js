@@ -23,7 +23,7 @@ function removeFromExpertSet(userId) {
 function getExpert(userId, name) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `http://veto.imsi.athenarc.gr/api/datasets/get?term=${name}`,
+            url: `https://veto.imsi.athenarc.gr/api/datasets/get?term=${name}`,
             type: 'GET',
             async : true,
             cache: false,
@@ -97,7 +97,7 @@ $(document).ready( function() {
 
     function getStatus() {
         $.ajax({
-            url: `http://veto.imsi.athenarc.gr/api/analysis/status?id=${analysisId}`,
+            url: `https://veto.imsi.athenarc.gr/api/analysis/status?id=${analysisId}`,
             type: 'GET',
             async : true,
             cache: false,
@@ -125,7 +125,7 @@ $(document).ready( function() {
 
     function getResults() {
         $.ajax({
-            url: `http://veto.imsi.athenarc.gr/api/analysis/get?id=${analysisId}`,
+            url: `https://veto.imsi.athenarc.gr/api/analysis/get?id=${analysisId}`,
             type: 'GET',
             async : true,
             cache: false,
@@ -149,7 +149,7 @@ $(document).ready( function() {
                         </div>
                     </li>`;
                 });
-                const moreItem = `<li class="list-group-item text-center" style="padding: 0.3rem 0.7rem;"><a href="http://veto.imsi.athenarc.gr/jobs/${analysisId}" target="_blank" class="text-info">See more results <i class="fa-solid fa-square-arrow-up-right"></i></a></li>`
+                const moreItem = `<li class="list-group-item text-center" style="padding: 0.3rem 0.7rem;"><a href="https://veto.imsi.athenarc.gr/jobs/${analysisId}" target="_blank" class="text-info">See more results <i class="fa-solid fa-square-arrow-up-right"></i></a></li>`
                 resultItems.push(moreItem);
 
                 $('#veto-results').html(resultItems);
@@ -167,7 +167,7 @@ $(document).ready( function() {
         $('#veto-results').html('');
        
         $.ajax({
-            url: 'http://veto.imsi.athenarc.gr/api/analysis/submit',
+            url: 'https://veto.imsi.athenarc.gr/api/analysis/submit',
             type: 'POST',       
             contentType: "application/json",
             async : false,

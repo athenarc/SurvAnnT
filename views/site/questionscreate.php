@@ -115,7 +115,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                     <tr class = "dataset-table-header-row">
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
-                                        <td class = "dataset-header-column class="edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "width: 10%;">  </td>
+                                        <td class = "dataset-header-column edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "display:none; width: 10%;">  </td>
                                     </tr>
                                     <?php foreach ($SurveyQuestion->answervalues as $ans_key => $ans_val): ?>
                                         <?php 
@@ -161,7 +161,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                     <tr class = "dataset-table-header-row">
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
-                                        <td class = "dataset-header-column edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "display: none;width: 10%;">  </td>
+                                        <td class = "dataset-header-column edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "display:none; width: 10%;">  </td>
                                     </tr>
                                     <?php foreach ($radiolist as $ans_key => $ans_val): ?>
                                         <?php 
@@ -207,7 +207,7 @@ $this->registerJsFile('@web/js/questionscreate.js', ['position' => View::POS_END
                                     <tr class = "dataset-table-header-row">
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 60%;"> User Answer </td>
                                         <td class = "dataset-header-column" colspan = "1" style = "width: 30%;"> Stored Value </td>
-                                        <td class = "dataset-header-column edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "display: none;width: 10%;">  </td>
+                                        <td class = "dataset-header-column edit-question-answer-<?=$SurveyQuestion->id?>" colspan = "1" style = "display:none; width: 10%;">  </td>
                                     </tr>
                                     <?php foreach ($radiolist as $ans_key => $ans_val): ?>
                                         <?php 

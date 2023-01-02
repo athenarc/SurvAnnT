@@ -253,7 +253,7 @@ class QuestionsController extends Controller
     public function actionQuestionsCreate(){
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
-        
+
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
                 return $this->goHome();
@@ -312,11 +312,13 @@ class QuestionsController extends Controller
             }
         }
         $SurveyQuestions = Questions::find()->joinWith('surveytoquestions')->where(['surveyid' => $surveyid]);
+        $cloneMyQuestions = clone $SurveyQuestions;
 
         $paginationSurveyQuestions = new Pagination(['totalCount' => $SurveyQuestions->count(), 'pageSize'=>10]);
         $SurveyQuestions = $SurveyQuestions->offset($paginationSurveyQuestions->offset)->limit($paginationSurveyQuestions->limit)->all();
-
-        $dbQuestions = Questions::find()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->all();
+        
+        // $dbQuestions = Questions::find()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->all();
+        $dbQuestions = Questions::find()->where(['allowusers' => 1])->orWhere(['ownerid' => $userid])->andWhere(['not in','questions.id',array_column( $cloneMyQuestions->asArray()->all(), 'id')])->all();
         $questions = [new Questions()];
         
         $fields = array_values ( array_keys ( Questions::attributeLabels() ) );
@@ -370,20 +372,24 @@ class QuestionsController extends Controller
                 foreach ($greped_arr as $key => $value) {
                     $question = Questions::findOne(escapeshellcmd(str_replace("agree-question-", "", $value)));
                     if ( $question ){
+                        
                         $newQuestion = new Questions();
                         $newQuestion->attributes = $question->attributes;
                         $newQuestion->save();
-
-                        $surveytoquestions = new Surveytoquestions();
-                        $surveytoquestions->surveyid = $survey->id;
-                        $surveytoquestions->questionid = $newQuestion->id;
-                        $surveytoquestions->ownerid = $userid;
-                        $surveytoquestions->save();
+                        
+                        if(!Surveytoquestions::find()->where(['questionid' => $question->id])->andWhere(['surveyid' => $surveyid])->one()){
+                            $surveytoquestions = new Surveytoquestions();
+                            $surveytoquestions->surveyid = $survey->id;
+                            $surveytoquestions->questionid = $newQuestion->id;
+                            $surveytoquestions->ownerid = $userid;
+                            $surveytoquestions->save();
+                        }
                     }
                 }
                 Yii::$app->response->redirect( array( 'questions/questions-create', 'surveyid' => $surveyid));
             } 
         }
+        // exit(0);
         // return $this->goBack();
     }
 

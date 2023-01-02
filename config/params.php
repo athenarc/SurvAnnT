@@ -170,7 +170,7 @@ return [
             'Contact us' => 
                 [
                     'link' => 'index.php?r=site%2Fabout&tab=',
-                    'text' => 'Send us your feedback at: <br> &nbsp;&nbsp;<i class = "fa fa-envelope" style ="color:white;"> </i> survannt.helpdesk@gmail.gr <br> &nbsp;&nbsp;<i class = "fa fa-map-marker"> </i> Athena RC, Artemidos 6 & Epidavrou, Maroussi 15125, Greece <br>&nbsp;&nbsp;<a href="https://github.com/athenarc/SurvAnnT" target="_blank" class="fa-brands fa-github link-icon" style = "color:white;"> Github repository</a>',
+                    'text' => 'Send us your feedback at: <br> &nbsp;&nbsp;<i class = "fa fa-envelope" style ="color:white;"> </i> survannt@athenarc.gr <br> &nbsp;&nbsp;<i class = "fa fa-map-marker"> </i> Athena RC, Artemidos 6 & Epidavrou, Maroussi 15125, Greece <br>&nbsp;&nbsp;<a href="https://github.com/athenarc/SurvAnnT" target="_blank" class="fa-brands fa-github link-icon" style = "color:white;"> Github repository</a>',
                     'enabled' => 1,
                 ]
         ],
