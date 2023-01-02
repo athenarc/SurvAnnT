@@ -525,11 +525,11 @@ class ResourcesController extends Controller
 
             $resource->zipFile = UploadedFile::getInstanceByName("Resources[0][zipFile]");
             $status = $resource->uploadZip($userid, $collection->id, 'article', $numAbstracts, $selectionOption);
-            if (! in_array(500, $status[0]) ) {
-                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 200, 'status_message' => 'Imported '.sizeof($status[0]).' files'  ] ?: Yii::$app->homeUrl);
+            if (! in_array(500, $status) ) {
+                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 200, 'status_message' => 'Imported '.sizeof($status).' files'  ] ?: Yii::$app->homeUrl);
             }else{
                 $resource->getErrors();
-                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 500, 'status_message' => implode(", ", $status[1])  ] ?: Yii::$app->homeUrl);
+                return $this->redirect(['resources/resource-create', 'surveyid' => $survey->id, 'status' => 500, 'status_message' => 'Error in importing files'  ] ?: Yii::$app->homeUrl);
             }
         }
 
