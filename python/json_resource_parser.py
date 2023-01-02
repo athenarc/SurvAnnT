@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import json, os, sys, pandas as pd, pymysql
 from sqlalchemy import create_engine
 from urllib import parse
