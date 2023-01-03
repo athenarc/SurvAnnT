@@ -80,7 +80,7 @@ $(document).ready(function(){
                     if ( $(this).attr('id') != ans ){
                         $(this).css("display", "none");
                     }else{
-                        $(this).css("display", "table");
+                        $(this).css("display", "table-cell");
                         $(this).html(table);
                     }
                 }
