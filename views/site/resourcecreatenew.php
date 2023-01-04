@@ -77,7 +77,7 @@ $this->registerJsFile('@web/js/resourcecreatenew.js', ['position' => View::POS_E
 	                	<?php if( !$SurveyCollection->isNewRecord && $survey->getCollection()->one()->getResources()->all()): ?>
 	                		<?= Html::a( 'Delete All Resources',['resources/resources-delete-all', 'surveyid' => $survey->id],  ['class' => 'btn btn-primary resources-delete-all']) ?>
 	                	<?php endif; ?>
-	                	<?= Html::button( 'Import Resources (articles only)', ['id' => 'import-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#import-resources"]) ?>
+	                	<?= Html::button( 'Import Resources (articles only)', ['id' => 'import-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && ( $SurveyResources[0]['type'] != 'article' ) ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#import-resources"]) ?>
 	                   	<?= Html::button( 'Reuse Existing Resources', ['id' => 'db-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#db-resources"]) ?>
 	                    <?= Html::button( 'Create Resources', ['id' => 'user-resources-button', 'disabled' => sizeof($SurveyResources) > 0 && $SurveyResources[0]['type'] == 'questionnaire' ? true : false, 'class' => 'btn btn-primary', 'data-toggle' => "modal", 'data-target' => "#user-resources"]) ?>
 	                     <input type="hidden" id="surveyId" value="<?=$survey->id?>" name="">

@@ -739,7 +739,11 @@ class SiteController extends Controller
                         $usertobadges->badgeid = $badge->id;
                         $usertobadges->surveyid = $survey->id;
                         $rate_cond = (int)$surveytobadge->ratecondition - (int)$user_feedback_provided;
-                        $rate_conditions[] = ($rate_cond >= 0 ) ? $rate_cond : -1 * $rate_cond;
+
+                        if ( (int)$user_feedback_provided < (int)$surveytobadge->ratecondition ){
+                            $rate_conditions[] = ($rate_cond >= 0 ) ? $rate_cond : -1 * $rate_cond;
+                        }
+                        
                         $ratings_expression = (int)$user_feedback_provided >= (int)$surveytobadge->ratecondition && (int)$surveytobadge->ratecondition > 0;
 
                         if ( $ratings_expression ){
@@ -766,9 +770,13 @@ class SiteController extends Controller
 
                 $next_badge_goal = 0;
                 if ( isset( $rate_conditions ) && sizeof( array_filter($rate_conditions ) ) > 0 ){
-                    
-                    $next_badge_goal = min( array_filter($rate_conditions, function($v) { return $v > 0; }) );
-                    // print_r($next_badge_goal);
+                    $next_badge_goal = min( array_filter($rate_conditions, 
+                        function($v) use($user_feedback_provided) 
+                        { 
+                            echo "<br><br> ufp: ".$user_feedback_provided." and v: ".$v."<br><br>";
+                            return $v > 0; 
+                        }
+                    ) );
                 }else{
                     $rate_conditions = [];
                 }
