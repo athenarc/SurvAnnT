@@ -19,6 +19,7 @@ else:
     f = open(log_filename, 'w')
 
 f.write("Timestamp: " + str(greece_time) + " jsoun_resource_parser.py called\n")
+f.write("Timestamp: " + str(greece_time) + " command: " + " ".join(sys.argv) +"\n")
 
 hostname = sys.argv[1].lower() # DB HOST
 dbname = sys.argv[2].lower() # DATABASE
@@ -65,7 +66,8 @@ if num_of_articles != -1:
 
 engine = create_engine("mysql+pymysql://{user}:{pw}@{host}/{db}".format(host=hostname, db=dbname, user=uname, pw=parse.quote(pwd)))
 
-
+with engine.connect():
+	f.write("Timestamp: " + str(greece_time) + " Connected \n")
 try:
 	# bug when zipped file contains articles in json format
 	dataframe.to_sql(con=engine, index=False, name='resources', if_exists='append')

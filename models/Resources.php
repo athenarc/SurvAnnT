@@ -112,7 +112,7 @@ class Resources extends \yii\db\ActiveRecord
             }
         }
     }
-
+ 
     public function uploadZip($userid, $collectionid, $type, $numAbstracts = -1, $selectionOption = 'relevance')
     {
  

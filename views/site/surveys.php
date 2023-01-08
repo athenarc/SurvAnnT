@@ -181,7 +181,7 @@ $this->title = 'My Yii Application';
 					                    }
 				                    }
 							        return 
-							        ( Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin") ) && ( $model->active != 1 )
+							        ( Yii::$app->user->identity->id == $user_id || Yii::$app->user->identity->hasRole("Superadmin") ) && ( $model->active != 1 && $model->completed != 1)
 							        ? Html::a('<i class="fas fa-edit link-icon"></i>', 'index.php?r=site%2Fsurvey-create&surveyid='.$key.'&edit=1', ['title' => 'Edit campaign']) 
 							        : '';
 							    },
@@ -204,7 +204,7 @@ $this->title = 'My Yii Application';
 							        	$date = date('Y-m-d H:i:s', time());
 							        	foreach ($model->participatesin as $participant) {
 							    			if ( $participant->userid ==  Yii::$app->user->identity->id ){
-							    				if ( $participant->finished == 1 ){
+							    				if ( $participant->finished == 1 || $model->completed == 1){
 							    					return Html::a('<i class="fas fa-check link-icon" ></i>', 'javascript:void(0);', ['title' => 'Campaign completed']);
 							    				}
 							    				if ( $participant->request == 1 && $model->active == 1 && ( $model->starts <= strval($date) || $model->starts == '' ) ){

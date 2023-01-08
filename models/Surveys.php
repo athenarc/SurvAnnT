@@ -461,15 +461,14 @@ class Surveys extends \yii\db\ActiveRecord
         }
         
         $numResEval = $this->getRates()->groupBy(['resourceid'])->count();
-
-        $numRespPerRes = $this->getRates()->select(['resourceid', 'COUNT(*)'])->groupBy(['resourceid'])->having(['>=', 'COUNT(*)', $this->minResEv])->count();
+        $numRespPerRes = $this->getRates()->select(['resourceid', 'COUNT(*)'])->groupBy(['resourceid'])->having(['>=', 'COUNT(*)', $this->minRespPerRes * $this->getQuestions()->count()])->count();
+        
         $minResEv = ( $this->minResEv != null ) ? $this->minResEv : 'Not Set';
 
         $maxResEv = ( $this->maxResEv != null ) ? $this->maxResEv : 'Not Set';
         $minRespPerRes = ( $this->minRespPerRes != null ) ? $this->minRespPerRes : 'Not Set';
         $maxRespPerRes = ( $this->maxRespPerRes != null ) ? $this->maxRespPerRes : 'Not Set';
-        // echo "Resources Evaluated: ".$numResEval."<br>";
-        
+
         $minTotalProgress = '-';
         $maxTotalProgress = '-';
         $minRespPerResProgress = '-';

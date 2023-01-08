@@ -773,7 +773,6 @@ class SiteController extends Controller
                     $next_badge_goal = min( array_filter($rate_conditions, 
                         function($v) use($user_feedback_provided) 
                         { 
-                            echo "<br><br> ufp: ".$user_feedback_provided." and v: ".$v."<br><br>";
                             return $v > 0; 
                         }
                     ) );

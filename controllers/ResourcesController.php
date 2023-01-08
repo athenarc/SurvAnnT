@@ -229,6 +229,10 @@ class ResourcesController extends Controller
         $question = new Questions();
         $userid = Yii::$app->user->identity->id;
         
+        // exec("pip3 freeze", $out, $ret);
+        // print_r($out);
+
+        // exit(0);
         if ( !isset( $_GET['surveyid'] ) ){
             if ( isset( $_GET['r'] ) && $_GET['r'] == 'site/participants-invite'){
                 return $this->goHome();
