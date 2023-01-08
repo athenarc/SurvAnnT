@@ -89,7 +89,7 @@ $(document).ready(function(){
                 	element.removeClass('fa-check save-badge').addClass('fa-pencil edit-badge');
                 	element.css("color", "#949494");
                 }else if( response.action == 'delete' ){
-                	alert("deleted");
+                	// alert("deleted");
                 	element.parent().parent().remove();
                 }
             },
